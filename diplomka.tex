@@ -141,29 +141,65 @@ Algoritmus, který by k libovolnému slovu vrátil jeho základ, je poměrně ko
 
 
 \subsection{Uložení indexu}
-V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále. V každém dokumentu spočítáme počet výskytů všech slov a zapamatujeme si také počet výskytů všech slov ve všech dokumentech. Všechny tyto informace uložíme do struktury, která má tvar:
+V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále. V každém dokumentu spočítáme počet výskytů všech stemů a zapamatujeme si také počet výskytů všech stemů ve všech dokumentech. Všechny tyto informace uložíme do struktury, která má tvar:
 
 \begin{verbatim}
-slovo => (počet výskytů slova ve všech dokumentech, 
-         [(doc1, počet výskytů slova v doc1), 
-          (doc2, počet výskytů slova v doc2), 
+stem => (počet výskytů slova ve všech dokumentech, 
+         [(doc1, počet výskytů v doc1), 
+          (doc2, počet výskytů v doc2), 
           ..., 
-          (docN, počet výskytů slova v docN)])
+          (docN, počet výskytů v docN)])
 \end{verbatim}
 
-Proměnné \code{doc1}, \code{doc2}, \dots představují ID dokumentů, které obsahují dané slovo a každé slovo tak může obsahovat různou sadu docID. 
+Proměnné \code{doc1}, \code{doc2}, \dots představují ID dokumentů, které obsahují daný stem a každé slovo tak může obsahovat různou sadu docID. 
 
-Tato struktura je v Pythonu realizována pomocí vestavěných typů \code{dictionary} a \code{tuple}. Abychom zvýšili rychlost vyhledávání informací v této struktuře, rozdělíme ji na několik menších částí podle toho, na jaké písmeno začínají slova v dané části. Vytvoříme tak ještě další slovník, kde klíčem bude písmeno a hodnotou bude předchozí struktura, která bude obsahovat všechna slova, která začínají na dané písmeno. Dostáváme strukturu:
+Tato struktura je v Pythonu realizována pomocí vestavěných typů \code{dictionary} a \code{tuple}. Abychom zvýšili rychlost vyhledávání informací v této struktuře, rozdělíme ji na několik menších částí podle toho, na jaké písmeno začínají stemy v dané části. Vytvoříme tak ještě další slovník, kde klíčem bude písmeno a hodnotou bude předchozí struktura, která bude obsahovat všechny stemy, která začínají na dané písmeno. Dostáváme strukturu:
 
 \begin{verbatim}
-písmeno => slovo začínající na písmeno => (počet výskytů slova...
+písmeno => stem začínající na písmeno => (počet výskytů stemu...
 \end{verbatim}
 
 Program umožňuje nastavit délku prefixu, nemusí se fixně jednat o pouze jedno písmeno, prefix může být libovolně dlouhý. Tutu strukturu už uložíme na disk. K tomu využijeme modul \code{shelve}, což je jednoduchá slovníková databáze, která je vestavěna v Pythonu 3. Klíčem bude použitý prefix, hodnotou pak budou dané struktury, které modul \code{shelve} serializuje a uloží. 
 
 Výhodou tohoto řešení je rychlost a jednoduchost implementace, nevýhodou je, že data jsou uložena ve formátu, který je těžko čitelný ostatním technologiím. 
 
-Po uložení dostaneme několik souborů typu \code{a.db}, \code{b.db}, \dots a v případě, že chceme získat informace o slově \uv{strom}, stačí nám přečíst si z disku soubor \code{s.db}. 
+Po uložení dostaneme několik souborů typu \code{a.db}, \code{b.db}, \dots a v případě, že chceme získat informace o stemu \uv{strom}, stačí nám přečíst si z disku soubor \code{s.db}. Tím dosáhneme jisté úspory, protože tyto informace potřebujeme znát ve chvíli, kdy parsujeme dotaz, který bývá většinou složen z málo slov, takže budeme číst jen málo souborů. 
+
+\subsection{Vyhledání klíčových slov} 
+
+V druhé části vyhledávače, která se zabývá nalezením souvisejících dotazů, budeme potřebovat znát množinu slov, která nejvíce charakterizuje daný dokument. Těmto slovům budeme říkat \uv{klíčová slova dokumentu}. 
+
+\subsubsection{Jak by měla klíčová slova vypadat}
+
+Klíčová slova jsou poměrně běžnou součástí různých vědeckých článků, kde je ale obvykle vyplňuje sám autor. V případě vyhledávače stojíme před problémem, jak získat klíčová slova z libovolného dokumentu nějakým obecným způsobem. 
+
+Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za klíčová slova pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici počtu stemu (\uv{alespoň 10 výskytů}) nebo nějakou relativní hranici (\uv{alespoň každý dvacátý stem}). 
+
+Tento postup může být úspěšný v případě, že máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Klíčové slovo pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
+
+Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejné klíčové slovo a to není to, co bychom chtěli. 
+
+Tento problém vyřešíme tím, že při hledání klíčových slov pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v ostatních dokumentech co nejméně často. 
+
+
+\subsubsection{Algoritmus tf-idf}
+Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
+
+Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ uniktání. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
+$$\mbox{idf}_t=\log\frac{N}{\mbox{df}_t}.$$
+
+Složením funkcí tf a idf získáme funkci tf-idf definovanou jako
+$$\mbox{tf-idf}_{t,d}=\mbox{df}_{t,d}\cdot\mbox{idf}_t.$$
+
+Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
+
+\begin{itemize}
+\item vysoká, pokud se slovo $t$ často vyskytuje v malé množině dokumentů,
+\item nízká, pokud se slovo vyskytuje málo v dokumentu $d$ nebo pokud se vyskytuje hodně v ostatních dokumentech,
+\item nízká, pokud se vyskytuje ve všech dokumentech. 
+\end{itemize}
+
+
 
 
 
