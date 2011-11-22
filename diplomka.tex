@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 
-\usepackage[master]{updiplom}
+\usepackage[master]{styly/updiplom}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 
@@ -11,6 +11,7 @@
 \newcommand{\name}{CHANDLER}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\sep}{\,|\,}
+\newcommand{\docs}{\mathbb{D}}
 
 %%% Nadpisy
 \newcommand{\ssection}[1]{\subsection{#1}}
@@ -29,9 +30,14 @@
 \renewcommand{\implies}{\Rightarrow}
 
 %%% Používané funkce
-\DeclareMathOperator{\tdidf}{td-idf}
+\DeclareMathOperator{\tfidf}{tf-idf}
 \DeclareMathOperator{\stem}{stem}
+\DeclareMathOperator{\score}{sc}
 \DeclareMathOperator{\wcount}{sf}
+\DeclareMathOperator{\getdocs}{getDocs}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
 \newcommand{\invstem}{\stem^{-1}}
 
 
@@ -132,7 +138,7 @@ Další částí vyhledávače je hledání souvesijících dotazů. Tato část
 
 
 \subsection{Předzpracování dokumentů}
-
+\label{prepr}
 Při budování indexu máme na vstupu sadu dokumentů a na výstupu strukturu, která reprezentuje index této sady. Během samotného budování indexu procházíme jednotlivé dokumenty a upravujeme je do takové podoby, která se hodí pro uložení. Budeme uvažovat pouze textové dokumenty jako je HTML nebo PDF a budeme předpokládat statickou sadu dokumentů, takže se nebudeme příliš zatěžovat aktualizací indexu. 
 
 Na samotném začátku tak musíme upravit jednotlivé textové dokumenty do nějaké kanonické podoby. To budeme dělat postupnými úpravami jednotlivých dokumentů. S každým dokumentem budeme provádět identické oprace v identickém pořadí. Jednotlivé operace budou popsány v takovém pořadí, v jakém se aplikují ve vyhledávači. 
@@ -253,7 +259,7 @@ $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
 
 \begin{itemize}
-\item Seznam všech klíčových slov všech dokumentů v sadě spolu s jejich $\tdidf$ skórem vzhledem k danému dokumentu. V dalších algoritmech budeme potřebovat vědět, zda dokument $d$ obsahuje klíčové slovo $k$, případně i jaké je jeho $\tdidf$ skóre. 
+\item Seznam všech klíčových slov všech dokumentů v sadě spolu s jejich $\tfidf$ skórem vzhledem k danému dokumentu. V dalších algoritmech budeme potřebovat vědět, zda dokument $d$ obsahuje klíčové slovo $k$, případně i jaké je jeho $\tfidf$ skóre. 
 
 Na rychlosti získání těchto informací už bude přímo záležet rychlost celého algoritmu, takže by čtení a následné získání dat mělo být rychlé. Vyhledávač k tomu opět používá serializovaná data, která využívají především \code{dictionary}, tj. hashovací tabulku. 
 
@@ -261,11 +267,79 @@ Na rychlosti získání těchto informací už bude přímo záležet rychlost c
 	\begin{itemize}
 	\item Název dokumentu. Pokud se nám nepodařilo získat název, uložíme prázdný řetězec.
 	\item URL dokumentu. 
-	\item Klíčová slova daného dokumentu spolu s jejich $\tdidf$ skórem. 
+	\item Klíčová slova daného dokumentu spolu s jejich $\tfidf$ skórem. 
 	\item Číselný identifikátor dokumentu.
 	\item Počet slov v dokumentu. 
 	\end{itemize}
 \end{itemize}
+
+
+
+
+\ssection{Odpovídání na dotazy}
+Hlavním účeleme vyhledávače je samozřejmě odpovídání na dotazy. Uživatel vloží do rozhraní vyhledávače svůj dotaz, který je dále zpracován vyhledávačem, který vrátí nějaký seznam výsledků. 
+
+\sssection{Syntax dotazu}
+Dotazem může být libovolný text, přičemž může obsahovat jisté řídicí příkazy, kterým říkáme operátory. \name{} podporuje tři operátory: AND, OR a NOT. Pokud se tato tři slova objeví v dotazu, budou vyhledávačem pochopena jako operátory, nikoli jako obyčejná text. Musí být psány velkými písmeny, takže pokud chce uživatel použít daná slova jako obyčejný text, stačí použít jejich variantu s malými písmeny. 
+
+Během vyhodnocování dotazu budou na dotaz aplikovány stejné postupy na úpravy textu, jaké byly popsány v kapitole \ref{prepr} Dojde tak k odstanění interpunkce, diakritiky a stop slov, text bude převeden na malá písmena a podobně. Dotaz \uv{Hele, jak se máš?!} tak bude vyhodnocen stejně jako dotaz \uv{hele mas}, pokud budou slova \uv{jak} a \uv{se} v množině stop slov. 
+
+Pokud nevložíme do textu žádný operátor, použije se implicitně mezi každým slovem AND operátor. To znamená, že pokud hledáme \uv{analýza dat}, vyhledávač bude hledat takové dokumenty, které obsahují slovo \uv{analýza} a zároveň obsahují slovo \uv{dat}, respektive jejich stemy. 
+
+Spojíme-li dvě slova operátorem OR, budou se hledat dokumenty, které obsahují alespoň jedno z těchto slov. Hledáme-li \uv{spočetné OR nespočetné}, vyhledávač bude hledat dokumenty, které obsahují slovo \uv{spočetné} nebo \uv{nespočetné}.
+
+Operátor NOT vylučuje ty dokumenty, které obsahují slovo, které se nachází za NOT. Hledáme-li \uv{spočetné NOT nespočetné}, bude vyhledávač hledat ty dokumenty, které obsahují slovo \uv{spočetné}, ale neobsahují slovo \uv{nespočetné}. 
+
+Tyty operátory můžeme různě kombinovat a s pomocí závorek můžeme tvořit složitější dotazy, například \uv{(spočetné OR nespočetné) množiny NOT (komplexní OR přirozená)}. 
+
+Každý operátor má jinou prioritu. Seřazeno od nejmenší priority: OR, AND, NOT. Znamená to, že dotaz \uv{NOT a AND b OR c} je ekvivalentní s dotazem \uv{((NOT a) AND b) OR c}.
+
+\sssection{Parsování dotazu}
+
+Samotný dotaz zapsaný uživatel musí vyhledávač přeložit do nějaké interní formy, které bude rozumět. K tomu jednoduchý parser. 
+
+V prvním kroku převedeme holý text na lexémy. Lexém je nějaká základní jednotka dotazovacího jazyka. V našem případě může být lexém slovo, operátor nebo závorky. Takže lexém je například slovo \uv{matematika}, operátor \uv{AND} nebo otevírací závorka \uv{(}. Lexém není \uv{matematika)}, protože na konci slova máme závorku -- tento výraz by měl být rozdělen do dvou lexémů. Po aplikaci této části tak dostáváme seznam či pole lexémů. 
+
+V tuto chvíli budeme jednotlivé lexémy převádět na syntaktický strom, což je stromová struktura, která obsahuje v každém uzlu informaci o typu uzlu a obsahuje odkaz na nula až dva potomky. 
+
+Typem může být buď slovo nebo operátor. V případě, že je uzel operátorem, uložíme si ještě, o jaký operátor se jedná. V případě, že je uzel slovem, uložíme si do uzlu samotné slovo. Pokud jde o binární operátor, tj. AND nebo OR, musí obsahovat ještě levého a pravého potomka. Tam může být uložen opět uzel libovolného typu. Pokud jde o uzel typu NOT, tak musí mít právě jednoho potomka, který může být libovolného typu. 
+
+Například dotazu \uv{(matematika AND (spočetné OR nespočetné)) OR (NOT (množiny AND funkce))} by odpovídal syntaktický strom zobrazený na obrázku~\ref{fig:syntree}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{obrazky/syntactic_tree.pdf}
+  \caption{Syntaktický strom pro dotaz \uv{(matematika AND (spočetné OR nespočetné)) OR (NOT (množiny AND funkce))}}
+  \label{fig:syntree}
+\end{figure}
+
+Nakonec celý výraz zjednodušíme -- odstraníme uzly, které obsahují stop slova, protože stop slova nepoužíváme při vyhledávání a převedeme slova na stemy. 
+
+\sssection{Vyhledání odpovídajících dokumentů}
+
+Ve chvíli, kdy máme syntaktický strom, se můžeme pustit do dolování dokumentů. K tomu využijeme vybudovaný index, který nám umožňuje snadno zjistit, v jakých dokumentech se vyskytuje dané slovo. Pro účely popisu mechanismu si definujeme funkci $\getdocs$, která bere na vstupu dotaz $Q$ a na výstupu vrací množinu dokumentů, které odpovídají zadanému dotazu. Tato funkce se bude chovat odlišně v závislosti na tom, jak vypadá dotaz $Q$. 
+
+\begin{itemize}
+\item Je-li $Q=s$, kde $s$ je nějaké slovo, pak funkce $\getdocs$ vrátí množinu dokumentů, které obsahují dané slovo, což vyčteme z indexu. 
+\item Je-li $Q = \alpha \AND \beta$, pak $\getdocs(Q) = \getdocs(\alpha) \cap \getdocs(\beta)$.
+\item Je-li $Q = \alpha \OR \beta$, pak $\getdocs(Q) = \getdocs(\alpha) \cup \getdocs(\beta)$.
+\item Je-li $Q = \NOT \alpha$, pak $\getdocs(Q) = \mathbb{D}\setminus\getdocs(\alpha)$, kde $\mathbb{D}$ je množina všech dokumentů.
+\end{itemize}
+
+Postupnou aplikací těchto pravidel dostaneme množinu výsledných dokumentů $R$. V dalším kroku tyto dokumenty seřadíme podle relevance. 
+
+\sssection{Seřazení dokumentů}
+
+V současné chvíli máme množinu dokumentů $R$. Aby byl vyhledávač smysluplný, měl by tyto dokumenty seřadit podle toho, jak relevantní dané dokumenty vzhledem k položenému dotazu jsou. To je obecně nelehký úkol. Ve vyhledávači je použit standardní $\tfidf$ algoritmus. 
+
+Abychom mohli ohodnotit jednotlivé dokumenty, potřebujeme znát slova, vůči kterým máme dokumenty ohodnocovat. Odstraníme tak z dotazu všechny operátory a dostaneme množinu všech slov $S$. Vůči těmto slovům budeme dokumenty hodnotit. 
+
+K tomu už využijeme standardní $\tfidf$ algoritmus -- pro každé slovo a pro každý dokument spočítáme jeho $\tfidf$ skóre; poté tato skóre sečteme a dokumenty seřadíme sestupně podle tohoto skóre. Skóre $\score_d$ dokumentu $d$ tak udává vzorec:
+$$\score_d=\sum_{s\in S} \tfidf_{s, d}.$$
+
+Nyní seřadíme dokumenty $R$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde $n=|R|; d_i\in R \,\forall i$, tak, aby platilo $\score_{d_1} \ge \score_{d_2} \ge \ldots \ge \score_{d_n}$.
+
+Tato seřazená $n$-tice je výstupem algoritmu vyhledávání. 
 
 
 
