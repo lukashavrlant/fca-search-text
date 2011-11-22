@@ -1,0 +1,184 @@
+\documentclass[12pt]{article}
+
+\usepackage[master]{updiplom}
+\usepackage[utf8]{inputenc}
+
+
+
+
+
+\newcommand{\name}{CHANDLER}
+\newcommand{\code}[1]{\texttt{#1}}
+
+
+
+
+
+
+
+
+\title{Vyhledávač založený na Formální konceptuální analýze}
+\author{Lukáš Havrlant}
+\year{2011}
+%\date{21. květen 2009}
+
+\docinfo{Lukáš Havrlant}{Vyhledávač založený na Formální konceptuální analýze}
+
+\annotation{Příliš obecná slova představují pro vyhledávače velký oříšek. Napovídání souvisejících dotazů tak může být řešením v případě, kdy uživatel zadá do vyhledávače slovo, které nemá jednoznačný význam. V práci se zabývám tvorbou vyhledávače s webovým rozhraním, který po vyhledání dotazu napovídá uživateli konkrétnější a podobné dotazy, což je realizováno pomocí Formální konceptuální analýzy a jejím fuzzy rozšířením.}
+
+\thanks{Děkuji Mgr. Janu Outratovi, Ph.D. za vedení této diplomové práce a za rady při konzultacích.}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+
+%%% Text diplomové práce.
+\section*{Úvod}
+\addcontentsline{toc}{section}{Úvod}
+
+Současné vyhledávače si uchovávají obsah, nad kterým mají vyhledávat, ve formě indexu. Při položení dotazu se vyhledávač podívá do tohoto indexu, kde zjistí, ve kterých dokumentech se nachází hledaná klíčová slova. Pomocí jednoduchých množinových operací tak získáme množinu všech dokumentů, které vyhovují zadanému dotazu a které můžeme v nějaké formě předložit uživateli. 
+
+Tento způsob vyhledávání je velice efektivní, bohužel neposkytuje žádné prostředky k sémantické analýze textu. Pokud položíme dotaz, který není jednoznačný, vyhledávač si s ním nebude umět efektivně poradit a jednoduše ukáže uživateli všechny výsledky. I ty, které zřejmě neodpovídají tomu, co zamýšlel hledat. 
+
+Příkladem může být vyhledání slova \uv{jaguár}. Slovo \uv{jaguár} má minimálně dva hlavní významy -- je to auto a zvíře. Bez dodatečných informací nemůže vyhledávač zjistit, má-li hledat auto, nebo zvíře. 
+
+Vyhledávače tento problém mohou řešit různě. Nemusí zvolit žádné speciální řešení, vyhledávač pak vrátí seznam výsledků seřazených podle standardních kritérií jako je například počet odkazů na dokument. Pokud si vyhledávač uchovává nějakou historii uživatelů, může pro různé uživatele preferovat různé varianty. 
+
+Tato diplomová práce se zabývá další možností -- po vyhledání dotazu ukázat uživateli související či upřesňující dotazy. Například v případě jaguáru by mohl vyhledávač uživateli napovědět, že po vyhledání spojení \uv{jaguár auto} či \uv{jaguár zvíře} dostane přesnější výsledky. 
+
+K tomuto cíli je použita Formální konceptuální analýza dat (anglicky Formal concept analysis, dále jen FCA), což je metoda, která dokáže hierarchicky uspořádat klasická tabulková data. V dané tabulce dat vyhledává tzv. formální koncepty, což jsou skupiny objektů, které sdílí nějaké společné atributy. Tyto koncepty budou v případě vyhledávače představovat skupiny dokumentů, které sdílí určitá klíčová slova. Například skupina dokumentů obsahující slova \uv{jaguár auto} a další skupina obsahující \uv{jaguár zvíře}. Z těchto konceptů bude poté vyhledávač generovat související dotazy.
+
+Výhodou použití FCA je, že nám stačí znalosti, které máme -- k použití FCA si vystačíme pouze se samotným zpracovaným indexem, nepotřebujeme žádná další data od uživatelů, ani historii vyhledávání v daném vyhledávači. Nevýhodou je časová složitost algoritmů. 
+
+\newpage
+\section{Information retrieval}
+
+Tato sekce se zabývá budováním samotného vyhledávače, jehož výsledky budou jednak zobrazeny uživateli, ale také použity jako vstup do formální konceptuální analýzy. 
+
+\subsection{Jak funguje vyhledávač}
+V této části si popíšeme, jak může obecný vyhledávač fungovat. 
+
+\subsubsection{Pojmy související s vyhledávačem}
+\begin{description}
+\item[Sada dokumentů] Na začátku máme nějakou sadu dokumentů, nad kterými chceme vyhledávat. Tato sada může být libovolná -- může se jednat o webové stránky, o lokální dokumenty na osobním počítači nebo o emaily na serveru. V případě webových vyhledávačů typu Google je pak sadou dokumentů \uv{všechno, co lze nalézt na webu}, v případě vyhledávačů v moderních operačních systémech je sadou \uv{všechno, co lze nalézt na počítači}. 
+
+Sada dokumentů může být buď statická, nebo dynamická. Statická sada je taková sada, která se nemění buď nikdy nebo málokdy. Může to být například vyhledávač PSČ. Dynamická sada se naopak mění poměrně často, například webové stránky. Velké vyhledávače častěji pracují s dynamickou sadou dokumentů. 
+\item[Uživatel] Uživatel je obecné označení toho, kdo pracuje s vyhledávačem. Typicky se jedná o nějakého člověka, ale může to být i program. 
+\item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaká množina slov, která reprezentuje to, co uživatel chce najít. Může se jednat o jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu často říkáme klíčová slova. 
+
+Vyhledávač může uživatelům umožnit používat v dotazu různé operátory, kterými může uživatel zpřesnit svůj dotaz. Typické operátory jsou logické operátory AND, OR a NOT. Webové vyhledávače umožňují například vyhledávat na určité doméně pomocí SITE operátoru, vyhledat odkazující stránky pomocí LINK operátoru a podobně. 
+\item[Výsledky vyhledávání] Po položení dotazu odpoví vyhledávač výsledky. Obecně se  jedná o nějaké zkrácené zobrazení dokumentů, které vyhovují danému dotazu. Typicky jde o seznam odkazů na dané dokumenty, ale v některých případech může vyhledávač přímo zodpovědět položenou otázku. Například na otázku o smyslu života může odpověď 42. 
+
+Samotný seznam dokumentů bývá obvykle seřazen podle nějakých kritérií. Těchto kritérií bývá poměrně hodně a vyvážit je tak, aby vyhledávač vracel co možná nejlepší výsledky je obtížný úkol, kterým se tato diplomová práce nebude více zabývat. 
+
+Mezi výsledky může být kromě seznamu odkazů i nějaká další informace. Současné webové vyhledávače například umí opravovat překlepy, přehrát video odpovídající klíčovým slovům, vypočítat jednoduché matematické operace nebo napovědět dotaz, který by vedl k přesnějším výsledkům. 
+\end{description}
+
+
+Dále si představíme dva modely, jak může vyhledávač fungovat. Naivní model a model používající index.
+
+\subsubsection{Naivní model vyhledávače}
+
+Naivní model vyhledávače funguje tak, že po položení dotazu začne vyhledávač procházet všechny dokumenty a kontroluje, jestli některý z dokumentů odpovídá dotazu. Pokud ano, vrátí tento dokument mezi výsledky. 
+
+Tento model je velice jednoduchý, ale není příliš efektivní. V současné době můžeme mít sady dokumentů, které obsahují miliony či miliardy položek, takže chceme-li znát výsledky řádově za desetiny sekund, není možné je při každém dotazu všechny procházet.
+
+\subsubsection{Vyhledávač používající index}
+Mnohem efektivnější je použít index. Jedná se o podobnou strukturu, kterou můžeme najít v některých, obzvlášťě odborných, knihách. Protože v klasické tištěné knize nemůžeme nijak \uv{vyhledávat}, dává se na konec knihy seznam nejdůležitějších slov, která kniha obsahuje, spolu s čísly stránek, na kterých se pojem vyskytuje. 
+
+Podobný princip můžeme použít i ve vyhledávačích. Nebudeme ale vytvářet index z důležitých slov, ale ze všech slov, která se v dokumentech vyskytují. Vytvoříme tak slovníkovou strukturu, kde klíčem bude slovo a hodnotou bude seznam dokumentů, které dané slovo obsahují. Při položení dotazu pak může vyhledávač rychle zjistit jaké dokumenty obsahují dané klíčové slovo prostým nahlédnutím do tohoto slovníku. 
+
+Spolu s tím si můžeme uložit informace i o tom, kolik daných slov daný dokument obsahuje, což můžeme dále využít při řazení dokumentů. 
+
+Celou práci vyhledávače tak můžeme rozdělit do dvou částí -- budování a upravování indexu a hledání odpovědí na dotaz. Zde je nutné dát pozor na to, jak velká je sada dokumentů a zda je statická nebo dynamická. Samotné budování indexu můžeme ještě rozdělit na dvě podčásti: předzpracování dokumentů a technická realizace indexu. 
+
+\subsection{Vyhledávač \name}
+
+Součástí této diplomové práce je naprogramovaný vyhledávač \name, který bude v dalších částech textu popsán. \name{} je vyhledávač napsaný v Pythonu 3. Pracuje se statickou sadou dokumentů, předpokládá se, že se sada dokumentů bude měnit pouze nárazově jednou za čas. Samotná sada dokumentů, nad kterou má vyhledávač pracovat, nebude příliš velká, řádově stovky dokumentů. 
+
+Samozřejmě na začátku vytváří index, takže jde o druhý model vyhledávače. Při budování indexu je vstupem seznam URL adres, které si vyhledávač sám stáhne a zaindexuje je. Výsledný index je pak uložen do několika souborů, ke kterým pak vyhledávač přistupuje. 
+
+\name{} má rozumět logickým operátorům AND, OR a NOT. Po zadání dotazu má vrátit výsledky seřazené podle relevance, kterou spočítá pomocí klasického tf–idf algoritmu. Výstup bude textový ve formátu JSON, se kterým pak mohou pracovat další programy, v tomto případě webové rozhraní, které je napsáno v PHP. 
+
+Další částí vyhledávače je hledání souvesijících dotazů. Tato část bude podrobně rozebrána v další kapitole. V této kapitole je dále popsáno, jak \name{} buduje index a jak vrací výsledky. 
+
+%Dále seznam dotazů, které konkretizují zadaný dotaz, tj. seznam nových klíčových slov, které můžeme přidat k současnému dotazu, abychom získali přesnější výsledky. To je případ, kdy po vyhledání \uv{jaguár} vyhledávač napoví \uv{jaguár auto}. Dále seznam podobných dotazů, což jsou dotazy, které mění jedno nebo více klíčových slov v dotazu. To je případ, kdy vyhledávač k \uv{jaguár auto} napoví \uv{jaguár zvíře}. Nakonec vyhledávač zobrazí i obecnější dotaz. K dotazu \uv{jaguár zvíře} tak může zobrazit \uv{jaguár}.  
+
+
+\subsection{Předzpracování dokumentů}
+
+Při budování indexu máme na vstupu sadu dokumentů a na výstupu strukturu, která reprezentuje index této sady. Během samotného budování indexu procházíme jednotlivé dokumenty a upravujeme je do takové podoby, která se hodí pro uložení. Budeme uvažovat pouze textové dokumenty jako je HTML nebo PDF a budeme předpokládat statickou sadu dokumentů, takže se nebudeme příliš zatěžovat aktualizací indexu. 
+
+Na samotném začátku tak musíme upravit jednotlivé textové dokumenty do nějaké kanonické podoby. To budeme dělat postupnými úpravami jednotlivých dokumentů. S každým dokumentem budeme provádět identické oprace v identickém pořadí. Jednotlivé operace budou popsány v takovém pořadí, v jakém se aplikují ve vyhledávači. 
+
+\begin{description}
+\item[Zjištění názvu dokumentu] U některých typů dokumentů můžeme z jejich obsahu zjistit název dokumentu. Například pokud máme na vstupu HTML stránku, můžeme zjistit název stránky z TITLE elementu. 
+
+\item[Odstranění formátovacích prvků dokumentu] Vstupem do algoritmu budování indexu může být soubor, který kromě samotného textu obsahuje i různé formátovací a jiné prvky. Tyto prvky pro další zpracování nepotřebujeme, takže je všechny odstraníme. Jedná se například o HTML nebo XML značky. Po aplikaci tohoto bodu už bychom měli mít pouze čistý text. 
+
+\item[Odstranění netextových znaků] Text obsahuje spousty různých znaků, které jsou vyhledávači téměř k ničemu. Jedná se o interpunkci, která typicky doplňuje text, ale při samotném vyhledávání se bez ní obejdeme. Odstraníme tak všechny znaky, které nejsou písmeny. 
+
+Při tomto odstraňování můžeme narazit na určité problémy a může zde dojít k první ztrátě informace. Například pokud ze slova \uv{chcete-li} odstraníme spojovník, můžeme dostat buď slovo \uv{chceteli} nebo dvě slova \uv{chcete} a \uv{li}. 
+
+\item[Odstranění bílých znaků] Pod bílé znaky spadají mezery, tabulátory a nové řádky. To jsou opět informace, které jsou zbytné a které můžeme odstranit. Namísto libovolně dlouhé posloupnosti bílých znaků tak vždy vložíme právě jednu mezeru. Tím dosáhneme toho, že všechna slova v celém dokumentu budou v jednom řádku a budou oddělena právě jednou mezerou. 
+
+\item[Převod na malá písmena] Velikost písmen má pouze minimální vliv na hodnocení dokumentů, takže můžeme všechna písmena převést na jednotný tvar. V tomto případě na malá písmena. Můžeme sice nalézt případy, kdy ztratíme jistý kousek informace, například \uv{Prokop Buben} vs. \uv{prokop buben}), ale tento kousek je natolik zanedbatelný, že si to můžeme dovolit. 
+
+\item[Převod do pole] V tuto chvíli už máme text v takové podobě, že ho můžeme převézt do jiné datové struktury, a sice pole. Jako oddělovač zvolíme mezeru. Tím získáme pole, které v každé buňce obsahuje právě jedno slovo. 
+
+\item[Odstranění stop slov] Stop slova jsou slova, která se vyskytují téměř v každém dokumentu, jsou příliš obecná a nicneříkající a tak nemá příliš velký smysl je indexovat. Typicky se jedná o předložky jako \uv{ke}, \uv{u}, \uv{na} a podobně. Pokud je odstraníme, neztratíme příliš mnoho informací, ale můžeme tím i poměrně výrazně zredukovat velikost výsledného indexu. 
+
+\item[Převod na stemy] Jedna z nejdůležitějších části vyhledávače je převod slov na stemy. Stem je kořen, základ slova. Smyslem je, abychom si v indexu neuchovávali všechny tvary každého slova, ale abychom si od každé slova uchovávali ideálně jen jeden, základní tvar. 
+
+Důvody pro to máme v zásadě dva: opět se velmi zvýrazně sníží velikost indexu, protože namísto například pěti tvarů, budeme mít uchovaný pouze jeden tvar. Druhým důvodem je, že pokud uživatel hledá slovo \uv{kniha}, pravděpodobně bude spokojený i s dokumentem, který obsahuje slova \uv{knihy} a \uv{knihou}, ale neobsahuje samotné slovo \uv{kniha}. 
+
+Algoritmus, který by k libovolnému slovu vrátil jeho základ, je poměrně komplikovaný a většinou ani není, alespoň v případě českého jazyka, příliš úspěšný. Přesto se stále vyplatí nějaký stemmer použít a ve vyhledávači použit je. 
+
+\item[Odstranění diakritiky] Po převodu na stemy můžeme odstranit diakritiku. Odstraněním diakritiky může vzniknout několik konfliktů, které před ostraněním neexistovaly, ale je to jednoduchý způsob, jak umožnit vyhledávat i lidem, kteří diakritiku vůbec nepoužívají. 
+\end{description} 
+
+
+\subsection{Uložení indexu}
+V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále. V každém dokumentu spočítáme počet výskytů všech slov a zapamatujeme si také počet výskytů všech slov ve všech dokumentech. Všechny tyto informace uložíme do struktury, která má tvar:
+
+\begin{verbatim}
+slovo => (počet výskytů slova ve všech dokumentech, 
+         [(doc1, počet výskytů slova v doc1), 
+          (doc2, počet výskytů slova v doc2), 
+          ..., 
+          (docN, počet výskytů slova v docN)])
+\end{verbatim}
+
+Proměnné \code{doc1}, \code{doc2}, \dots představují ID dokumentů, které obsahují dané slovo a každé slovo tak může obsahovat různou sadu docID. 
+
+Tato struktura je v Pythonu realizována pomocí vestavěných typů \code{dictionary} a \code{tuple}. Abychom zvýšili rychlost vyhledávání informací v této struktuře, rozdělíme ji na několik menších částí podle toho, na jaké písmeno začínají slova v dané části. Vytvoříme tak ještě další slovník, kde klíčem bude písmeno a hodnotou bude předchozí struktura, která bude obsahovat všechna slova, která začínají na dané písmeno. Dostáváme strukturu:
+
+\begin{verbatim}
+písmeno => slovo začínající na písmeno => (počet výskytů slova...
+\end{verbatim}
+
+Program umožňuje nastavit délku prefixu, nemusí se fixně jednat o pouze jedno písmeno, prefix může být libovolně dlouhý. Tutu strukturu už uložíme na disk. K tomu využijeme modul \code{shelve}, což je jednoduchá slovníková databáze, která je vestavěna v Pythonu 3. Klíčem bude použitý prefix, hodnotou pak budou dané struktury, které modul \code{shelve} serializuje a uloží. 
+
+Výhodou tohoto řešení je rychlost a jednoduchost implementace, nevýhodou je, že data jsou uložena ve formátu, který je těžko čitelný ostatním technologiím. 
+
+Po uložení dostaneme několik souborů typu \code{a.db}, \code{b.db}, \dots a v případě, že chceme získat informace o slově \uv{strom}, stačí nám přečíst si z disku soubor \code{s.db}. 
+
+
+
+
+
+%%% Závěr práce v~češtině
+\begin{conclusions-cz}
+  Závěr práce v češtině.
+\end{conclusions-cz}
+
+
+%%% Závěr práce v~angličtině
+\begin{conclusions-en}
+  Conclusion in english.
+\end{conclusions-en}
+
+
+\end{document}
