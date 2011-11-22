@@ -1,0 +1,22 @@
+digraph G {
+	a [label="OR"]
+	b [label="AND"]
+	c [label="NOT"]
+	d [label="'matematika'"]
+	e [label="OR"]
+	f [label="AND"]
+	g [label="'mnoziny'"]
+	h [label="'funkce'"]
+	i [label="'spocetne'"]
+	j [label="'nespocetne'"]
+	node [shape=circle];
+	a -> b;
+	a -> c;
+	b -> d;
+	b -> e;
+	c -> f;
+	f -> g;
+	f -> h;
+	e -> i;
+	e -> j;
+}
