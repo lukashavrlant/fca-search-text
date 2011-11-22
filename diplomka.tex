@@ -29,6 +29,7 @@
 \renewcommand{\implies}{\Rightarrow}
 
 %%% Používané funkce
+\DeclareMathOperator{\tdidf}{td-idf}
 \DeclareMathOperator{\stem}{stem}
 \DeclareMathOperator{\wcount}{sf}
 \newcommand{\invstem}{\stem^{-1}}
@@ -247,6 +248,24 @@ $$\invstem_{max}(s)=\adds{x\in P_s \sep \wcount(x) = \max_{y\in P_s}\wcount(y)}.
 
 Tato funkce nám vrátí množinu všech slov, která se zobrazují na stem $s$ a jejichž počet výskytů v sadě dokumentů je shodný, ale maximální mezi všemi slovy z $P_s$. Funkce $\invstem$ může z této množiny vrátit libovolný prvek. Aby byla funkce jednoznačně definována, vrátí takové slovo, které je nejmenší vzhledem k lexikografickému uspořádání:
 $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
+
+\ssection{Doplňující informace}
+Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
+
+\begin{itemize}
+\item Seznam všech klíčových slov všech dokumentů v sadě spolu s jejich $\tdidf$ skórem vzhledem k danému dokumentu. V dalších algoritmech budeme potřebovat vědět, zda dokument $d$ obsahuje klíčové slovo $k$, případně i jaké je jeho $\tdidf$ skóre. 
+
+Na rychlosti získání těchto informací už bude přímo záležet rychlost celého algoritmu, takže by čtení a následné získání dat mělo být rychlé. Vyhledávač k tomu opět používá serializovaná data, která využívají především \code{dictionary}, tj. hashovací tabulku. 
+
+\item Meta data ke všem dokumentům. Jedná se o:
+	\begin{itemize}
+	\item Název dokumentu. Pokud se nám nepodařilo získat název, uložíme prázdný řetězec.
+	\item URL dokumentu. 
+	\item Klíčová slova daného dokumentu spolu s jejich $\tdidf$ skórem. 
+	\item Číselný identifikátor dokumentu.
+	\item Počet slov v dokumentu. 
+	\end{itemize}
+\end{itemize}
 
 
 
