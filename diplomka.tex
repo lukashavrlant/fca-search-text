@@ -2,15 +2,36 @@
 
 \usepackage[master]{updiplom}
 \usepackage[utf8]{inputenc}
+\usepackage{amsmath}
 
 
 
 
-
+%%% Obecné věci
 \newcommand{\name}{CHANDLER}
 \newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\sep}{\,|\,}
+
+%%% Nadpisy
 \newcommand{\ssection}[1]{\subsection{#1}}
 \newcommand{\sssection}[1]{\subsubsection{#1}}
+
+%%% Závorky
+\newcommand{\addk}[1]{\left(#1\right)}
+\newcommand{\addh}[1]{\left[#1\right]}
+\newcommand{\adds}[1]{\left\{#1\right\}}
+\newcommand{\addsp}[1]{\left<#1\right>}
+
+%%% Logické spojky
+\renewcommand{\and}{\,\wedge\,}
+\renewcommand{\or}{\,\vee\,}
+\newcommand{\eq}{\Leftrightarrow}
+\renewcommand{\implies}{\Rightarrow}
+
+%%% Používané funkce
+\DeclareMathOperator{\stem}{stem}
+\DeclareMathOperator{\wcount}{sf}
+\newcommand{\invstem}{\stem^{-1}}
 
 
 
@@ -208,6 +229,26 @@ Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygene
 Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici skóre. \name{} pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici tf-idf skóre pro klíčová slova a všechny stemy, které dosáhnout alespoň takového skóre budou považovány za klíčová slova pro daný dokument. 
 
 Lze také nastavit minimální počet klíčových slov -- pokud neexistuje dostatek stemů, které by měly alespoň dané td-idf skóre, pak se ke klíčovým slovům přidají ty stemy, které měly nejlepší hodnocení tak, aby byl splněn minimální počet klíčových slov. 
+
+\ssection{Inverzní stemovací funkce}
+
+Během zpracování textů jsme používali stemmer, který bral na vstup slovo a na výstupu vrátil základ slova. Bohužel pro poměrně velkou část slov vrací funkce takový základ slova, který je sám o sobě nesmyslný. 
+
+Například pro slovo \uv{množina} získáme s použitým stemmerem stem \uv{mnoh}. Toto chování nám nevadí v případě budování indexu, ale vadilo by nám v druhé části. Nemůžeme uživateli napovědět, že má k dotazu přidat slovo \uv{mnoh}, protože nebdue vědět, jaké slovo ve skutečnosti přidává. 
+
+Potřebovali bychom inverzní funkci ke stemovací funkci. Bohužel, inverzní funkce neexistuje, protože stemovací funkce není prostá. Sestrojíme tak takovou funkci, která bude mít na vstupu stem $s$ a na výstupu jedno ze slov, které má $s$ jako svůj stem. Mějme tak původní stemmer, který označíme jako funkci $\stem$ z množiny slov do množiny stemů. Budeme chtít sestavit funkci $\invstem$ z množiny stemů do množiny slov.
+
+Při používání funkce $\stem$ si tak u každého výsledného stemu $s$ budeme uchovávat množinu původních slov $P_s$, která se zobrazují právě na stem $s$. Tedy pokud $s=stem(w)$, pak $P_s=P_s\cup\adds{w}$. Množina $P_s$ pak splňuje $\forall x\in P_s: \stem(x)=s$. 
+
+Zároveň si uložíme počet jednotlivých slov ve všech dokumentech. K tomu účelu definujeme funkci $\wcount(w)$, která vrací počet výskytů slova $w$ ve všech dokumentech. Budeme chtít, aby nám funkce $\invstem$ vrátila z množiny $P_s$ takové slovo, které se v původní sadě dokumentů vyskytovalo nejčastěji. 
+
+Nejprve zadefinujeme pomocnou funkci $\invstem_{max}$:
+$$\invstem_{max}(s)=\adds{x\in P_s \sep \wcount(x) = \max_{y\in P_s}\wcount(y)}.$$
+
+Tato funkce nám vrátí množinu všech slov, která se zobrazují na stem $s$ a jejichž počet výskytů v sadě dokumentů je shodný, ale maximální mezi všemi slovy z $P_s$. Funkce $\invstem$ může z této množiny vrátit libovolný prvek. Aby byla funkce jednoznačně definována, vrátí takové slovo, které je nejmenší vzhledem k lexikografickému uspořádání:
+$$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
+
+
 
 
 
