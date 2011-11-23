@@ -1,9 +1,10 @@
 \documentclass[12pt]{article}
 
-\usepackage[master]{updiplom}
+\usepackage[tables,figures,master]{updiplom}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
-
+\usepackage{amsthm}
+\usepackage{booktabs}
 
 
 
@@ -12,6 +13,9 @@
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\sep}{\,|\,}
 \newcommand{\docs}{\mathbb{D}}
+\newcommand{\yes}{$\times$}
+\newcommand{\foreach}{\mbox{pro všechna }}
+\newcommand{\pravekdyz}{\mbox{právě když }}
 
 %%% Nadpisy
 \newcommand{\ssection}[1]{\subsection{#1}}
@@ -24,8 +28,8 @@
 \newcommand{\addsp}[1]{\left<#1\right>}
 
 %%% Logické spojky
-\renewcommand{\and}{\,\wedge\,}
-\renewcommand{\or}{\,\vee\,}
+\newcommand{\logand}{\,\wedge\,}
+\newcommand{\logor}{\,\vee\,}
 \newcommand{\eq}{\Leftrightarrow}
 \renewcommand{\implies}{\Rightarrow}
 
@@ -40,8 +44,14 @@
 \DeclareMathOperator{\NOT}{NOT}
 \newcommand{\invstem}{\stem^{-1}}
 
+%%% FCA věci
+\newcommand{\context}{\addsp{X, Y, I}}
+\newcommand{\AB}{\addsp{A, B}}
+\newcommand{\up}{^{\uparrow}}
+\newcommand{\down}{^{\downarrow}}
 
 
+\newtheorem{mydef}{Definice}
 
 
 
@@ -309,7 +319,7 @@ Například dotazu \uv{(matematika AND (spočetné OR nespočetné)) OR (NOT (mn
 \begin{figure}
   \centering
   \includegraphics[width=14cm]{obrazky/syntactic_tree.pdf}
-  \caption{Syntaktický strom pro dotaz \uv{(matematika AND (spočetné OR nespočetné)) OR (NOT (množiny AND funkce))}}
+  \caption{Syntaktický strom}
   \label{fig:syntree}
 \end{figure}
 
@@ -386,8 +396,87 @@ Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřaze
 
 Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následují tři řádky, kde na první místě jsou slova, která můžeme z dotazu dobrat; ta jsou označena symbolem minus. Na dalším řádku jsou dotazy, které můžeme vyhledávat namísto originálního dotazu; jsou označena symbolem tilda. Nakonec jsou slova, která můžeme k dotazu přidat; jsou označena symbolem plus.
 
+\ssection{Teoretické základy formální konceptuální analýzy}
+\sssection{Neformální úvod}
+Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je tak binární, daný objekt buď daný atribut má, nebo nemá. V další kapitole si popíšeme i variantu s fuzzy logikou, kdy daný objekt může mít atribut v nějakém stupni. 
+
+V tabulce \ref{tab.con1} je příklad takových tabulkových dat. V řádcích jsou objekty -- programy, které se obyčejně používají pro práci s textem. Ve sloupcích jsou atributy -- vlastnosti, které tyto programy mají. Kvůli zkrácení se tam nenachází celé popisky, takže: \uv{Multi} = program je multiplatformní, \uv{Java} = program je napsaný v Javě, \uv{Debug} = program obsahuje vestavěný debugger, \uv{Start} = program startuje rychle, \uv{Barvy} = program obsahuje zvýraňovač programovacího kódu, \uv{Výchozí} = program se v daném operačním systému nachází při výchozí instalaci systému. 
+
+O atributu \uv{Start} bychom mohli říci, že je velmi neurčitý, protože nemáme definováno, co znamená že program startuje rychle. Můžeme například říci, že pokud se na průměrném počítači spouští do tří sekund, pak je rychlý. Lépe bychom tuto vlastnost mohli definovat za využití fuzzy logiky, kde bychom mohli lépe definovat jednotlivé stupně rychlosti. 
+
+\begin{table}
+\begin{tabular}{r|cccccc}
+\toprule
+&Multi&Java&Debug&Start&Barvy&Výchozí\\
+\midrule
+Xcode&&&\yes&&\yes\\
+Aptana&\yes&\yes&\yes&&\yes\\
+Poznámkový blok&&&&\yes&&\yes\\
+VisualStudio&&&\yes&&\yes\\
+PSPad&&&&\yes&\yes\\
+Smultron&&&&\yes&\yes\\
+NetBeans&\yes&\yes&\yes&&\yes\\
+TextEdit&&&&\yes&&\yes\\
+\bottomrule
+\end{tabular}
+\caption{Kontext} \label{tab.con1}
+\end{table}
+
+Takové tabulce s daty říkáme kontext. V tomto kontextu pak hledáme shluky potenciálně zajímavých dat. Shlukem může být například množina programů $\adds{Xcode, Aptana, VisualStudio, NetBeans}$, protože to jsou všechno programátorská vývojová prostředí, IDE. Tato IDE mají některé společné vlastnosti. Všechny tyto programy mají atributy $\adds{Debug, Barvy}$. Žádné jiné společné atributy nemají. Zároveň žádné jiné objekty nesdílejí atributy $\adds{Debug, Barvy}$. Vždy se snažíme najít maximální počet objektů, které sdílí společné atributy a maximální počet atributů, které mají nějaké objekty. Můžeme tak říci, že hledáme maximální \uv{obdélníky}, které jsou tvořené křížky v tabulce. Takovému shluku dat pak říkáme koncept. 
+
+To samozřejmě není jediný koncept, který kontext obsahuje. Pokud budeme chtít znát multiplatformní vývojová prostředí, přidáme do množiny atributů \uv{Multi} a dopočítáme objekty, které sdílí tyto atributy. Množina objektů se zmenší na $\adds{Aptana, NetBeans}$. Dále musíme ověřit, zda množina atributů $\adds{Debug, Barvy, Multi}$ je maximální možná. Pohledem do tabulky zjistíme, že tyto dva programy sdílí ještě atribut \uv{Java}, tedy všechny multiplatformní programy v této tabulce jsou napsané v Javě. Atribut Java přidáme do množiny atributů $\adds{Debug, Barvy, Multi, Java}$ a tím získáme koncept.
+
+Řekli jsme, že formální konceptuální analýza zároveň řeší i hierarchii shluků. Ta se řeší pomocí relace inkluze. O konceptu multiplatformní IDE řekneme, že je konkrétnější než koncept IDE, protože množina objektů multiplatformních IDE je vlastní podmnožinou množiny objektů všech IDE. Nebo pomocí atributů: množina multiplatformních IDE obsahují nadmnožinou atributů. Multiplatformní IDE mají všechny vlastnosti jako IDE plus některé navíc. Tím se koncet stává konkrétnějším. 
+
+\sssection{Formální definice FCA}
+
+\begin{mydef}[Formální kontext]
+Formální kontext je trojice $\addsp{X, Y, I}$, kde $X$ je neprázdná množina objektů, $Y$ je neprázdná množina atributů a $I$ je binární relace mezi $X$ a $Y$, tj. $I\subseteq X\times X$.
+\end{mydef}
+
+V předchozím příkladě byla množina $X$ rovna programům a množina $Y$ byla rovna vlastnostem programů. Relace $I$ pak vyznačuje, zda má objekt $x$ atribut $y$. Objekt $x$ má atribut $y$ právě tehdy když $\addsp{x, y}\in I$. Formální kontext, jak jsme viděli, může být reprezentován pomocí tabulky. 
+
+\begin{mydef}[Šipečkové operátory]
+Pro kontext $\context$ definujeme operátory $\up:2^X\rightarrow2^Y$ a $\down:2^Y\rightarrow2^X$, tak že pro každé $A\subseteq X$ a $B\subseteq Y$:
+\begin{eqnarray}
+A\up&=&\adds{y\in Y\sep \foreach x \in A: \addsp{x, y}\in I}\\
+B\down&=&\adds{x\in X\sep\foreach y\in B:\addsp{x, y} \in I}
+\end{eqnarray}
+\end{mydef}
+
+Tyto operátory umožňují zjistit společné vlastnosti. Operátor $\up$ nám zjistí všechny atributy, které mají všechny objekty v $A$ společné. Operátor $\down$ nám zjistí všechny objekty, které sdílí všechny atributy z $B$. 
+
+Pokud se vrátíme ke kontextu v tabulce \ref{tab.con1}, tak:
+
+\begin{eqnarray*}
+\adds{\mbox{Xcode}}\up&=&\adds{\mbox{Debug, Barvy}}\\
+\adds{\mbox{PSPad, Smultron}}\up&=&\adds{\mbox{Start, Barvy}}\\
+\adds{\mbox{TextEdit, Poznámkový Blok}}\up&=&\adds{\mbox{Start, Výchozí}}\\
+A\up&=&\emptyset\\
+\adds{\mbox{Multi, Java}}\down&=&\adds{\mbox{Aptana, NetBeans}}\\
+\adds{\mbox{Debug, Výchozí}}\down&=&\emptyset\\
+\adds{\mbox{Barvy, Start}}\down&=&\adds{\mbox{PSPad, Smultron}}
+\end{eqnarray*}
+
+\begin{mydef}[Formální koncept]
+Formální koncept v kontextu $\context$ je dvojice $\AB$, $A\subseteq X$, $B\subseteq Y$ tak, že:
+$$A\up=B\logand B\down =A.$$
+
+Množině $A$ říkáme \uv{extent} a množině $B$ \uv{intent}.
+\end{mydef}
+
+Takto definovaný formální koncept odpovídá naší předchozí představě o konceptu. Pokud jsme měli danou množinu objektů, pak jsme našli sdílené atributy. K těmto sdíleným atributům jsme následně nalezli objekty, které všechny tyto atributy sdílí, což mohlo být více objektů, než jaké jsme měli na začátku. Ve chvíli, kdy se k těmto objektům pokusíme najít sdílené atributy, nenalezneme již žádný nový.
+
+V tabulce \ref{tab.con1} tak můžeme najít například koncept 
+$$\adds{\adds{\mbox{PSPad, Smultron}}, \adds{\mbox{Barvy, Start}}},$$ 
+protože 
+$$\adds{\mbox{PSPad, Smultron}}\up=\adds{\mbox{Barvy, Start}} \logand \adds{\mbox{Barvy, Start}}\down=\adds{\mbox{PSPad, Smultron}}.$$
 
 
+\begin{mydef}[Uspořádání konceptů]
+O konceptech $\addsp{A_1, B_1}, \addsp{A_2, B_2}$ kontextu $\context$ řekeneme, že
+$$\addsp{A_1, B_1}\le\addsp{A_2, B_2}\quad\pravekdyz\quad A_1\subseteq A_2 \quad(B_2\subseteq B_1).$$
+\end{mydef}
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
