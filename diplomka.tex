@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 
-\usepackage[master]{styly/updiplom}
+\usepackage[master]{updiplom}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 
@@ -321,9 +321,9 @@ Ve chvíli, kdy máme syntaktický strom, se můžeme pustit do dolování dokum
 
 \begin{itemize}
 \item Je-li $Q=s$, kde $s$ je nějaké slovo, pak funkce $\getdocs$ vrátí množinu dokumentů, které obsahují dané slovo, což vyčteme z indexu. 
-\item Je-li $Q = \alpha \AND \beta$, pak $\getdocs(Q) = \getdocs(\alpha) \cap \getdocs(\beta)$.
-\item Je-li $Q = \alpha \OR \beta$, pak $\getdocs(Q) = \getdocs(\alpha) \cup \getdocs(\beta)$.
-\item Je-li $Q = \NOT \alpha$, pak $\getdocs(Q) = \mathbb{D}\setminus\getdocs(\alpha)$, kde $\mathbb{D}$ je množina všech dokumentů.
+\item Je-li $Q = \alpha \AND \beta$, pak $\getdocs_Q = \getdocs_\alpha \cap \getdocs_\beta$.
+\item Je-li $Q = \alpha \OR \beta$, pak $\getdocs_Q = \getdocs_\alpha \cup \getdocs_\beta$.
+\item Je-li $Q = \NOT \alpha$, pak $\getdocs_Q = \mathbb{D}\setminus\getdocs_\alpha$, kde $\mathbb{D}$ je množina všech dokumentů.
 \end{itemize}
 
 Postupnou aplikací těchto pravidel dostaneme množinu výsledných dokumentů $R$. V dalším kroku tyto dokumenty seřadíme podle relevance. 
