@@ -342,9 +342,49 @@ Nyní seřadíme dokumenty $R$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde $
 Tato seřazená $n$-tice je výstupem algoritmu vyhledávání. 
 
 
+\newpage
+\section{Hledání souvisejících dokumentů}
+V této kapitole bude popsána druhá část vyhledávače, která se stará o nalezení souvisejících dotazů. 
 
+\ssection{O co nám půjde}
 
+\sssection{Motivace}
 
+Pokud uživatel položí vyhledávači nějaký dotaz, tak vyhledávač odpoví nějakým seznamem dokumentů, které jsou podle něj nejvíce relevantní. Pokud má uživatel štěstí, bude v tomto seznamu dokument, který zrovna potřebuje najít. Pokud bude mít velké štěstí, pak bude tento dokument na předních místech v seznamu. 
+
+Pokud ale toto štěstí mít nebude a dokument se mu nepodaří nalézt, musí uživatel nějakým způsobem přeformulovat svůj dotaz tak, aby vyhledávač vrátil jinou sadu výsledků. Obecně může upravit dotaz třemi různými způsoby. Může
+
+\begin{enumerate}
+\item přidat k dotazu jedno či více slov, díky čehož obrdží méně výsledků,
+\item změnit jedno či více slov, díky čehož obdrží podobné výsledky,
+\item odebrat jedno či více slov, díky čehož obdrží více výsledků.
+\end{enumerate}
+
+V různých situacích se hodí různé postupy. Pokud jsme zadali příliš konkrétní dotaz, bude vhodné odebrat některá klíčová slova dotazu, abychom získali více výsledků. Pokud jsme naopak zadali příliš obecný dotaz, můžeme přidat nějaká klíčová slova, abychom obrželi méně dokumentů, která ale lépe odpovídají na náš dotaz. 
+
+\sssection{Hlavní cíl}
+
+Hlavním cílem vyhledávače je nacházet předchozí úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
+
+My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
+
+K tomu využijeme Formální konceptuální analýzu dat, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
+
+\sssection{Výstup vyhledávače}
+
+Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat všechny tři kategorie dotazů a pokud nějaké najde, měl by je uživateli zobazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{hosting php} by měl vypadat přibližně takto:
+
+\begin{verbatim}
+1. Doc23
+2. Doc17
+3. ... 
+
+-hosting; -php
+~domény hosting; ~databáze php; ~cena hosting
++cena; +databáze; +forum; +formuláře; +kniha
+\end{verbatim}
+
+Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následují tři řádky, kde na první místě jsou slova, která můžeme z dotazu dobrat; ta jsou označena symbolem minus. Na dalším řádku jsou dotazy, které můžeme vyhledávat namísto originálního dotazu; jsou označena symbolem tilda. Nakonec jsou slova, která můžeme k dotazu přidat; jsou označena symbolem plus.
 
 
 
