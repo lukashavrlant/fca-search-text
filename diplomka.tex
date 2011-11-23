@@ -47,14 +47,14 @@
 
 
 
-\title{Vyhledávač založený na Formální konceptuální analýze}
+\title{Vyhledávač založený na formální konceptuální analýze}
 \author{Lukáš Havrlant}
 \year{2011}
 %\date{21. květen 2009}
 
-\docinfo{Lukáš Havrlant}{Vyhledávač založený na Formální konceptuální analýze}
+\docinfo{Lukáš Havrlant}{Vyhledávač založený na formální konceptuální analýze}
 
-\annotation{Příliš obecná slova představují pro vyhledávače velký oříšek. Napovídání souvisejících dotazů tak může být řešením v případě, kdy uživatel zadá do vyhledávače slovo, které nemá jednoznačný význam. V práci se zabývám tvorbou vyhledávače s webovým rozhraním, který po vyhledání dotazu napovídá uživateli konkrétnější a podobné dotazy, což je realizováno pomocí Formální konceptuální analýzy a jejím fuzzy rozšířením.}
+\annotation{Příliš obecná slova představují pro vyhledávače velký oříšek. Napovídání souvisejících dotazů tak může být řešením v případě, kdy uživatel zadá do vyhledávače slovo, které nemá jednoznačný význam. V práci se zabývám tvorbou vyhledávače s webovým rozhraním, který po vyhledání dotazu napovídá uživateli konkrétnější a podobné dotazy, což je realizováno pomocí formální konceptuální analýzy a jejím fuzzy rozšířením.}
 
 \thanks{Děkuji Mgr. Janu Outratovi, Ph.D. za vedení této diplomové práce a za rady při konzultacích.}
 
@@ -78,7 +78,7 @@ Vyhledávače tento problém mohou řešit různě. Nemusí zvolit žádné spec
 
 Tato diplomová práce se zabývá další možností -- po vyhledání dotazu ukázat uživateli související či upřesňující dotazy. Například v případě jaguáru by mohl vyhledávač uživateli napovědět, že po vyhledání spojení \uv{jaguár auto} či \uv{jaguár zvíře} dostane přesnější výsledky. 
 
-K tomuto cíli je použita Formální konceptuální analýza dat (anglicky Formal concept analysis, dále jen FCA), což je metoda, která dokáže hierarchicky uspořádat klasická tabulková data. V dané tabulce dat vyhledává tzv. formální koncepty, což jsou skupiny objektů, které sdílí nějaké společné atributy. Tyto koncepty budou v případě vyhledávače představovat skupiny dokumentů, které sdílí určitá klíčová slova. Například skupina dokumentů obsahující slova \uv{jaguár auto} a další skupina obsahující \uv{jaguár zvíře}. Z těchto konceptů bude poté vyhledávač generovat související dotazy.
+K tomuto cíli je použita formální konceptuální analýza dat (anglicky Formal concept analysis, dále jen FCA), což je metoda, která dokáže hierarchicky uspořádat klasická tabulková data. V dané tabulce dat vyhledává tzv. formální koncepty, což jsou skupiny objektů, které sdílí nějaké společné atributy. Tyto koncepty budou v případě vyhledávače představovat skupiny dokumentů, které sdílí určitá klíčová slova. Například skupina dokumentů obsahující slova \uv{jaguár auto} a další skupina obsahující \uv{jaguár zvíře}. Z těchto konceptů bude poté vyhledávač generovat související dotazy.
 
 Výhodou použití FCA je, že nám stačí znalosti, které máme -- k použití FCA si vystačíme pouze se samotným zpracovaným indexem, nepotřebujeme žádná další data od uživatelů, ani historii vyhledávání v daném vyhledávači. Nevýhodou je časová složitost algoritmů. 
 
@@ -368,7 +368,7 @@ Hlavním cílem vyhledávače je nacházet předchozí úpravy dotazu automatick
 
 My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
 
-K tomu využijeme Formální konceptuální analýzu dat, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
+K tomu využijeme formální konceptuální analýzu dat, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
 
 \sssection{Výstup vyhledávače}
 
