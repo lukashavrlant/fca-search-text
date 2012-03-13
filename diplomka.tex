@@ -5,6 +5,8 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 
 
@@ -38,11 +40,13 @@
 \DeclareMathOperator{\stem}{stem}
 \DeclareMathOperator{\score}{sc}
 \DeclareMathOperator{\wcount}{sf}
-\DeclareMathOperator{\getdocs}{getDocs}
+\DeclareMathOperator{\getdocs}{R}
 \DeclareMathOperator{\AND}{AND}
 \DeclareMathOperator{\OR}{OR}
 \DeclareMathOperator{\NOT}{NOT}
+\DeclareMathOperator{\rank}{rank}
 \newcommand{\invstem}{\stem^{-1}}
+\newcommand{\alldoc}{\mathbb{D}}
 
 %%% FCA věci
 \newcommand{\context}{\addsp{X, Y, I}}
@@ -212,7 +216,7 @@ Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že b
 Tento problém vyřešíme tím, že při hledání klíčových slov pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v ostatních dokumentech co nejméně často. 
 
 
-\subsubsection{Algoritmus tf-idf}
+\subsubsection{Algoritmus tf-idf}\label{tfidf}
 Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která v základním nastavení vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
 
 Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ uniktání. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
@@ -342,7 +346,7 @@ Dotazem může být libovolný text, přičemž může obsahovat jisté řídic�
 
 Během vyhodnocování dotazu budou na dotaz aplikovány stejné postupy na úpravy textu, jaké byly popsány v kapitole \ref{prepr} Dojde tak k odstanění interpunkce, diakritiky a stop slov, text bude převeden na malá písmena a podobně. Dotaz \uv{Hele, jak se máš?!} tak bude vyhodnocen stejně jako dotaz \uv{hele mas}, pokud budou slova \uv{jak} a \uv{se} v množině stop slov. 
 
-Pokud nevložíme do textu žádný operátor, použije se implicitně mezi každým slovem AND operátor. To znamená, že pokud hledáme \uv{analýza dat}, vyhledávač bude hledat takové dokumenty, které obsahují slovo \uv{analýza} a zároveň obsahují slovo \uv{dat}, respektive jejich stemy. 
+Pokud nevložíme do textu žádný operátor, použije se implicitně mezi každým slovem AND operátor. To znamená, že pokud hledáme \uv{analýza dat}, vyhledávač bude vidět dotaz jako \uv{analýza AND dat} a vyhledá takové dokumenty, které obsahují slovo \uv{analýza} a zároveň obsahují slovo \uv{dat}, respektive jejich stemy. 
 
 Spojíme-li dvě slova operátorem OR, budou se hledat dokumenty, které obsahují alespoň jedno z těchto slov. Hledáme-li \uv{spočetné OR nespočetné}, vyhledávač bude hledat dokumenty, které obsahují slovo \uv{spočetné} nebo \uv{nespočetné}.
 
@@ -354,9 +358,9 @@ Každý operátor má jinou prioritu. Seřazeno od nejmenší priority: OR, AND,
 
 \sssection{Parsování dotazu}
 
-Samotný dotaz zapsaný uživatel musí vyhledávač přeložit do nějaké interní formy, které bude rozumět. K tomu jednoduchý parser. 
+Samotný dotaz zapsaný uživatelem musí vyhledávač přeložit do nějaké interní formy, které bude rozumět. K tomu využívá jednoduchý parser. 
 
-V prvním kroku převedeme holý text na lexémy. Lexém je nějaká základní jednotka dotazovacího jazyka. V našem případě může být lexém slovo, operátor nebo závorky. Takže lexém je například slovo \uv{matematika}, operátor \uv{AND} nebo otevírací závorka \uv{(}. Lexém není \uv{matematika)}, protože na konci slova máme závorku -- tento výraz by měl být rozdělen do dvou lexémů. Po aplikaci této části tak dostáváme seznam či pole lexémů. 
+V prvním kroku převedeme holý text na lexémy. Lexém je nějaká základní jednotka dotazovacího jazyka. V našem případě může být lexém slovo, operátor nebo závorky. Takže lexém je například slovo \uv{matematika}, operátor \uv{AND} nebo otevírací závorka \uv{(}. Lexém není \uv{matematika)}, protože na konci slova máme závorku -- tento výraz by měl být rozdělen do dvou lexémů. Po aplikaci této části tak dostáváme seznam lexémů. 
 
 V tuto chvíli budeme jednotlivé lexémy převádět na syntaktický strom, což je stromová struktura, která obsahuje v každém uzlu informaci o typu uzlu a obsahuje odkaz na nula až dva potomky. 
 
@@ -375,27 +379,54 @@ Nakonec celý výraz zjednodušíme -- odstraníme uzly, které obsahují stop s
 
 \sssection{Vyhledání odpovídajících dokumentů}
 
-Ve chvíli, kdy máme syntaktický strom, se můžeme pustit do dolování dokumentů. K tomu využijeme vybudovaný index, který nám umožňuje snadno zjistit, v jakých dokumentech se vyskytuje dané slovo. Pro účely popisu mechanismu si definujeme funkci $\getdocs$, která bere na vstupu dotaz $Q$ a na výstupu vrací množinu dokumentů, které odpovídají zadanému dotazu. Tato funkce se bude chovat odlišně v závislosti na tom, jak vypadá dotaz $Q$. 
+Ve chvíli, kdy máme syntaktický strom, se můžeme pustit do hledání dokumentů. K tomu využijeme vybudovaný index, který nám umožňuje snadno zjistit, v jakých dokumentech se vyskytuje dané slovo. Pro účely popisu mechanismu si definujeme funkci $\getdocs$, která bere na vstupu dotaz (syntaktický strom) $Q$ a na výstupu vrací množinu dokumentů, které odpovídají zadanému dotazu. Tato funkce se bude chovat odlišně v závislosti na tom, jak vypadá dotaz $Q$. 
+
+Dále označme $\alldoc$ množinu všech dokumentů a $\alpha$ a $\beta$ nechť označují nějaké dotazy. 
 
 \begin{itemize}
-\item Je-li $Q=s$, kde $s$ je nějaké slovo, pak funkce $\getdocs$ vrátí množinu dokumentů, které obsahují dané slovo, což vyčteme z indexu. 
-\item Je-li $Q = \alpha \AND \beta$, pak $\getdocs_Q = \getdocs_\alpha \cap \getdocs_\beta$.
-\item Je-li $Q = \alpha \OR \beta$, pak $\getdocs_Q = \getdocs_\alpha \cup \getdocs_\beta$.
-\item Je-li $Q = \NOT \alpha$, pak $\getdocs_Q = \mathbb{D}\setminus\getdocs_\alpha$, kde $\mathbb{D}$ je množina všech dokumentů.
+\item Je-li $Q=s$, kde $s$ je nějaký stem, pak funkce $\getdocs$ vrátí množinu dokumentů, které obsahují daný stem, což vyčteme z indexu. Formálně to můžeme zapsat jako:
+$$
+\getdocs_s = \left\{d\in \alldoc\sep s\in d\right\}.
+$$
+\item Je-li dotaz ve tvaru Q = \uv{$\alpha$ AND $\beta$}, pak $\getdocs_Q = \getdocs_\alpha \cap \getdocs_\beta$.
+\item Je-li dotaz ve tvaru Q = \uv{$\alpha$ OR $\beta$}, pak $\getdocs_Q = \getdocs_\alpha \cup \getdocs_\beta$.
+\item Je-li dotaz ve tvaru Q = \uv{NOT $\alpha$}, pak $\getdocs_Q = \alldoc\setminus\getdocs_\alpha$.
 \end{itemize}
 
 Postupnou aplikací těchto pravidel dostaneme množinu výsledných dokumentů $R$. V dalším kroku tyto dokumenty seřadíme podle relevance. 
 
 \sssection{Seřazení dokumentů}
 
-V současné chvíli máme množinu dokumentů $R$. Aby byl vyhledávač smysluplný, měl by tyto dokumenty seřadit podle toho, jak relevantní dané dokumenty vzhledem k položenému dotazu jsou. To je obecně nelehký úkol. Ve vyhledávači je použit standardní $\tfidf$ algoritmus. 
+V současné chvíli máme množinu dokumentů $\getdocs_Q$. Aby byl vyhledávač smysluplný, měl by tyto dokumenty seřadit podle toho, jak relevantní dané dokumenty vzhledem k položenému dotazu jsou. To je obecně nelehký úkol. Ve vyhledávači je pak použit standardní $\tfidf$ algoritmus popsaný v části \ref{tfidf}
 
 Abychom mohli ohodnotit jednotlivé dokumenty, potřebujeme znát slova, vůči kterým máme dokumenty ohodnocovat. Odstraníme tak z dotazu všechny operátory a dostaneme množinu všech slov $S$. Vůči těmto slovům budeme dokumenty hodnotit. 
 
-K tomu už využijeme standardní $\tfidf$ algoritmus -- pro každé slovo a pro každý dokument spočítáme jeho $\tfidf$ skóre; poté tato skóre sečteme a dokumenty seřadíme sestupně podle tohoto skóre. Skóre $\score_d$ dokumentu $d$ tak udává vzorec:
-$$\score_d=\sum_{s\in S} \tfidf_{s, d}.$$
+K tomu už využijeme $\tfidf$ algoritmus -- pro každé slovo z množiny $S$ a pro každý dokument z množiny $\getdocs_Q$ spočítáme jeho $\tfidf$ skóre; poté tato skóre sečteme a dokumenty seřadíme sestupně podle tohoto skóre. Skóre $\score_{d,S}$ dokumentu $d$ tak udává vzorec:
+$$\score_{d,S}=\sum_{s\in S} \tfidf_{s, d}.$$
 
-Nyní seřadíme dokumenty $R$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde $n=|R|; d_i\in R \,\forall i$, tak, aby platilo $\score_{d_1} \ge \score_{d_2} \ge \ldots \ge \score_{d_n}$.
+Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slova z dotazu nevyskytují v důležitých částech dokumentu, konkrétně jde o název stránky a popisek stránky. Za každé klíčové slovo, které se vyskytuje v názvu stránky $d$, ztrojnásobíme hodnotu $\score_{d,S}$. Za každé klíčové slovo, které se vyskytuje v popisu stránky $d$, zdvojnásobíme hodnotu $\score_{d,S}$. Ve výsledku tak dostáváme funkci $\rank$, která nejprve vypočte hodnotu $\score_{d,S}$ a poté aplikuje pravidla o ztrojnásobení a zdvojnásobení. Funkce $\rank$ bere na vstupu dva parametry: dokument $d$, pro který počítáme skóre a slova $S$ z dotazu $Q$.
+
+
+\begin{algorithmic}
+\Function{rank}{$d, S$}
+    \State $baseScore \gets \score_{d, S}$
+    \ForAll{$s \in S$} 
+    	\If{$s \in \mbox{title}(d)$}
+    		\State $baseScore \gets baseScore \cdot 3$
+    	\EndIf
+    	\If{$s \in \mbox{description}(d)$}
+    		\State $baseScore \gets baseScore \cdot 2$
+    	\EndIf
+    \EndFor
+    \State \Return $baseScore$
+\EndFunction
+\end{algorithmic}
+
+
+
+Nyní seřadíme dokumenty $\getdocs_Q$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde 
+$$n=\left|\getdocs_Q\right|\quad\mbox{a}\quad \bigcup_{i=1}^n d_i=\getdocs_Q$$ 
+tak, aby platilo $\rank_{d_1, S} \ge \rank_{d_2, S} \ge \ldots \ge \rank_{d_n, S}$.
 
 Tato seřazená $n$-tice je výstupem algoritmu vyhledávání. 
 
