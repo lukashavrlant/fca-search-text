@@ -221,13 +221,12 @@ Tento problém vyřešíme tím, že při hledání klíčových slov pro dokume
 
 
 \subsubsection{Algoritmus tf-idf}
-Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
+Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která v základním nastavení vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
 
 Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ uniktání. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
 $$\mbox{idf}_t=\log\frac{N}{\mbox{df}_t}.$$
 
-Složením funkcí tf a idf získáme funkci tf-idf definovanou jako
-$$\mbox{tf-idf}_{t,d}=\mbox{df}_{t,d}\cdot\mbox{idf}_t.$$
+Složením funkcí tf a idf získáme funkci tf-idf' (za chvíli tuto funkci ještě vylepšíme, tak prozatím si ji označíme s apostrofem) definovanou jako
 
 Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
 
