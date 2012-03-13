@@ -46,9 +46,12 @@
 
 %%% FCA věci
 \newcommand{\context}{\addsp{X, Y, I}}
+\newcommand{\lattice}{\mathcal{B}(X, Y, I)}
 \newcommand{\AB}{\addsp{A, B}}
 \newcommand{\up}{^{\uparrow}}
 \newcommand{\down}{^{\downarrow}}
+\newcommand{\updown}{^{\uparrow\downarrow}}
+\newcommand{\downup}{^{\downarrow\uparrow}}
 
 
 \newtheorem{mydef}{Definice}
@@ -78,19 +81,13 @@
 \section*{Úvod}
 \addcontentsline{toc}{section}{Úvod}
 
-Současné vyhledávače si uchovávají obsah, nad kterým mají vyhledávat, ve formě indexu. Při položení dotazu se vyhledávač podívá do tohoto indexu, kde zjistí, ve kterých dokumentech se nachází hledaná klíčová slova. Pomocí jednoduchých množinových operací tak získáme množinu všech dokumentů, které vyhovují zadanému dotazu a které můžeme v nějaké formě předložit uživateli. 
+Současné vyhledávače si uchovávají obsah, nad kterým mají vyhledávat, ve formě indexu, což je struktura v principu podobná indexu v knize. Uživateli stačí vložit do vyhledávacího pole svůj dotaz a vyhledávač z indexu získá potřebná data a zobrazí uživateli výsledek, obvykle ve formě nějakého uspořádaného seznamu odkazů na dokumenty. Pokud není uživatel spokojený s výsledky, musí přeformulovat svůj dotaz tak, aby lépe vystihoval to, co chce najít. 
 
-Tento způsob vyhledávání je velice efektivní, bohužel neposkytuje žádné prostředky k sémantické analýze textu. Pokud položíme dotaz, který není jednoznačný, vyhledávač si s ním nebude umět efektivně poradit a jednoduše ukáže uživateli všechny výsledky. I ty, které zřejmě neodpovídají tomu, co zamýšlel hledat. 
+Tento problém je typický pro slova, která mají několik významů. Například pokud ve webovém vyhledávači vyhledáme slovo \uv{jaguár}, tak vyhledávač nemůže vědět, zda chceme hledat auto, zvíře nebo ještě něco jiného. Pokud má přístup k historii hledání daného uživatele, může pomocí ní přizpůsobit výsledky. Ale může také uživateli zobrazit návrhy na nový dotaz, například \uv{jaguár auto} nebo \uv{jaguár zvíře}, po jejichž vyhledání se výsledky velmi zpřesní. 
 
-Příkladem může být vyhledání slova \uv{jaguár}. Slovo \uv{jaguár} má minimálně dva hlavní významy -- je to auto a zvíře. Bez dodatečných informací nemůže vyhledávač zjistit, má-li hledat auto, nebo zvíře. 
+Otázkou je, jak tyto návrhy získat. Pokud si vyhledávač uchovává historii všech hledání, která uživatelé provádějí, může se je pokusit vytáhnout právě z této historie. Pokud ovšem tato data vyhledávač nemá, nebo jich má málo, musí se použít jiná metoda. 
 
-Vyhledávače tento problém mohou řešit různě. Nemusí zvolit žádné speciální řešení, vyhledávač pak vrátí seznam výsledků seřazených podle standardních kritérií jako je například počet odkazů na dokument. Pokud si vyhledávač uchovává nějakou historii uživatelů, může pro různé uživatele preferovat různé varianty. 
-
-Tato diplomová práce se zabývá další možností -- po vyhledání dotazu ukázat uživateli související či upřesňující dotazy. Například v případě jaguáru by mohl vyhledávač uživateli napovědět, že po vyhledání spojení \uv{jaguár auto} či \uv{jaguár zvíře} dostane přesnější výsledky. 
-
-K tomuto cíli je použita formální konceptuální analýza dat (anglicky Formal concept analysis, dále jen FCA), což je metoda, která dokáže hierarchicky uspořádat klasická tabulková data. V dané tabulce dat vyhledává tzv. formální koncepty, což jsou skupiny objektů, které sdílí nějaké společné atributy. Tyto koncepty budou v případě vyhledávače představovat skupiny dokumentů, které sdílí určitá klíčová slova. Například skupina dokumentů obsahující slova \uv{jaguár auto} a další skupina obsahující \uv{jaguár zvíře}. Z těchto konceptů bude poté vyhledávač generovat související dotazy.
-
-Výhodou použití FCA je, že nám stačí znalosti, které máme -- k použití FCA si vystačíme pouze se samotným zpracovaným indexem, nepotřebujeme žádná další data od uživatelů, ani historii vyhledávání v daném vyhledávači. Nevýhodou je časová složitost algoritmů. 
+Tato práce popisuje metodu, jak získat podobné dotazy pomocí formální konceptuální analýzy (anglicky Formal concept analysis, dále jen FCA) pouze na základně znalosti obsahu dokumentů. FCA pracuje s tabulkovými daty, ve kterých hledá nějaké potenciálně zajímavé shluky dat. Tyto shluky pro nás budou představovat množiny dokumentů, které jsou nějakým způsobem podobné a které sdílí nějaká zásadní klíčová slova. Tato klíčová slova poté dále využijeme při genrování návrhů na nové dotazy.  
 
 \newpage
 \section{Information retrieval}
@@ -474,8 +471,26 @@ $$\adds{\mbox{PSPad, Smultron}}\up=\adds{\mbox{Barvy, Start}} \logand \adds{\mbo
 
 
 \begin{mydef}[Uspořádání konceptů]
+\label{def.order}
 O konceptech $\addsp{A_1, B_1}, \addsp{A_2, B_2}$ kontextu $\context$ řekeneme, že
 $$\addsp{A_1, B_1}\le\addsp{A_2, B_2}\quad\pravekdyz\quad A_1\subseteq A_2 \quad(B_2\subseteq B_1).$$
+\end{mydef}
+
+Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{být konkrétnější koncept}. Pokud pro koncepty platí $\addsp{A_1, B_1}\le\addsp{A_2, B_2}$, pak koncept $\addsp{A_1, B_1}$ je konkrétnější než koncept $\addsp{A_2, B_2}$. 
+
+\begin{mydef}[Konceptuální svaz]
+Pro kontext $\context$ definujeme množinu všech formálních konceptů $\lattice$ z $\context$. Tedy
+$$\lattice=\adds{\addsp{A, B}\in 2^X\times 2^Y\sep A\up=B\logand B\down=A}.$$
+
+Dvojice $\addsp{\lattice, \le}$ pak představuje konceptuální svaz. 
+\end{mydef}
+
+\begin{mydef}[Nejmenší extent obsahující $A$]
+Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
+\end{mydef}
+
+\begin{mydef}[Hlavní věta konceptuálních svazů]
+
 \end{mydef}
 
 %%% Závěr práce v~češtině
