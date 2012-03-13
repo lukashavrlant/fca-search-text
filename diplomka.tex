@@ -290,6 +290,24 @@ Moderní vyhledávače typu Google nebo Seznam zobrazují ve výsledcích vyhled
 \name{} pracuje podobně a jako název HTML stránky volí obsah \code{TITLE} elementu. Pokud stránka nemá \code{TITLE} element nebo vyhledávač nezpracovává HTML stránku, použije se název souboru. 
 
 Jako popisek stránky se použije element \code{META} obsahují popisek, pokud existuje. V opačném případě vyhledávač v dokumentu nalezne několik vět, které obsahují atribut dokumentu, a tyto věty pak uloží jako popisek dokumentu. Oproti řešení, které volí Google nebo Seznam, je nevýhoda v tom, že se popisek nemění s dotazem uživatele, je vždy stejný. 
+
+\ssection{Kontrola překlepů}
+Vyhledávač má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
+
+Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody
+
+\begin{itemize}
+	\item Kontrola překlepů bude rychlejší, protože množina slov z dané databáze bude pravděpodobně menší než množina všech slov daného jazyka. Vyhledávač tak bude hledat správná slova v menší množině. 
+	\item Nabídnuté opravy jistě povedou k nějakým výsledkům. Pokud bychom použili množinu všech slov jazyka, vyhledávač by mohl nabídnout slovo, které je sice platné, ale v databázi se nevyskytuje. Pokud se omezíme je na slova, která se reálně vyskytují ve zpracovaných dokumentech, povede nabídnutá oprava vždy k nějakému výsledku.
+\end{itemize}
+
+Nyní potřebujeme algoritmus, který dokáže porovnat dvě slova a vrátit hodnotu reprezentující jejich podobnost. Jedním z klasických algoritmů je Levenstheinova vzdálenost, který počítá počet překlepů mezi dvěma slovy. Takže pro slova \uv{kotel} a \uv{hotel} vrátí hodnotu $1$, protože se liší pouze v prvním písmenu. 
+
+% source: http://epydoc.sourceforge.net/stdlib/difflib.SequenceMatcher-class.html
+\name{} používá složitější algoritmus, který je založen na myšlence hledání největších společných subsekvencí. V prvním kroku nalezneme nejdelší společný řetězec mezi dvěma slovy. Uložíme si indexy, na kterých řetězec v jednotlivých slovech začíná a délku tohoto řetězce. Poté aplikujeme stejný postup na zbylé kousky řetězce. Nakonec dostaneme seznam všech společných řetězců, pomocí nichž můžeme vypočítat stupeň podobnosti, což je číslo z intervalu $[0, 1]$. Vyhledávač na to používá funkci ze standardní knihovny Pythonu. 
+
+% todo: počet slov
+
 \ssection{Doplňující informace}
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
 
