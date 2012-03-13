@@ -268,7 +268,7 @@ Dále můžeme ve vyhledávači nastavit:
 
 Během zpracování textů jsme používali stemmer, který bral na vstup slovo a na výstupu vrátil základ slova. Bohužel pro poměrně velkou část slov vrací funkce takový základ slova, který je sám o sobě nesmyslný. 
 
-Například pro slovo \uv{množina} získáme s použitým stemmerem stem \uv{mnoh}. Toto chování nám nevadí v případě budování indexu, ale vadilo by nám v druhé části. Nemůžeme uživateli napovědět, že má k dotazu přidat slovo \uv{mnoh}, protože nebdue vědět, jaké slovo ve skutečnosti přidává. 
+Například pro slovo \uv{množina} získáme s použitým stemmerem stem \uv{mnoh}. Toto chování nám nevadí v případě budování indexu, ale vadilo by nám v druhé části. Nemůžeme uživateli napovědět, že má k dotazu přidat klíčové slovo \uv{mnoh}, protože nebude vědět, jaké slovo ve skutečnosti přidává. 
 
 Potřebovali bychom inverzní funkci ke stemovací funkci. Bohužel, inverzní funkce neexistuje, protože stemovací funkce není prostá. Sestrojíme tak takovou funkci, která bude mít na vstupu stem $s$ a na výstupu jedno ze slov, které má $s$ jako svůj stem. Mějme tak původní stemmer, který označíme jako funkci $\stem$ z množiny slov do množiny stemů. Budeme chtít sestavit funkci $\invstem$ z množiny stemů do množiny slov.
 
@@ -281,6 +281,8 @@ $$\invstem_{max}(s)=\adds{x\in P_s \sep \wcount(x) = \max_{y\in P_s}\wcount(y)}.
 
 Tato funkce nám vrátí množinu všech slov, která se zobrazují na stem $s$ a jejichž počet výskytů v sadě dokumentů je shodný, ale maximální mezi všemi slovy z $P_s$. Funkce $\invstem$ může z této množiny vrátit libovolný prvek. Aby byla funkce jednoznačně definována, vrátí takové slovo, které je nejmenší vzhledem k lexikografickému uspořádání:
 $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
+
+Pokud nyní použijeme funkci $\mbox{stem}^{-1}$ například na stem \uv{mnoh}, měla by vrátit slovo \uv{množina}, protože to je slovo, které má stem \uv{mnoh} a pravděpodobně se v dokumentech vyskytuje nejčastěji. 
 
 \ssection{Doplňující informace}
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
