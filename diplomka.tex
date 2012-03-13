@@ -156,7 +156,7 @@ Při budování indexu máme na vstupu sadu dokumentů a na výstupu strukturu, 
 Na samotném začátku tak musíme upravit jednotlivé textové dokumenty do nějaké kanonické podoby. To budeme dělat postupnými úpravami jednotlivých dokumentů. S každým dokumentem budeme provádět identické oprace v identickém pořadí. Jednotlivé operace budou popsány v takovém pořadí, v jakém se aplikují ve vyhledávači. 
 
 \begin{description}
-\item[Zjištění názvu dokumentu] U některých typů dokumentů můžeme z jejich obsahu zjistit název dokumentu. Například pokud máme na vstupu HTML stránku, můžeme zjistit název stránky z TITLE elementu. U ostatních dokumentů vezmeme jako název obyčejný název souboru. Pokud zpracováváme soubor \code{prikazy.pdf}, bude názvem právě \uv{prikazy.pdf}.
+% \item[Zjištění názvu dokumentu] U některých typů dokumentů můžeme z jejich obsahu zjistit název dokumentu. Například pokud máme na vstupu HTML stránku, můžeme zjistit název stránky z TITLE elementu. U ostatních dokumentů vezmeme jako název obyčejný název souboru. Pokud zpracováváme soubor \code{prikazy.pdf}, bude názvem právě \uv{prikazy.pdf}.
 
 \item[Odstranění formátovacích prvků dokumentu] Vstupem do algoritmu budování indexu může být soubor, který kromě samotného textu obsahuje i různé formátovací a jiné prvky. Tyto prvky pro další zpracování nepotřebujeme, takže je všechny odstraníme. Jedná se například o HTML nebo XML značky. Po aplikaci tohoto bodu už bychom měli mít pouze čistý text. 
 
@@ -284,6 +284,12 @@ $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
 
 Pokud nyní použijeme funkci $\mbox{stem}^{-1}$ například na stem \uv{mnoh}, měla by vrátit slovo \uv{množina}, protože to je slovo, které má stem \uv{mnoh} a pravděpodobně se v dokumentech vyskytuje nejčastěji. 
 
+\ssection{Název a popisek dokumentu}
+Moderní vyhledávače typu Google nebo Seznam zobrazují ve výsledcích vyhledávání název dokumentu a popisek dokumentu. V případě HTML stránek se většinou jedná o obsah \code{TITLE} elementu. Jako popisek je buď zvolen obsah elementu \code{META}, který obsahuje popisek, nebo část stránky, která obsahuje klíčová slova, která uživatel hledal. 
+
+\name{} pracuje podobně a jako název HTML stránky volí obsah \code{TITLE} elementu. Pokud stránka nemá \code{TITLE} element nebo vyhledávač nezpracovává HTML stránku, použije se název souboru. 
+
+Jako popisek stránky se použije element \code{META} obsahují popisek, pokud existuje. V opačném případě vyhledávač v dokumentu nalezne několik vět, které obsahují atribut dokumentu, a tyto věty pak uloží jako popisek dokumentu. Oproti řešení, které volí Google nebo Seznam, je nevýhoda v tom, že se popisek nemění s dotazem uživatele, je vždy stejný. 
 \ssection{Doplňující informace}
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
 
