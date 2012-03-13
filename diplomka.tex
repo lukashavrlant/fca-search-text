@@ -308,17 +308,22 @@ Nyní potřebujeme algoritmus, který dokáže porovnat dvě slova a vrátit hod
 
 % todo: počet slov
 
+
+
+
+
 \ssection{Doplňující informace}
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
 
 \begin{itemize}
-\item Seznam všech klíčových slov všech dokumentů v sadě spolu s jejich $\tfidf$ skórem vzhledem k danému dokumentu. V dalších algoritmech budeme potřebovat vědět, zda dokument $d$ obsahuje klíčové slovo $k$, případně i jaké je jeho $\tfidf$ skóre. 
+\item Seznam všech atributů všech dokumentů v sadě spolu s jejich $\tfidf$ skórem vzhledem k danému dokumentu. V dalších algoritmech budeme potřebovat vědět, zda dokument $d$ obsahuje atribut $a$, případně i jaké je jeho $\tfidf_{a, d}$ skóre. 
 
-Na rychlosti získání těchto informací už bude přímo záležet rychlost celého algoritmu, takže by čtení a následné získání dat mělo být rychlé. Vyhledávač k tomu opět používá serializovaná data, která využívají především \code{dictionary}, tj. hashovací tabulku. 
+Na rychlosti získání těchto informací už bude přímo záležet rychlost celého algoritmu, takže by čtení a následné získání dat mělo být rychlé. 
 
 \item Meta data ke všem dokumentům. Jedná se o:
 	\begin{itemize}
-	\item Název dokumentu. Pokud se nám nepodařilo získat název, uložíme prázdný řetězec.
+	\item Název dokumentu. 
+	\item Popisek dokumentu.
 	\item URL dokumentu. 
 	\item Klíčová slova daného dokumentu spolu s jejich $\tfidf$ skórem. 
 	\item Číselný identifikátor dokumentu.
