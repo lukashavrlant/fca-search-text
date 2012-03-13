@@ -113,7 +113,7 @@ Sada dokumentů může být buď statická, nebo dynamická. Statická sada je t
 
 \item[Uživatel] Uživatel je obecné označení toho, kdo pracuje s vyhledávačem. Typicky se jedná o nějakého člověka, ale může to být i program, který například každý den kontroluje počet dokumentů na dané klíčové slovo a při zvýšení pošle někomu informační email. 
 
-\item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaký seznam slov, která reprezentuje to, co uživatel chce najít. Může se jednat o jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu říkáme klíčová slova. 
+\item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaký seznam slov, který reprezentuje to, co uživatel chce najít. Může se jednat o jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu říkáme klíčová slova. 
 
 Vyhledávač může uživatelům umožnit používat v dotazu různé operátory, kterými může uživatel zpřesnit svůj dotaz. Typické operátory jsou logické operátory AND, OR a NOT. Webové vyhledávače umožňují například vyhledávat na určité doméně pomocí SITE operátoru, vyhledat odkazující stránky pomocí LINK operátoru a podobně. 
 
@@ -150,7 +150,7 @@ Jedná se vyhledávač používající index. Při budování indexu je vstupem 
 
 \name{} má rozumět logickým operátorům AND, OR a NOT. Po zadání dotazu má vrátit výsledky seřazené podle relevance, kterou spočítá pomocí klasického tf–idf algoritmu. Výstup bude textový ve formátu JSON, se kterým pak mohou pracovat další programy, v tomto případě webové rozhraní, které je napsáno v PHP. 
 
-Další částí vyhledávače je hledání souvesijících dotazů. Tato část bude podrobně rozebrána v další kapitole. V této kapitole je dále popsáno, jak \name{} buduje index a jak vrací výsledky. 
+Další částí vyhledávače je hledání souvisejících dotazů. Tato část bude podrobně rozebrána v další kapitole. V této kapitole je dále popsáno, jak \name{} buduje index a jak vrací výsledky. 
 
 %Dále seznam dotazů, které konkretizují zadaný dotaz, tj. seznam nových klíčových slov, které můžeme přidat k současnému dotazu, abychom získali přesnější výsledky. To je případ, kdy po vyhledání \uv{jaguár} vyhledávač napoví \uv{jaguár auto}. Dále seznam podobných dotazů, což jsou dotazy, které mění jedno nebo více klíčových slov v dotazu. To je případ, kdy vyhledávač k \uv{jaguár auto} napoví \uv{jaguár zvíře}. Nakonec vyhledávač zobrazí i obecnější dotaz. K dotazu \uv{jaguár zvíře} tak může zobrazit \uv{jaguár}.  
 
@@ -180,16 +180,17 @@ Při tomto odstraňování můžeme narazit na určité problémy a může zde d
 
 \item[Převod na stemy] Jedna z nejdůležitějších části vyhledávače je převod slov na stemy. Stem je kořen, základ slova. Smyslem je, abychom si v indexu neuchovávali všechny tvary každého slova, ale abychom si od každé slova uchovávali ideálně jen jeden, základní tvar -- místo \uv{strom}, \uv{stromy}, \uv{stromu} tak budeme mít pouze jeden tvar \uv{strom}.
 
-Důvody pro to máme v zásadě dva: opět se velmi zvýrazně sníží velikost indexu, protože namísto například pěti tvarů, budeme mít uchovaný pouze jeden tvar. Druhým důvodem je, že pokud uživatel hledá slovo \uv{strom}, pravděpodobně bude spokojený i s dokumentem, který obsahuje slova \uv{stromy} a \uv{stromu}, ale neobsahuje samotné slovo \uv{strom}. 
+Důvody pro to máme v zásadě dva: opět se velmi výrazně sníží velikost indexu, protože namísto například pěti tvarů, budeme mít uchovaný pouze jeden tvar. Druhým důvodem je, že pokud uživatel hledá slovo \uv{strom}, pravděpodobně bude spokojený i s dokumentem, který obsahuje slova \uv{stromy} a \uv{stromu}, ale neobsahuje samotné slovo \uv{strom}. 
 
 Algoritmus, který by k libovolnému slovu vrátil jeho základ, je poměrně komplikovaný a většinou ani není, alespoň v případě českého jazyka, příliš úspěšný. Přesto se stále vyplatí nějaký stemmer použít a ve vyhledávači použit je. 
 
-\item[Odstranění diakritiky] Po převodu na stemy můžeme odstranit diakritiku. Odstraněním diakritiky může vzniknout několik konfliktů, které před ostraněním neexistovaly, ale je to jednoduchý způsob, jak umožnit vyhledávat i lidem, kteří diakritiku vůbec nepoužívají. 
+\item[Odstranění diakritiky] Po převodu na stemy můžeme odstranit diakritiku. Odstraněním diakritiky může vzniknout několik konfliktů, které před ostraněním neexistovaly, ale je to jednoduchý způsob, jak umožnit vyhledávat i lidem, kteří diakritiku vůbec nepoužívají. Navíc ani autor nějakého dokumentu diakritiku nemusel používat a z některých dokumentů se kvůli problémům s kódováním ani písmena s diakritikou nepodaří získat. Odstraňovat veškerou diakritiku je tak nejmenší zlo. 
 \end{description} 
 
-
 \subsection{Uložení indexu}
-V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále. V každém dokumentu spočítáme počet výskytů všech stemů a zapamatujeme si také počet výskytů všech stemů ve všech dokumentech. Všechny tyto informace uložíme do struktury, která má tvar:
+V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále a můžeme vytvořit základní index. Do něj si uložíme informace o tom, ve kterých dokumentech se vyskytuje daný stem. Pokud pak budeme chtít získat dokumentu, které obsahují stem \uv{strom}, vyhledáme si v indexu záznam o stemu \uv{strom} a okamžitě získáme množinu dokumentů, která stem obsahuje. 
+
+Bude se nám také hodit informace o počtu stemů v daném dokumentu. To využijeme během řazení dokumentů od nejvíce relevantních. Nakonec si můžeme ještě uložit informaci o počtu výskytů daného stemu ve všech dokumentech. Všechny tyto informace můžeme uložit do struktury, která vypadá takto: 
 
 \begin{verbatim}
 stem => (počet výskytů slova ve všech dokumentech, 
@@ -209,7 +210,7 @@ V druhé části vyhledávače, která se zabývá nalezením souvisejících do
 
 Atributy jsou poměrně běžnou součástí různých vědeckých článků, kde je ale obvykle vyplňuje sám autor pod názvem \uv{klíčová slova}. V případě vyhledávače stojíme před problémem, jak získat atributy z libovolného dokumentu nějakým obecným způsobem. 
 
-Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu stemu děleno počtem všech slov je větší než 0,05}). 
+Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu daného stemu ku počtu všech stemů v dokumentu je větší než 0,05}). 
 
 Tento postup může být úspěšný v případě, že máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Klíčové slovo pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
 
@@ -221,10 +222,10 @@ Tento problém vyřešíme tím, že při hledání klíčových slov pro dokume
 \subsubsection{Algoritmus tf-idf}\label{tfidf}
 Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která v základním nastavení vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
 
-Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ uniktání. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
+Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ unikátní. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
 $$\mbox{idf}_t=\log\frac{N}{\mbox{df}_t}.$$
 
-Složením funkcí tf a idf získáme funkci tf-idf' (za chvíli tuto funkci ještě vylepšíme, tak prozatím si ji označíme s apostrofem) definovanou jako
+Složením funkcí tf a idf získáme funkci tf-idf' (za chvíli tuto funkci ještě vylepšíme, prozatím si ji označíme s apostrofem) definovanou jako
 $$\mbox{tf-idf}_{t,d}'=\mbox{tf}_{t,d}\cdot\mbox{idf}_t.$$
 
 Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
@@ -258,19 +259,20 @@ kde $|d|$ je počet slov v dokumentu $d$.
 
 \sssection{Vygenerování atributů dokumentu}
 
-Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ tak vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho tf-idf$_{s,d}$ skóre. 
+Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho tf-idf$_{s,d}$ skóre. 
 
 Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici tf-idf skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici tf-idf skóre pro klíčová slova a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
 
 Dále můžeme ve vyhledávači nastavit:
 
 \begin{itemize}
-	\item Minimální počet atributů. Pomocí tohoto nastavení můžeme specifikovat, že pro každý dokument chceme například alespoň tři klíčová slova. Pokud se přes hranici dostanou pouze dva stemy, třetí stem s největším tf-idf skóre bude také považován za atribut dokumentu. 
+	\item Minimální počet atributů. Pomocí tohoto nastavení můžeme specifikovat, že pro každý dokument chceme například alespoň tři atributy. Pokud se přes hranici dostanou pouze dva stemy, třetí stem s největším tf-idf skóre bude také považován za atribut dokumentu. 
 	\item Maximální počet atributů pro každý dokument. 
 	\item Vyhledávač umožňuje přepnout do druhého modelu, kdy se za atributy berou například tři stemy s největším tf-idf skórem. Žádná hranice se pak neuplatňuje. 
 \end{itemize}
 
-\ssection{Inverzní stemovací funkce}
+\ssection{Další funkce vyhledávače}
+\sssection{Inverzní stemovací funkce}
 
 Během zpracování textů jsme používali stemmer, který bral na vstup slovo a na výstupu vrátil základ slova. Bohužel pro poměrně velkou část slov vrací funkce takový základ slova, který je sám o sobě nesmyslný. 
 
@@ -290,14 +292,14 @@ $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
 
 Pokud nyní použijeme funkci $\mbox{stem}^{-1}$ například na stem \uv{mnoh}, měla by vrátit slovo \uv{množina}, protože to je slovo, které má stem \uv{mnoh} a pravděpodobně se v dokumentech vyskytuje nejčastěji. 
 
-\ssection{Název a popisek dokumentu}
+\sssection{Zjištění názvu a popisku dokumentu}
 Moderní vyhledávače typu Google nebo Seznam zobrazují ve výsledcích vyhledávání název dokumentu a popisek dokumentu. V případě HTML stránek se většinou jedná o obsah \code{TITLE} elementu. Jako popisek je buď zvolen obsah elementu \code{META}, který obsahuje popisek, nebo část stránky, která obsahuje klíčová slova, která uživatel hledal. 
 
 \name{} pracuje podobně a jako název HTML stránky volí obsah \code{TITLE} elementu. Pokud stránka nemá \code{TITLE} element nebo vyhledávač nezpracovává HTML stránku, použije se název souboru. 
 
 Jako popisek stránky se použije element \code{META} obsahují popisek, pokud existuje. V opačném případě vyhledávač v dokumentu nalezne několik vět, které obsahují atribut dokumentu, a tyto věty pak uloží jako popisek dokumentu. Oproti řešení, které volí Google nebo Seznam, je nevýhoda v tom, že se popisek nemění s dotazem uživatele, je vždy stejný. 
 
-\ssection{Kontrola překlepů}
+\sssection{Kontrola překlepů}
 Vyhledávač má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
 
 Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody
@@ -315,10 +317,7 @@ Nyní potřebujeme algoritmus, který dokáže porovnat dvě slova a vrátit hod
 % todo: počet slov
 
 
-
-
-
-\ssection{Doplňující informace}
+\sssection{Doplňující informace}
 Kromě samotného indexu a slovníku na překlad stemů zpět na slova si potřebujeme uchovávat ještě některé další informace. Jmenovitě tyto: 
 
 \begin{itemize}
@@ -336,8 +335,6 @@ Na rychlosti získání těchto informací už bude přímo záležet rychlost c
 	\item Počet slov v dokumentu. 
 	\end{itemize}
 \end{itemize}
-
-
 
 
 \ssection{Odpovídání na dotazy}
@@ -406,23 +403,24 @@ Abychom mohli ohodnotit jednotlivé dokumenty, potřebujeme znát slova, vůči 
 K tomu už využijeme $\tfidf$ algoritmus -- pro každé slovo z množiny $S$ a pro každý dokument z množiny $\getdocs_Q$ spočítáme jeho $\tfidf$ skóre; poté tato skóre sečteme a dokumenty seřadíme sestupně podle tohoto skóre. Skóre $\score_{d,S}$ dokumentu $d$ tak udává vzorec:
 $$\score_{d,S}=\sum_{s\in S} \tfidf_{s, d}.$$
 
-Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slova z dotazu nevyskytují v důležitých částech dokumentu, konkrétně jde o název stránky a popisek stránky. Za každé klíčové slovo, které se vyskytuje v názvu stránky $d$, ztrojnásobíme hodnotu $\score_{d,S}$. Za každé klíčové slovo, které se vyskytuje v popisu stránky $d$, zdvojnásobíme hodnotu $\score_{d,S}$. Ve výsledku tak dostáváme funkci $\rank$, která nejprve vypočte hodnotu $\score_{d,S}$ a poté aplikuje pravidla o ztrojnásobení a zdvojnásobení. Funkce $\rank$ bere na vstupu dva parametry: dokument $d$, pro který počítáme skóre a slova $S$ z dotazu $Q$.
+Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slova z dotazu nevyskytují v důležitých částech dokumentu, konkrétně jde o název, adresa a popisek stránky. Za každé klíčové slovo, které se vyskytuje v názvu stránky $d$ nebo v adrese stránky, ztrojnásobíme hodnotu $\score_{d,S}$. Za každé klíčové slovo, které se vyskytuje v popisu stránky $d$, zdvojnásobíme hodnotu $\score_{d,S}$. Ve výsledku tak dostáváme funkci $\rank$, která nejprve vypočte hodnotu $\score_{d,S}$ a poté aplikuje pravidla o ztrojnásobení a zdvojnásobení. Funkce $\rank$ bere na vstupu dva parametry: dokument $d$, pro který počítáme skóre a slova $S$ z dotazu $Q$.
 
-
+\begin{figure}
 \begin{algorithmic}
 \Function{rank}{$d, S$}
-    \State $baseScore \gets \score_{d, S}$
+    \State $score \gets \score_{d, S}$
     \ForAll{$s \in S$} 
-    	\If{$s \in \mbox{title}(d)$}
-    		\State $baseScore \gets baseScore \cdot 3$
+    	\If{$s \in \mbox{title}(d) \quad\vee\quad s \in \mbox{url}(d)$}
+    		\State $score \gets score \cdot 3$
     	\EndIf
     	\If{$s \in \mbox{description}(d)$}
-    		\State $baseScore \gets baseScore \cdot 2$
+    		\State $score \gets score \cdot 2$
     	\EndIf
     \EndFor
-    \State \Return $baseScore$
+    \State \Return $score$
 \EndFunction
 \end{algorithmic}
+\end{figure}
 
 
 
