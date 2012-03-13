@@ -250,13 +250,19 @@ $$
 $$
 kde $|d|$ je počet slov v dokumentu $d$.
 
-\sssection{Vygenerování klíčových slov}
+\sssection{Vygenerování atributů dokumentu}
 
-Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho klíčová slova. Pro každý dokument $d$ tak vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho td-idf$_{s,d}$ skóre. 
+Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ tak vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho tf-idf$_{s,d}$ skóre. 
 
-Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici skóre. \name{} pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici tf-idf skóre pro klíčová slova a všechny stemy, které dosáhnout alespoň takového skóre budou považovány za klíčová slova pro daný dokument. 
+Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici tf-idf skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici tf-idf skóre pro klíčová slova a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
 
-Lze také nastavit minimální počet klíčových slov -- pokud neexistuje dostatek stemů, které by měly alespoň dané td-idf skóre, pak se ke klíčovým slovům přidají ty stemy, které měly nejlepší hodnocení tak, aby byl splněn minimální počet klíčových slov. 
+Dále můžeme ve vyhledávači nastavit:
+
+\begin{itemize}
+	\item Minimální počet atributů. Pomocí tohoto nastavení můžeme specifikovat, že pro každý dokument chceme například alespoň tři klíčová slova. Pokud se přes hranici dostanou pouze dva stemy, třetí stem s největším tf-idf skóre bude také považován za atribut dokumentu. 
+	\item Maximální počet atributů pro každý dokument. 
+	\item Vyhledávač umožňuje přepnout do druhého modelu, kdy se za atributy berou například tři stemy s největším tf-idf skórem. Žádná hranice se pak neuplatňuje. 
+\end{itemize}
 
 \ssection{Inverzní stemovací funkce}
 
