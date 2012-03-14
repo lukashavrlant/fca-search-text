@@ -16,6 +16,7 @@
 \newcommand{\sep}{\,|\,}
 \newcommand{\docs}{\mathbb{D}}
 \newcommand{\yes}{$\times$}
+\newcommand{\fyes}{\fbox{$\times$}}
 \newcommand{\foreach}{\mbox{pro všechna }}
 \newcommand{\pravekdyz}{\mbox{právě když }}
 
@@ -28,6 +29,8 @@
 \newcommand{\addh}[1]{\left[#1\right]}
 \newcommand{\adds}[1]{\left\{#1\right\}}
 \newcommand{\addsp}[1]{\left<#1\right>}
+
+\newcommand{\strong}[1]{{\em #1}}
 
 %%% Logické spojky
 \newcommand{\logand}{\,\wedge\,}
@@ -446,73 +449,110 @@ V této kapitole bude popsána druhá část vyhledávače, která se stará o n
 
 \sssection{Motivace}
 
-Pokud uživatel položí vyhledávači nějaký dotaz, tak vyhledávač odpoví nějakým seznamem dokumentů, které jsou podle něj nejvíce relevantní. Pokud má uživatel štěstí, bude v tomto seznamu dokument, který zrovna potřebuje najít. Pokud bude mít velké štěstí, pak bude tento dokument na předních místech v seznamu. 
+Pokud uživatel položí vyhledávači nějaký dotaz, vyhledávač odpoví nějakým seznamem dokumentů, které jsou podle něj nejvíce relevantní. Pokud má uživatel štěstí, bude v tomto seznamu dokument, který zrovna potřebuje najít. Pokud bude mít velké štěstí, pak bude tento dokument na předních místech v seznamu. 
 
 Pokud ale toto štěstí mít nebude a dokument se mu nepodaří nalézt, musí uživatel nějakým způsobem přeformulovat svůj dotaz tak, aby vyhledávač vrátil jinou sadu výsledků. Obecně může upravit dotaz třemi různými způsoby. Může
 
 \begin{enumerate}
-\item přidat k dotazu jedno či více slov, díky čehož obrdží méně výsledků,
+\item přidat k dotazu jedno či více slov, díky čehož obdrží méně výsledků,
 \item změnit jedno či více slov, díky čehož obdrží podobné výsledky,
 \item odebrat jedno či více slov, díky čehož obdrží více výsledků.
 \end{enumerate}
 
-V různých situacích se hodí různé postupy. Pokud jsme zadali příliš konkrétní dotaz, bude vhodné odebrat některá klíčová slova dotazu, abychom získali více výsledků. Pokud jsme naopak zadali příliš obecný dotaz, můžeme přidat nějaká klíčová slova, abychom obrželi méně dokumentů, která ale lépe odpovídají na náš dotaz. 
+V různých situacích se hodí různé postupy. Pokud jsme zadali příliš konkrétní dotaz, na který vyhledávač odpověděl málo dokumenty, bude vhodné odebrat některá klíčová slova dotazu, abychom získali více výsledků. Pokud jsme naopak zadali příliš obecný dotaz, můžeme přidat nějaká klíčová slova, abychom obrželi méně dokumentů, která ale lépe odpovídají na náš dotaz. 
 
 \sssection{Hlavní cíl}
 
-Hlavním cílem vyhledávače je nacházet předchozí úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
+Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
 
 My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
 
-K tomu využijeme formální konceptuální analýzu dat, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
+K tomu využijeme formální konceptuální analýzu, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů -- ten musíme nějak najít -- představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
 
 \sssection{Výstup vyhledávače}
 
-Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat všechny tři kategorie dotazů a pokud nějaké najde, měl by je uživateli zobazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{hosting php} by měl vypadat přibližně takto:
+Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat návrhy na úpravu dotazů ve všech třech kategorií -- konkrétnější, podobný a obecnější dotaz. Pokud tyto návrhy existují, což není vždy, měl by je uživateli zobazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{příležitostné příjmy} by měl vypadat přibližně takto:
 
 \begin{verbatim}
-1. Doc23
-2. Doc17
-3. ... 
+1. Příležitostná činnost
+2. Ostatní příjmy a daňové přiznání
+3. ...
 
--hosting; -php
-~domény hosting; ~databáze php; ~cena hosting
-+cena; +databáze; +forum; +formuláře; +kniha
++ sleva | + potvrzení
++/- sleva, příjmy | +/- příjmy, paušální
+- příležitostné | -příjmy
 \end{verbatim}
 
-Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následují tři řádky, kde na první místě jsou slova, která můžeme z dotazu dobrat; ta jsou označena symbolem minus. Na dalším řádku jsou dotazy, které můžeme vyhledávat namísto originálního dotazu; jsou označena symbolem tilda. Nakonec jsou slova, která můžeme k dotazu přidat; jsou označena symbolem plus.
+Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následující tři řádky jsou hlavním výsledkem vyhledávače, jsou to návrhy, jak upravit dotaz. 
+
+Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. první návrh, \code{+sleva}, nám říká, abychom zkusili vyhledat dotaz \uv{příležitostné příjmy sleva}, čímž bychom měli získat dokumenty, které nám řeknou, zda můžeme u příležitostných příjmů uplatnit nějakou slevu. To zní jako smysluplný dotaz. 
+
+Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva příjmy}, čímž bychom měli dostat dokumenty, které se věnují celkově slevám, které můžeme během danění příjmů uplatnit. Druhým dotazem, \uv{paušální příjmy}, bychom se měli dostat k informacím o paušálních výdajích, které můžeme uplatnit při danění příjmů. 
+
+Na poslední, řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. 
 
 \ssection{Teoretické základy formální konceptuální analýzy}
 \sssection{Neformální úvod}
-Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je tak binární, daný objekt buď daný atribut má, nebo nemá. V další kapitole si popíšeme i variantu s fuzzy logikou, kdy daný objekt může mít atribut v nějakém stupni. 
+Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je binární, daný objekt buď daný atribut má, nebo nemá. 
 
-V tabulce \ref{tab.con1} je příklad takových tabulkových dat. V řádcích jsou objekty -- programy, které se obyčejně používají pro práci s textem. Ve sloupcích jsou atributy -- vlastnosti, které tyto programy mají. Kvůli zkrácení se tam nenachází celé popisky, takže: \uv{Multi} = program je multiplatformní, \uv{Java} = program je napsaný v Javě, \uv{Debug} = program obsahuje vestavěný debugger, \uv{Start} = program startuje rychle, \uv{Barvy} = program obsahuje zvýraňovač programovacího kódu, \uv{Výchozí} = program se v daném operačním systému nachází při výchozí instalaci systému. 
+V tabulce \ref{tab.con1} je příklad takových tabulkových dat. V řádcích jsou objekty -- živočichové či rostliny. Ve sloupcích pak jsou jednotlivé atributy, což jsou nějaké vlastnosti, které dané objekty mohou mít. Pod tabulkou je legenda k jednotlivým atributům. Například první atribut $a$ je \uv{potřebuje k životu vodu}. Každý živočich a každá rostlina potřebuje k životu vodu, takže v celém sloupečku je křížek. Druhý atribut $b$ je \uv{žije ve vodě}. Zde už není křížek všude, takový pes ve vodě nežije. 
 
-O atributu \uv{Start} bychom mohli říci, že je velmi neurčitý, protože nemáme definováno, co znamená že program startuje rychle. Můžeme například říci, že pokud se na průměrném počítači spouští do tří sekund, pak je rychlý. Lépe bychom tuto vlastnost mohli definovat za využití fuzzy logiky, kde bychom mohli lépe definovat jednotlivé stupně rychlosti. 
 
 \begin{table}
-\begin{tabular}{r|cccccc}
+\begin{center}
+\begin{tabular}{r|ccccccccc}
 \toprule
-&Multi&Java&Debug&Start&Barvy&Výchozí\\
+&a&b&c&d&e&f&g&h&i\\
 \midrule
-Xcode&&&\yes&&\yes\\
-Aptana&\yes&\yes&\yes&&\yes\\
-Poznámkový blok&&&&\yes&&\yes\\
-VisualStudio&&&\yes&&\yes\\
-PSPad&&&&\yes&\yes\\
-Smultron&&&&\yes&\yes\\
-NetBeans&\yes&\yes&\yes&&\yes\\
-TextEdit&&&&\yes&&\yes\\
+Pijavice&\yes&\yes&&&&&\yes\\
+Cejn&\yes&\yes&&&&&\yes&\yes\\
+Žába&\yes&\yes&\yes&&&&\yes&\yes\\
+Pes&\yes&&\yes&&&&\yes&\yes&\yes\\
+Bodlák&\yes&\yes&&\yes&&\yes\\
+Rákosí&\yes&\yes&\yes&\yes&&\yes\\
+Fazole&\yes&&\yes&\yes&\yes\\
+Kukuřice&\yes&&\yes&\yes&&\yes\\
 \bottomrule
 \end{tabular}
-\caption{Kontext} \label{tab.con1}
+\end{center}
+\caption{Formální kontext} \label{tab.con1}
+
+\begin{center}
+$a$: potřebuje k životu vodu, $b$: žije ve vodě, $c$: žije na zemi,\\ $d$: potřebuje chlorofyl, $e$: dvouděložná rostlina, $f$: jednoděložná rostlina,\\ $g$: může se pohybovat, $h$: má končetiny, $i$: kojí potomky
+\end{center}
 \end{table}
 
-Takové tabulce s daty říkáme kontext. V tomto kontextu pak hledáme shluky potenciálně zajímavých dat. Shlukem může být například množina programů $\adds{Xcode, Aptana, VisualStudio, NetBeans}$, protože to jsou všechno programátorská vývojová prostředí, IDE. Tato IDE mají některé společné vlastnosti. Všechny tyto programy mají atributy $\adds{Debug, Barvy}$. Žádné jiné společné atributy nemají. Zároveň žádné jiné objekty nesdílejí atributy $\adds{Debug, Barvy}$. Vždy se snažíme najít maximální počet objektů, které sdílí společné atributy a maximální počet atributů, které mají nějaké objekty. Můžeme tak říci, že hledáme maximální \uv{obdélníky}, které jsou tvořené křížky v tabulce. Takovému shluku dat pak říkáme koncept. 
 
-To samozřejmě není jediný koncept, který kontext obsahuje. Pokud budeme chtít znát multiplatformní vývojová prostředí, přidáme do množiny atributů \uv{Multi} a dopočítáme objekty, které sdílí tyto atributy. Množina objektů se zmenší na $\adds{Aptana, NetBeans}$. Dále musíme ověřit, zda množina atributů $\adds{Debug, Barvy, Multi}$ je maximální možná. Pohledem do tabulky zjistíme, že tyto dva programy sdílí ještě atribut \uv{Java}, tedy všechny multiplatformní programy v této tabulce jsou napsané v Javě. Atribut Java přidáme do množiny atributů $\adds{Debug, Barvy, Multi, Java}$ a tím získáme koncept.
+Takové tabulce s daty říkáme \strong{kontext}. V tomto kontextu pak hledáme shluky potenciálně zajímavých dat. Shlukem může být například množina $\adds{\mbox{Cejn, Žába, Pes}}$, protože všechna tato zvířata sdílí společné atributy $\adds{a, g, h}$ -- potřebují vodu k životu, mohou se pohybovat a mají končetiny. Zároveň platí, že cejn, žába a pes žádné další společné atributy nesdílí a podobně u atributů: žádný další objekt už nemá právě tyto tři společné vlastnosti. Takové dvě množiny objektů a atributů pak tvoří \strong{koncept}. Množinu objektů konceptu nazýváme \strong{extent} a množinu atributů \strong{intent}. 
 
-Řekli jsme, že formální konceptuální analýza zároveň řeší i hierarchii shluků. Ta se řeší pomocí relace inkluze. O konceptu multiplatformní IDE řekneme, že je konkrétnější než koncept IDE, protože množina objektů multiplatformních IDE je vlastní podmnožinou množiny objektů všech IDE. Nebo pomocí atributů: množina multiplatformních IDE obsahují nadmnožinou atributů. Multiplatformní IDE mají všechny vlastnosti jako IDE plus některé navíc. Tím se koncet stává konkrétnějším. 
+Když se podíváme na tabulku, zjistíme, že koncept je tvořený křížky, které dohromady tvoří \uv{rozházený obdélník}. Pokud bychom ale sloupce, které reprezentují množinu společných atributů, přesunuly k sobě, získali bychom hezký obdélník (v tomto případě dokonce čtverec). Koncept je zvýrazněný v tabulce \ref{tab.con2} Vždy nás zajímá maximální obdélník, tj. pokud existuje objekt nebo atribut, který můžeme přidat a opět získáme obdélník, přidáme ho. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{r|ccccccccc}
+\toprule
+&b&c&d&e&f&g&h&a&i\\
+\midrule
+Pijavice&\yes&&&&&\yes&&\yes\\
+Cejn&\yes&&&&&\fyes&\fyes&\fyes\\
+Žába&\yes&\yes&&&&\fyes&\fyes&\fyes\\
+Pes&&\yes&&&&\fyes&\fyes&\fyes&\yes\\
+Bodlák&\yes&&\yes&&\yes&&&\yes\\
+Rákosí&\yes&\yes&\yes&&\yes&&&\yes\\
+Fazole&&\yes&\yes&\yes&&&&\yes\\
+Kukuřice&&\yes&\yes&&\yes&&&\yes\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Formální kontext se zvýrazněným konceptem} \label{tab.con2}
+\end{table}
+
+
+To samozřejmě není jediný koncept, který kontext obsahuje. Ve skutečnosti tento kontext obsahuje 19 konceptů. Zkusíme si najít další. Existuje něco, co žije na zemi i ve vodě? Hledáme tak objekty, které mají atributy $\adds{b, c}$. Pohledem do tabulky zjistíme, že tyto vlastnosti má žába a rákosí. Nicméně ještě jsme nenalezli koncept, protože nevíme, jestli náhodou tyto objekty nesdílí ještě nějaký další atribut. Vzhledem k tomu, že všechny objekty mají atribut $a$, musíme ho přidat do množiny atributů. Tím už získáme koncept s objekty $\adds{\mbox{žába, rákosí}}$ a atributy $\adds{a, b, c}$.
+
+Řekli jsme, že formální konceptuální analýza zároveň řeší i hierarchii shluků. Ta se řeší pomocí relace inkluze. Můžeme říci, že koncept, který se skládá z extentu $\adds{\mbox{pojavice, cejn, žába a pes}}$ a intentu $\adds{a, g}$ je obecnější než koncept $\adds{\mbox{cejn, žába a pes}}$ a $\adds{a, g, h}$. 
+
+První koncept můžeme pojmenovat \uv{pohybující se živočichové}, druhý koncept by byl \uv{živočichové, kteří k pohybu využívají končetiny}. Druhý koncept obsahuje všechny atributy jako první koncept, plus jeden navíc -- ten nějakým způsobem konkretizuje tento koncept. U objektů to platí naopak. Druhý koncept má více atributů, ale méně objektů. To je logické, pokud zvýšíme počet atributů, které objekty musí mít, zvýšíme tím na objekty nároky a objektů ubyde. 
 
 \sssection{Formální definice FCA}
 
