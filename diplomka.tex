@@ -49,6 +49,9 @@
 \DeclareMathOperator{\OR}{OR}
 \DeclareMathOperator{\NOT}{NOT}
 \DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\ext}{Ext}
+\DeclareMathOperator{\intfca}{Int}
+
 \newcommand{\invstem}{\stem^{-1}}
 \newcommand{\alldoc}{\mathbb{D}}
 
@@ -60,6 +63,8 @@
 \newcommand{\down}{^{\downarrow}}
 \newcommand{\updown}{^{\uparrow\downarrow}}
 \newcommand{\downup}{^{\downarrow\uparrow}}
+\newcommand{\biginf}{\bigwedge}
+\newcommand{\bigsup}{\bigvee}
 
 
 \newtheorem{mydef}{Definice}
@@ -493,8 +498,8 @@ Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva p�
 
 Na poslední, řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. 
 
-\ssection{Teoretické základy formální konceptuální analýzy}
-\sssection{Neformální úvod}
+% \ssection{Teoretické základy formální konceptuální analýzy}
+\ssection{Neformální úvod do formální konceptuální analýzy}
 Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je binární, daný objekt buď daný atribut má, nebo nemá. 
 
 V tabulce \ref{tab.con1} je příklad takových tabulkových dat. V řádcích jsou objekty -- živočichové či rostliny. Ve sloupcích pak jsou jednotlivé atributy, což jsou nějaké vlastnosti, které dané objekty mohou mít. Pod tabulkou je legenda k jednotlivým atributům. Například první atribut $a$ je \uv{potřebuje k životu vodu}. Každý živočich a každá rostlina potřebuje k životu vodu, takže v celém sloupečku je křížek. Druhý atribut $b$ je \uv{žije ve vodě}. Zde už není křížek všude, takový pes ve vodě nežije. 
@@ -558,8 +563,9 @@ První koncept můžeme pojmenovat \uv{pohybující se živočichové}, druhý k
 
 Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký koncept konkrétnější než jiný, řekneme, že je menší. Koncept $A$ je konkrétnější než koncept $B$, zapíšeme $A < B$, pokud je extent koncept $A$ vlastní podmnožinou extentu konceptu $B$. Tím máme definováno uspořádání, kterým můžeme uspořádat všechny koncepty. Přesnější popis bude v následující kapitole. 
 
-\sssection{Formální definice FCA}
+\ssection{Formální zavedení FCA}
 
+\sssection{Základní pojmy}
 \begin{mydef}[Formální kontext]
 Formální kontext je trojice $\addsp{X, Y, I}$, kde $X$ je neprázdná množina objektů, $Y$ je neprázdná množina atributů a $I$ je binární relace mezi $X$ a $Y$, tj. $I\subseteq X\times X$.
 \end{mydef}
@@ -588,56 +594,6 @@ X\up&=&\adds{a}\\
 \adds{b}\down&=&\adds{\mbox{Pijavice, Cejn, Žába, Bodlák, Rákosí}}
 \end{eqnarray*}
 
-\begin{mydef}[Galoisovo spojení]
-Galoisovo spojení mezi množinami $X$ a $Y$ je dvojice zobrazení $\addsp{f,g}$, $f:2^X\rightarrow2^Y$ a $g:2^Y\rightarrow2^X$, která pro všechna $A, A_1, A_2\subseteq X$ a $B, B_1, B_2\subseteq Y$ splňují:
-
-\begin{eqnarray}
-&&A_1\subseteq A_2\implies f(A_2)\subseteq f(A_1)\\
-&&B_1\subseteq B_2\implies g(B_2)\subseteq g(B_1)\\
-&&A\subseteq g(f(A))\\
-&&B\subseteq f(g(B))
-\end{eqnarray}
-\end{mydef}
-
-\begin{mydef}[Pevné body Galoisova spojení]
-Pro Galoisovo spojení $\addsp{f, g}$ mezi množinami $X$ a $Y$ definujeme množinu
-$$
-\fix(\addsp{f,g})=\adds{\addsp{A,B}\in 2^X\times2^Y\sep f(A)=B, g(B)=A}.
-$$
-Tuto množinu nazýváme množinu pevných bodů spojení $\addsp{f,g}$. 
-\end{mydef}
-
-\begin{theorem}[Zřetězení Galoisových spojení]
-Pro Galoisovo spojení $\addsp{f,g}$ mezi $X$ a $Y$ a pro všechna $A\subseteq X$ a $B\subseteq Y$ platí:
-
-\begin{eqnarray}
-f(A)&=&f(g(f(A)))\\
-g(B)&=&g(f(g(B)))
-\end{eqnarray}
-\end{theorem}
-
-\begin{mydef}[Uzávěrový operátor]
-Uzávěrový operátor $C$ na množině $X$ je zobrazení $C: 2^X\rightarrow2^X$, které pro každé $A, A_1, A_2\subseteq X$ splňuje:
-\begin{eqnarray}
-&&A\subseteq C(A),\\
-&&A_1\subseteq A_2\implies C(A_1) \subseteq C(A_2),\\
-&&C(A) = C(C(A)).
-\end{eqnarray}
-\end{mydef}
-
-\begin{mydef}[Pevné body uzávěrového operátoru]
-Pro uzávěrový operátor $C: 2^X\rightarrow2^X$ pojmenujeme množinu
-$$
-\fix(C)=\adds{A\subseteq X\sep C(A)=A}
-$$
-jako množinu pevných bodů uzávěrového operátoru $C$.
-\end{mydef}
-
-\begin{theorem}[Od Galoisova spojení k uzávěrovému operátoru]
-Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$.
-\end{theorem}
-
-Zápis $f \circ g$ značí skládání množin ve smyslu $(f \circ g)(x) = g(f(x))$.
 
 \begin{mydef}[Formální koncept]
 Formální koncept v kontextu $\context$ je dvojice $\AB$, $A\subseteq X$, $B\subseteq Y$ tak, že:
@@ -654,6 +610,122 @@ protože
 $$\adds{\mbox{Cejn, Žába}}\up=\adds{a, b, g, h}\quad \logand \quad \adds{a, b, g, h}\down=\adds{\mbox{Cejn, Žába}}.$$
 
 
+\sssection{Galoisova spojení}
+
+Évariste Galois byl francouzský matematik 19. století. Je známý svou prací v oblasti moderní algebry a považuje se za zakladatele teorie grup. Bohužel zemřel již ve svých dvaceti letech, když se účastnil střeleckého souboje. My využijeme Galoisovo spojení jako základní matematickou strukturu pro FCA.
+
+\begin{mydef}[Galoisovo spojení] \label{def.gal}
+Galoisovo spojení mezi množinami $X$ a $Y$ je dvojice zobrazení $\addsp{f,g}$, $f:2^X\rightarrow2^Y$ a $g:2^Y\rightarrow2^X$, která pro všechna $A, A_1, A_2\subseteq X$ a $B, B_1, B_2\subseteq Y$ splňují:
+
+\begin{eqnarray}
+&&A_1\subseteq A_2\implies f(A_2)\subseteq f(A_1)\label{eq.gal1}\\
+&&B_1\subseteq B_2\implies g(B_2)\subseteq g(B_1)\\
+&&A\subseteq g(f(A))\label{eq.gal2}\\
+&&B\subseteq f(g(B))
+\end{eqnarray}
+\end{mydef}
+
+Galoisovo spojení má jednoduchou interpretaci, kterou si můžeme ukázat na příkladu herců a filmů. Nechť množina $X$ je množina všech herců a hereček a množina $Y$ všech filmů. 
+
+Zobrazení $f$ nám pro danou podmnožinu herců $A$ vrací množinu filmů, ve kterých všichni herci z množiny $A$ hráli. Zobrazení $g$ naopak vrací pro podmnožinu filmů $B$ takovou množinu herců, kteří hráli ve všech filmech v množině $B$. Výsledkem $f(\adds{\mbox{Bruce Willis}})$ je množina všech filmů, ve kterých hrál Bruce Willis. Výsledkem $g(\adds{\mbox{Pelíšky; Dobrá zpráva; Pasti, pasti, pastičky}})$ je množina herců a hereček, kteří hráli ve všech těchto filmech: $\adds{\mbox{Miroslav Donutil, Eva Holubová}}$.
+
+Vlastnosti zmíněné v definici \ref{def.gal} už jsou pak velmi přirozené. Vlastnost \ref{eq.gal1} říká, že pokud máme skupiny herců $A_1=\adds{\mbox{Johnny Depp}}$ a $A_2=\adds{\mbox{Johnny Depp, Bruce Lee}}$, tak můžeme očekávat, že pouze Depp hrál ve více filmech než Depp spolu s Leem. Filmy, ve kterých spolu hráli Depp a Lee jsou určitě podmnožinou filmů, kde hrál pouze Depp.
+
+Vlastnost \ref{eq.gal2} zase říká, že pokud nalezneme všechny filmy, ve kterých hrál Johnny Depp a poté nalezneme všechny herce, kteří hráli ve všech těchto filmech, tak mezi těmito herci musí být Johnny Depp. Ostatní dvě vlastnosti říkají duálně totéž. 
+
+\begin{mydef}[Pevné body Galoisova spojení]
+Pro Galoisovo spojení $\addsp{f, g}$ mezi množinami $X$ a $Y$ definujeme množinu
+$$
+\fix(\addsp{f,g})=\adds{\addsp{A,B}\in 2^X\times2^Y\sep f(A)=B, g(B)=A}.
+$$
+Tuto množinu nazýváme množinu pevných bodů spojení $\addsp{f,g}$. 
+\end{mydef}
+
+Pevným bodem je například dvojice 
+\begin{eqnarray*}
+A&=&\adds{\mbox{Miroslav Donutil, Eva Holubová}},\\
+B&=& \adds{\mbox{Pelíšky; Dobrá zpráva; Pasti, pasti, pastičky}}.
+\end{eqnarray*}
+
+Donutil s Holubovou spolu nehráli v žádném dalším filmu, kromě těchto tří. A zároveň v těchto tří filmech spolu nehráli žádní jiní herci než Donutil a Holubová. 
+
+\begin{theorem}[Zřetězení Galoisových spojení]\label{th.chain}
+Pro Galoisovo spojení $\addsp{f,g}$ mezi $X$ a $Y$ a pro všechna $A\subseteq X$ a $B\subseteq Y$ platí:
+
+\begin{eqnarray}
+f(A)&=&f(g(f(A)))\\
+g(B)&=&g(f(g(B)))
+\end{eqnarray}
+\end{theorem}
+
+Toto je zajímavá vlastnost. Na začátku máme množinu herců $A$. Nalezneme filmy, ve kterých tito herci hráli. Tím získáme $f(A)$. Dále nalezneme herce, kteří hráli ve všech těchto nalezených filmech. Tam se určitě objeví herci z $A$, viz definice \ref{def.gal}, ale mohou se tam objevit i další herci. Tím získáme hodnotu $g(f(A))$. Nakonec zpátky spočítáme filmy, ve kterých tito herci hráli. Musíme nutně získat množinu filmů $f(A)$, protože $g(f(A))$ jsou právě herci, kteří hrají všech filmech z $f(A)$.
+
+\begin{mydef}[Uzávěrový operátor]\label{def.clop}
+Uzávěrový operátor $C$ na množině $X$ je zobrazení $C: 2^X\rightarrow2^X$, které pro každé $A, A_1, A_2\subseteq X$ splňuje:
+\begin{eqnarray}
+&&A\subseteq C(A),\\
+&&A_1\subseteq A_2\implies C(A_1) \subseteq C(A_2),\\
+&&C(A) = C(C(A)).
+\end{eqnarray}
+\end{mydef}
+
+\begin{mydef}[Pevné body uzávěrového operátoru]
+Pro uzávěrový operátor $C: 2^X\rightarrow2^X$ pojmenujeme množinu
+$$
+\fix(C)=\adds{A\subseteq X\sep C(A)=A}
+$$
+jako množinu pevných bodů uzávěrového operátoru $C$.
+\end{mydef}
+
+\begin{theorem}[Od Galoisova spojení k uzávěrovému operátoru]\label{th.galcl}
+Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$.
+\end{theorem}
+
+Zápis $f \circ g$ značí skládání množin ve smyslu $(f \circ g)(x) = g(f(x))$.
+
+Pevným bodem uzávěrového operátoru nad množinou herců rozumíme takovou množinu herců, kteří spolu hráli v určitých filmech, ale \strong{žádní jiní herci už v těchto filmech nehráli}. Poslední vlastnost je pro pevný bod klíčová. 
+
+Je například množina $\adds{\mbox{Danny Glover, Mel Gibson}}$ pevným bodem? Věta \ref{th.galcl} nám říká, jak postupovat, pokud pevný bod chceme nalézt. Jako první vypočteme $f(\adds{\mbox{Danny Glover, Mel Gibson}})$. Tím získáme množinu filmů, ve kterých herci hráli spolu, tj. $\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}}$. Nyní zpět zjistíme herce, kteří hráli v těchto filmech, spočítáme $g(\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}})$. Kromě Gibsona a Glovera se tam objeví ještě Mary Ellen Trainor: $\adds{\mbox{Danny Glover, Mel Gibson, Mary Ellen Trainor}}$. Tato množina herců a hereček je už pevným bodem. 
+
+Uzávěrový operátor si můžeme ukázat i na úplně jiném příkladě, doplnění rovinného útvaru na nejmenší konvexní útvar. Máme-li tak nějaké útvar v rovině, který není konvexní, například klasický obrázek hvězdy, uzávěrový operátor ho doplní tak, aby z něj vznikl konvexní útvar a aby tento nový útvat byl nejmenší. Na tomto operátoru si můžeme ilustrovat podmínky v definici \ref{def.clop}.
+
+První vlastnost říká, původní útvar bude vždy podmnožinou uzavřeného útvaru. Původní rovinný útvar bude vždy celý obsažen v konvexním útvaru, který ho má obalovat -- uzavřením pouze \uv{přidáme} původnímu útvaru body tak, aby vznikl konvexní útvar. Druhá vlastost říká, že pokud máme dva různé útvary, přičemž jeden je zanořený ve druhém, tak i jejich obaly budou zanořené. Poslední vlastnost říká, že obalem obalu je tentýž obal. Pokud obalíme hvězdu konvexním útvarem, pro příklad pravidelným pětiúhelníkem, tak obalem tohoto pětiúhelníku bude tentýž pětiúhelník.
+
+\begin{theorem}
+Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Pak pro každé $A_j\subseteq X, j\in J$ a $B_j\subseteq Y, j\in J$ platí:
+
+\begin{eqnarray}
+f(\bigcup_{j\in J}A_j)&=&\bigcap_{j\in J}f(A_j)\\
+g(\bigcup_{j\in J}B_j)&=&\bigcap_{j\in J}g(B_j)
+\end{eqnarray}
+\end{theorem}
+
+\begin{theorem}[Šipečkové operátory tvoří Galoisovo spojení]
+Pro formální kontext $\context$ tvoří dvojice $\addsp{\up, \down}$ Galoisovo spojení mezi $X$ a $Y$.
+\end{theorem}
+
+Předchozí věta je důležitým výsledkem. Odpovídá nám na otázku, jak jednoduše počítat extenty a intenty k libovolným podmnožinám objektů či atributů. Protože pro kontext $\context$ je $\addsp{\up, \down}$ Galoisovo spojení, platí, že zobrazení $\up\circ\down$ je uzávěrový operátor na množině $X$, tj. na množině objektů. 
+
+Máme-li množinu objektů $A \subseteq X$, pak uzavřením $A\updown$ získáme pevný bod operátoru, což je zároveň extent nějakého konceptu. Podobně pokud máme množinu atributů $B \subseteq Y$, pak uzavřením $B\downup$ získáme intent nějakého konceptu. 
+
+Pokud si spočítáme extent jako $A\updown$, můžeme intent tohoto konceptu zjistit tak, že ještě jednou spočítáme $\up$, dostaneme tak množinu $A^{\uparrow\downarrow\uparrow}$. Nicméně z věty \ref{th.chain} víme, že $A\up = A^{\uparrow\downarrow\uparrow}$, takže intent je zároveň rovný $A\up$. Jakýkoliv pár tvaru $\addsp{A\updown, A\up}$, kde $A\subseteq X$, tvoří formální koncept. 
+
+Můžete si také označit množinu všech extentů jako $\ext$ a množinu všech intentů jako $\intfca$:
+
+\begin{eqnarray}
+\ext(X, Y, I)&=&\fix(\updown),\\
+\intfca(X, Y, I)&=&\fix(\downup).
+\end{eqnarray}
+
+Dále si označíme množinu všech konceptů kontextu $\addsp{X,Y,I}$:
+
+\begin{eqnarray}
+\lattice&=&\adds{\addsp{A, A\up}\sep A\in\ext(X,Y,I)},\\
+\lattice&=&\adds{\addsp{B\down, B}\sep B\in\intfca(X,Y,I)}.
+\end{eqnarray}
+
+
+\sssection{Konceptuální svaz}
 \begin{mydef}[Uspořádání konceptů]
 \label{def.order}
 O konceptech $\addsp{A_1, B_1}, \addsp{A_2, B_2}$ kontextu $\context$ řekeneme, že
@@ -662,22 +734,50 @@ $$\addsp{A_1, B_1}\le\addsp{A_2, B_2}\quad\pravekdyz\quad A_1\subseteq A_2 \quad
 
 Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{být konkrétnější koncept}. Pokud pro koncepty platí $\addsp{A_1, B_1}\le\addsp{A_2, B_2}$, pak koncept $\addsp{A_1, B_1}$ je konkrétnější než koncept $\addsp{A_2, B_2}$. 
 
+\begin{theorem}[Extenty, intenty a formální koncepty]Některé důležité vlastnosti množin extentů, intentů a konceptů:
+\begin{enumerate}
+	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou (částečně) uspořádáné množiny. 
+	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou duálně isomorfní. Tj. existuje zobrazení $f: \ext(X,Y,I)\rightarrow\intfca(X,Y,I)$ takové, že platí $A_1\subseteq A_2$ právě tehdy, když $f(A_2)\subseteq f(A_1)$.
+	\item $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}.$
+\end{enumerate}
+\end{theorem}
+
+\begin{mydef}[Svaz]
+Nechť $\addsp{X, \le}$ je uspořádaná množina. Pokud pro každé $x,y\in X$ existuje $\sup(x,y)$ a $\inf(x,y)$, pak $\addsp{X, \le}$ nazveme svaz. Pokud můžeme nalézt infima a suprema pro jakoukoliv podmnožinu množiny $X$, pak se jedná o úplný svaz. 
+\end{mydef}
+
+Uspořádaná množina tak je svazem, pokud dokážeme ke každým dvěma prvkům množiny nalézt jejich infimum a supremum. Příkladem jednoduchého svazu mohou být reálná čísla s klasickým uspořádáním. Pak platí, že pro $x,y\in\mathbb{R}$: $\sup(x,y)=\max(x,y)$ a $\inf(x,y)=\min(x,y)$.
+
+Dalším příkladem svazu je $\addsp{2^{\mathbb{N}}, \subseteq}$, množina všech podmnožin přirozených čísel s uspořádáním podle množinové inkluze. Platí pak, že pro $X, Y \in 2^{\mathbb{N}}$ máme $\sup(X, Y) = X \cup Y$ a $\inf(X, Y) = X \cap Y$.
+
 \begin{mydef}[Konceptuální svaz]
-Pro kontext $\context$ definujeme množinu všech formálních konceptů $\lattice$ z $\context$. Tedy
+Pro kontext $\context$ máme definovanou množinu všech formálních konceptů $\lattice$ z $\context$. Tedy
 $$\lattice=\adds{\addsp{A, B}\in 2^X\times 2^Y\sep A\up=B\logand B\down=A}.$$
 
 Dvojice $\addsp{\lattice, \le}$ se nazývá konceptuální svaz. 
 \end{mydef}
 
-K tomu, abychom dokázali, že $\addsp{\lattice, \le}$ je skutečně svaz, musíme dokázat, že pro každé dva koncepty $c_1, c_2\in\addsp{\lattice, \le}$ existuje v tomto svazu jejich supremum a infimum. 
+K tomu, abychom dokázali, že $\addsp{\lattice, \le}$ je skutečně svaz, musíme dokázat, že pro každé dva koncepty $c_1, c_2\in\addsp{\lattice, \le}$ existuje v tomto svazu jejich supremum a infimum. Vrátíme se ještě k obecnému uzávěrovému operátoru. 
+
+\begin{theorem}[Systém pevných bodů uzávěrového operátoru]
+Mějme uzávěrový operátor $C$ na množině $X$. Pak uspořádaná množina $\addsp{\fix(C), \le}$ pevných bodů tohoto operátoru je úplný svaz, kde infima a suprema získáme
+
+\begin{eqnarray}
+\biginf_{j\in J}&=&\bigcap_{j\in J}A_j,\label{eq.clinf}\\
+\bigsup_{j\in J}&=&C(\bigcup_{j\in J}A_j).\label{eq.clsup}
+\end{eqnarray}
+\end{theorem}
+
+Ukážeme si na příkladu, jak tyto dva vzorce fungují. Rovnice \ref{eq.clinf} říká, že pokud máme dva pevné body uzávěrového operátoru a provedeme jejich průnik, pak opět získáme pevný bod a tento bod bude zároveň infimem původních dvou bodů (rovnice je ve skutečnosti obecnější a povoluje libovolně velkou množinu pevných bodů, ne jen dva).
+
 
 % \begin{mydef}[Nejmenší extent obsahující $A$]
 % Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
 % \end{mydef}
 
-\begin{mydef}[Hlavní věta konceptuálních svazů]
+% \begin{mydef}[Hlavní věta konceptuálních svazů]
 
-\end{mydef}
+% \end{mydef}
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
