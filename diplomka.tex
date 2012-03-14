@@ -763,21 +763,62 @@ K tomu, abychom dokázali, že $\addsp{\lattice, \le}$ je skutečně svaz, musí
 Mějme uzávěrový operátor $C$ na množině $X$. Pak uspořádaná množina $\addsp{\fix(C), \le}$ pevných bodů tohoto operátoru je úplný svaz, kde infima a suprema získáme
 
 \begin{eqnarray}
-\biginf_{j\in J}&=&\bigcap_{j\in J}A_j,\label{eq.clinf}\\
-\bigsup_{j\in J}&=&C(\bigcup_{j\in J}A_j).\label{eq.clsup}
+\biginf_{j\in J}A_j&=&\bigcap_{j\in J}A_j,\label{eq.clinf}\\
+\bigsup_{j\in J}A_j&=&C(\bigcup_{j\in J}A_j).\label{eq.clsup}
 \end{eqnarray}
 \end{theorem}
 
-Ukážeme si na příkladu, jak tyto dva vzorce fungují. Rovnice \ref{eq.clinf} říká, že pokud máme dva pevné body uzávěrového operátoru a provedeme jejich průnik, pak opět získáme pevný bod a tento bod bude zároveň infimem původních dvou bodů (rovnice je ve skutečnosti obecnější a povoluje libovolně velkou množinu pevných bodů, ne jen dva).
+Ukážeme si na příkladu myšlenku důkazu. Rovnice \ref{eq.clinf} říká, že pokud máme dva pevné body uzávěrového operátoru a provedeme jejich průnik, pak opět získáme pevný bod a tento bod bude zároveň infimem původních dvou bodů (rovnice je ve skutečnosti obecnější a povoluje libovolně velkou množinu pevných bodů, ne jen dva).
+
+Vrátíme se k příkladu uzávěrového operátoru, který uzavíral rovinný útvar na nejmenší konvexní útvar. Představme si dva konvexní útvary, například dva kruhy, které se protínají. Jejich průnikem pak bude jistě konvexní útvar. 
+
+Zajímavější je v tomto případě rovnice \ref{eq.clsup}, kde počítáme supremum. Očekávali bychom, že bude stačit pevné body pouze sjednotit a dostaneme opět pevný bod. Nicméně tomu tak není. Abychom dostali pevný bod, musíme sjednocení bodů ještě znovu uzavřít. Když se vrátíme ke kruhům -- sjednotíme-li dva protínající se kruhy, získáme útvar, který není konvexní. Abychom získali konvexní útvar, musíme tyto dva sjednocenné útvary opět uzavřít. 
+
+Nyní bychom měli ukázat, že $\biginf_{j\in J}A_j$ je skutečně rovno $\bigcap_{j\in J}A_j$. Už víme, že $\bigcap_{j\in J}A_j$ je také pevný bod. Z principu platí, že $\bigcap_{j\in J}A_j$ je menší nebo rovno než všechna $A_j$. Pokud si dále vezmeme množinu všech $B\in\fix(C)$, která jsou menší než všechna $A_j$, tak platí, že $\bigcap_{j\in J}A_j$ je větší nebo rovno než všechna tato $B$. Je to tedy největší prvek spodní závory množiny $\adds{A_j}$. 
+
+Pokud to vztáhneme na příklad: největší konvexní útvar, který je obsažen ve dvou rovinných útvarech, je právě průnik těchto dvou útvarů. Jakýkoliv větší útvar, nebo stejně velký, ale jinam umístěný, nebude obsažen v alespoň jednom z útvarů a jakýkoliv menší útvar bude \dots\, menší. 
+
+Dále ukážeme, že $C(\bigcup_{j\in J}A_j)$ je skutečně rovno $\bigsup_{j\in J}A_j$. Víme, že $C(\bigcup_{j\in J}A_j)$ je pevný bod. Dále víme, že $C(\bigcup_{j\in J}A_j)$ je větší nebo roven než všechna $A_j$, takže musí být větší nebo roven než supremum $\bigsup_{j\in J}A_j$, tj. $\bigsup_{j\in J}A_j\subseteq C(\bigcup_{j\in J}A_j)$. 
+
+Dále platí, že $\bigsup_{j\in J}A_j\supseteq A_j$ pro všechna $j$ -- supremum systému množin musí být větší nebo rovno než každá množina systému. Z toho vyplývá, že $\bigsup_{j\in J}A_j\supseteq\bigcup_{j\in J}A_j$. Pokud je supremum větší nebo rovno než každá množina, pak je větší nebo rovno než sjednocení systému. Využijeme faktu, že uzavřením pevného bodu získáme tentýž pevný bod: pokud $B\in\fix(C)$, pak $B=C(B)$. Protože $\bigsup_{j\in J}A_j$ je pevným bodem, můžeme napsat $\bigsup_{j\in J}A_j=C(\bigsup_{j\in J}A_j)$. Upravíme předchozí inkluzi: 
+
+\begin{eqnarray}
+\bigsup_{j\in J}A_j&\supseteq&\bigcup_{j\in J}A_j\\
+C(\bigsup_{j\in J}A_j)&\supseteq&C(\bigcup_{j\in J}A_j)\\
+\bigsup_{j\in J}A_j&\supseteq&C(\bigcup_{j\in J}A_j)
+\end{eqnarray}
+
+Nejprve oba výrazy uzavřeme, čímž nezměníme platnost inkluze. Poté z levé strany odstraníme $C$, protože supremum už pevným bodem je. Dostali jsme tak
+$$
+\bigsup_{j\in J}A_j\supseteq C(\bigcup_{j\in J}A_j)\quad\mbox{a}\quad\bigsup_{j\in J}A_j\subseteq C(\bigcup_{j\in J}A_j)
+$$
+
+Z toho vyplývá, že $\bigsup_{j\in J}A_j=C(\bigcup_{j\in J}A_j)$.
+
+\begin{theorem}[Hlavní věta konceptuálních svazů]
+Věta má dvě části:
+\begin{enumerate}
+	\item Nechť $\lattice$ je kompletní svaz, kde suprema a infima získáme
+	\begin{eqnarray}
+	\biginf_{j\in J}\addsp{A_j, B_j}&=&\addsp{\bigcap_{j\in J}A_j, \addk{\bigcup_{j\in J}B_j}\downup},\\
+	\bigsup_{j\in J}\addsp{A_j, B_j}&=&\addsp{\addk{\bigcup_{j\in J}A_j}\updown,\bigcap_{j\in J}B_j}.
+	\end{eqnarray}
+	\item Dále, libovolný úplný svaz \textbf{V} $=\addsp{V,\le}$ je izomorfní k $\lattice$ právě tehdy, když existují zobrazení $\gamma: X\rightarrow V, \mu:Y\rightarrow V$ tak, že
+	\begin{itemize}
+		\item $\gamma(X)$ je supremálně husté ve $V$ a $\mu(Y)$ je infomálně husté v $V$,
+		\item $\gamma(x)\le\mu(y)$ právě tehdy, když $\addsp{x,y}\in I$.
+	\end{itemize}
+\end{enumerate}
+\end{theorem}
+
+První část nám říká, jak hledat suprema a infima množiny konceptů. Chceme-li najít 
 
 
 % \begin{mydef}[Nejmenší extent obsahující $A$]
 % Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
 % \end{mydef}
 
-% \begin{mydef}[Hlavní věta konceptuálních svazů]
 
-% \end{mydef}
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
