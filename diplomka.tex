@@ -39,6 +39,7 @@
 \renewcommand{\implies}{\Rightarrow}
 
 %%% Používané funkce
+\DeclareMathOperator{\fix}{fix}
 \DeclareMathOperator{\tfidf}{tf-idf}
 \DeclareMathOperator{\stem}{stem}
 \DeclareMathOperator{\score}{sc}
@@ -62,6 +63,7 @@
 
 
 \newtheorem{mydef}{Definice}
+\newtheorem{theorem}{Věta}
 
 
 
@@ -586,6 +588,57 @@ X\up&=&\adds{a}\\
 \adds{b}\down&=&\adds{\mbox{Pijavice, Cejn, Žába, Bodlák, Rákosí}}
 \end{eqnarray*}
 
+\begin{mydef}[Galoisovo spojení]
+Galoisovo spojení mezi množinami $X$ a $Y$ je dvojice zobrazení $\addsp{f,g}$, $f:2^X\rightarrow2^Y$ a $g:2^Y\rightarrow2^X$, která pro všechna $A, A_1, A_2\subseteq X$ a $B, B_1, B_2\subseteq Y$ splňují:
+
+\begin{eqnarray}
+&&A_1\subseteq A_2\implies f(A_2)\subseteq f(A_1)\\
+&&B_1\subseteq B_2\implies g(B_2)\subseteq g(B_1)\\
+&&A\subseteq g(f(A))\\
+&&B\subseteq f(g(B))
+\end{eqnarray}
+\end{mydef}
+
+\begin{mydef}[Pevné body Galoisova spojení]
+Pro Galoisovo spojení $\addsp{f, g}$ mezi množinami $X$ a $Y$ definujeme množinu
+$$
+\fix(\addsp{f,g})=\adds{\addsp{A,B}\in 2^X\times2^Y\sep f(A)=B, g(B)=A}.
+$$
+Tuto množinu nazýváme množinu pevných bodů spojení $\addsp{f,g}$. 
+\end{mydef}
+
+\begin{theorem}[Zřetězení Galoisových spojení]
+Pro Galoisovo spojení $\addsp{f,g}$ mezi $X$ a $Y$ a pro všechna $A\subseteq X$ a $B\subseteq Y$ platí:
+
+\begin{eqnarray}
+f(A)&=&f(g(f(A)))\\
+g(B)&=&g(f(g(B)))
+\end{eqnarray}
+\end{theorem}
+
+\begin{mydef}[Uzávěrový operátor]
+Uzávěrový operátor $C$ na množině $X$ je zobrazení $C: 2^X\rightarrow2^X$, které pro každé $A, A_1, A_2\subseteq X$ splňuje:
+\begin{eqnarray}
+&&A\subseteq C(A),\\
+&&A_1\subseteq A_2\implies C(A_1) \subseteq C(A_2),\\
+&&C(A) = C(C(A)).
+\end{eqnarray}
+\end{mydef}
+
+\begin{mydef}[Pevné body uzávěrového operátoru]
+Pro uzávěrový operátor $C: 2^X\rightarrow2^X$ pojmenujeme množinu
+$$
+\fix(C)=\adds{A\subseteq X\sep C(A)=A}
+$$
+jako množinu pevných bodů uzávěrového operátoru $C$.
+\end{mydef}
+
+\begin{theorem}[Od Galoisova spojení k uzávěrovému operátoru]
+Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$.
+\end{theorem}
+
+Zápis $f \circ g$ značí skládání množin ve smyslu $(f \circ g)(x) = g(f(x))$.
+
 \begin{mydef}[Formální koncept]
 Formální koncept v kontextu $\context$ je dvojice $\AB$, $A\subseteq X$, $B\subseteq Y$ tak, že:
 $$A\up=B\logand B\down =A.$$
@@ -596,7 +649,7 @@ Množině $A$ říkáme \uv{extent} a množině $B$ \uv{intent}.
 Takto definovaný formální koncept odpovídá naší předchozí představě o konceptu. Pokud jsme měli danou množinu objektů, pak jsme našli sdílené atributy. K těmto sdíleným atributům jsme následně nalezli objekty, které všechny tyto atributy sdílí, což mohlo být více objektů, než jaké jsme měli na začátku. Ve chvíli, kdy se k těmto objektům pokusíme najít sdílené atributy, nenalezneme již žádný nový.
 
 V tabulce \ref{tab.con1} tak můžeme najít například koncept 
-$$\adds{\adds{\mbox{Cejn, Žába}}, \adds{a, b, g, h}},$$ 
+$$\addsp{\adds{\mbox{Cejn, Žába}}, \adds{a, b, g, h}},$$ 
 protože 
 $$\adds{\mbox{Cejn, Žába}}\up=\adds{a, b, g, h}\quad \logand \quad \adds{a, b, g, h}\down=\adds{\mbox{Cejn, Žába}}.$$
 
