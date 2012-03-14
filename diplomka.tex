@@ -562,7 +562,7 @@ Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký ko
 Formální kontext je trojice $\addsp{X, Y, I}$, kde $X$ je neprázdná množina objektů, $Y$ je neprázdná množina atributů a $I$ je binární relace mezi $X$ a $Y$, tj. $I\subseteq X\times X$.
 \end{mydef}
 
-V předchozím příkladě byla množina $X$ rovna programům a množina $Y$ byla rovna vlastnostem programů. Relace $I$ pak vyznačuje, zda má objekt $x$ atribut $y$. Objekt $x$ má atribut $y$ právě tehdy když $\addsp{x, y}\in I$. Formální kontext, jak jsme viděli, může být reprezentován pomocí tabulky. 
+V předchozím příkladě byla množina $X$ rovna živočichům a rostlinám a množina $Y$ byla rovna vlastnostem těchto živočichů a rostlin. Relace $I$ pak vyznačuje, zda má objekt $x$ atribut $y$. Objekt $x$ má atribut $y$ právě tehdy když $\addsp{x, y}\in I$. Formální kontext, jak jsme viděli, může být reprezentován pomocí tabulky. 
 
 \begin{mydef}[Šipečkové operátory]
 Pro kontext $\context$ definujeme operátory $\up:2^X\rightarrow2^Y$ a $\down:2^Y\rightarrow2^X$, tak že pro každé $A\subseteq X$ a $B\subseteq Y$:
@@ -577,13 +577,13 @@ Tyto operátory umožňují zjistit společné vlastnosti. Operátor $\up$ nám 
 Pokud se vrátíme ke kontextu v tabulce \ref{tab.con1}, tak:
 
 \begin{eqnarray*}
-\adds{\mbox{Xcode}}\up&=&\adds{\mbox{Debug, Barvy}}\\
-\adds{\mbox{PSPad, Smultron}}\up&=&\adds{\mbox{Start, Barvy}}\\
-\adds{\mbox{TextEdit, Poznámkový Blok}}\up&=&\adds{\mbox{Start, Výchozí}}\\
-A\up&=&\emptyset\\
-\adds{\mbox{Multi, Java}}\down&=&\adds{\mbox{Aptana, NetBeans}}\\
-\adds{\mbox{Debug, Výchozí}}\down&=&\emptyset\\
-\adds{\mbox{Barvy, Start}}\down&=&\adds{\mbox{PSPad, Smultron}}
+\adds{\mbox{Žába}}\up&=&\adds{a, b, c, g, h}\\
+\adds{\mbox{Fazole, Bodlák}}\up&=&\adds{a, d}\\
+\adds{\mbox{Pijavice, Pes, Kukuřice}}\up&=&\adds{a}\\
+X\up&=&\adds{a}\\
+\adds{c, d}\down&=&\adds{\mbox{Rákosí, Fazole, Kukuřice}}\\
+\adds{f, g}\down&=&\emptyset\\
+\adds{b}\down&=&\adds{\mbox{Pijavice, Cejn, Žába, Bodlák, Rákosí}}
 \end{eqnarray*}
 
 \begin{mydef}[Formální koncept]
@@ -596,9 +596,9 @@ Množině $A$ říkáme \uv{extent} a množině $B$ \uv{intent}.
 Takto definovaný formální koncept odpovídá naší předchozí představě o konceptu. Pokud jsme měli danou množinu objektů, pak jsme našli sdílené atributy. K těmto sdíleným atributům jsme následně nalezli objekty, které všechny tyto atributy sdílí, což mohlo být více objektů, než jaké jsme měli na začátku. Ve chvíli, kdy se k těmto objektům pokusíme najít sdílené atributy, nenalezneme již žádný nový.
 
 V tabulce \ref{tab.con1} tak můžeme najít například koncept 
-$$\adds{\adds{\mbox{PSPad, Smultron}}, \adds{\mbox{Barvy, Start}}},$$ 
+$$\adds{\adds{\mbox{Cejn, Žába}}, \adds{a, b, g, h}},$$ 
 protože 
-$$\adds{\mbox{PSPad, Smultron}}\up=\adds{\mbox{Barvy, Start}} \logand \adds{\mbox{Barvy, Start}}\down=\adds{\mbox{PSPad, Smultron}}.$$
+$$\adds{\mbox{Cejn, Žába}}\up=\adds{a, b, g, h}\quad \logand \quad \adds{a, b, g, h}\down=\adds{\mbox{Cejn, Žába}}.$$
 
 
 \begin{mydef}[Uspořádání konceptů]
@@ -613,12 +613,14 @@ Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{b
 Pro kontext $\context$ definujeme množinu všech formálních konceptů $\lattice$ z $\context$. Tedy
 $$\lattice=\adds{\addsp{A, B}\in 2^X\times 2^Y\sep A\up=B\logand B\down=A}.$$
 
-Dvojice $\addsp{\lattice, \le}$ pak představuje konceptuální svaz. 
+Dvojice $\addsp{\lattice, \le}$ se nazývá konceptuální svaz. 
 \end{mydef}
 
-\begin{mydef}[Nejmenší extent obsahující $A$]
-Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
-\end{mydef}
+K tomu, abychom dokázali, že $\addsp{\lattice, \le}$ je skutečně svaz, musíme dokázat, že pro každé dva koncepty $c_1, c_2\in\addsp{\lattice, \le}$ existuje v tomto svazu jejich supremum a infimum. 
+
+% \begin{mydef}[Nejmenší extent obsahující $A$]
+% Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
+% \end{mydef}
 
 \begin{mydef}[Hlavní věta konceptuálních svazů]
 
