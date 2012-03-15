@@ -904,10 +904,31 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 \end{enumerate}
 
 
+\ssection{Sestavení kontextu}
 
+Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokumentu nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
 
+Kontext $\context$ sestavíme takto: ze seznamu dokumentů vezmeme prvních $n$ dokumentů, kde $n$ je hodnota daná nastavením vyhledávače. V základním nastavení platí $n=50$. Tento seznam $n$ dokumentů bude představovat objekty kontextu
+$$
+X=\adds{d_i\in D\sep i \le n}.
+$$
 
+Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet klíčových slov, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací maximálně $m$ atributů dokumentu
+$$
+\alpha_m(A_i)=\adds{a_j\in A_i\sep j<m}.
+$$
 
+Nyní sjednotíme všechny atributy všech dokumentů do jedné množiny:
+$$
+Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}
+$$
+K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstpupu vrací množinu slov, která se vyskytuje v dotazu, ale nevyskytuje se v NOT. Tato funkce se bude chvoat různě v závislosti na tom, jak vypadá dotaz $Q$:
+
+\begin{enumerate}
+	\item pokud je $Q$ pouze jedno slovo, označme ho $s$, pak $\beta(Q)=\adds{s}$,
+	\item pokud je $Q$ tvaru \uv{$a$ AND $b$} nebo \uv{$a$ OR $b$}, pak $\beta(Q)=\beta(a)\cup\beta(b)$,
+	\item pokud je $Q$ tvaru \uv{NOT $a$}, pak $\beta(Q)=\emptyset$.
+\end{enumerate}
 
 
 
