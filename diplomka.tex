@@ -449,60 +449,16 @@ Tato seřazená $n$-tice je výstupem algoritmu vyhledávání.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
-\section{Hledání souvisejících dokumentů}
-V této kapitole bude popsána druhá část vyhledávače, která se stará o nalezení souvisejících dotazů. 
+\section{Formální konceptuální analýza}
+Formální konceptuální analýzu budeme používat jako matematický základ pro hledání souvisejících dotazů. V této kapitole bude popsána nezbytná teorie FCA. 
 
-\ssection{O co nám půjde}
-
-\sssection{Motivace}
-
-Pokud uživatel položí vyhledávači nějaký dotaz, vyhledávač odpoví nějakým seznamem dokumentů, které jsou podle něj nejvíce relevantní. Pokud má uživatel štěstí, bude v tomto seznamu dokument, který zrovna potřebuje najít. Pokud bude mít velké štěstí, pak bude tento dokument na předních místech v seznamu. 
-
-Pokud ale toto štěstí mít nebude a dokument se mu nepodaří nalézt, musí uživatel nějakým způsobem přeformulovat svůj dotaz tak, aby vyhledávač vrátil jinou sadu výsledků. Obecně může upravit dotaz třemi různými způsoby. Může
-
-\begin{enumerate}
-\item přidat k dotazu jedno či více slov, díky čehož obdrží méně výsledků,
-\item změnit jedno či více slov, díky čehož obdrží podobné výsledky,
-\item odebrat jedno či více slov, díky čehož obdrží více výsledků.
-\end{enumerate}
-
-V různých situacích se hodí různé postupy. Pokud jsme zadali příliš konkrétní dotaz, na který vyhledávač odpověděl málo dokumenty, bude vhodné odebrat některá klíčová slova dotazu, abychom získali více výsledků. Pokud jsme naopak zadali příliš obecný dotaz, můžeme přidat nějaká klíčová slova, abychom obrželi méně dokumentů, která ale lépe odpovídají na náš dotaz. 
-
-\sssection{Hlavní cíl}
-
-Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
-
-My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
-
-K tomu využijeme formální konceptuální analýzu, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů -- ten musíme nějak najít -- představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
-
-\sssection{Výstup vyhledávače}
-
-Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat návrhy na úpravu dotazů ve všech třech kategorií -- konkrétnější, podobný a obecnější dotaz. Pokud tyto návrhy existují, což není vždy, měl by je uživateli zobazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{příležitostné příjmy} by měl vypadat přibližně takto:
-
-\begin{verbatim}
-1. Příležitostná činnost
-2. Ostatní příjmy a daňové přiznání
-3. ...
-
-+ sleva | + potvrzení
-+/- sleva, příjmy | +/- příjmy, paušální
-- příležitostné | -příjmy
-\end{verbatim}
-
-Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následující tři řádky jsou hlavním výsledkem vyhledávače, jsou to návrhy, jak upravit dotaz. 
-
-Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. první návrh, \code{+sleva}, nám říká, abychom zkusili vyhledat dotaz \uv{příležitostné příjmy sleva}, čímž bychom měli získat dokumenty, které nám řeknou, zda můžeme u příležitostných příjmů uplatnit nějakou slevu. To zní jako smysluplný dotaz. 
-
-Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva příjmy}, čímž bychom měli dostat dokumenty, které se věnují celkově slevám, které můžeme během danění příjmů uplatnit. Druhým dotazem, \uv{paušální příjmy}, bychom se měli dostat k informacím o paušálních výdajích, které můžeme uplatnit při danění příjmů. 
-
-Na poslední, řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. 
-
-% \ssection{Teoretické základy formální konceptuální analýzy}
 \ssection{Neformální úvod do formální konceptuální analýzy}
 Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je binární, daný objekt buď daný atribut má, nebo nemá. 
 
 V tabulce \ref{tab.con1} je příklad takových tabulkových dat. V řádcích jsou objekty -- živočichové či rostliny. Ve sloupcích pak jsou jednotlivé atributy, což jsou nějaké vlastnosti, které dané objekty mohou mít. Pod tabulkou je legenda k jednotlivým atributům. Například první atribut $a$ je \uv{potřebuje k životu vodu}. Každý živočich a každá rostlina potřebuje k životu vodu, takže v celém sloupečku je křížek. Druhý atribut $b$ je \uv{žije ve vodě}. Zde už není křížek všude, takový pes ve vodě nežije. 
+
+
+Takové tabulce s daty říkáme \strong{kontext}. V tomto kontextu pak hledáme shluky potenciálně zajímavých dat. Shlukem může být například množina $\adds{\mbox{Cejn, Žába, Pes}}$, protože všechna tato zvířata sdílí společné atributy $\adds{a, g, h}$ -- potřebují vodu k životu, mohou se pohybovat a mají končetiny. Zároveň platí, že cejn, žába a pes žádné další společné atributy nesdílí a podobně u atributů: žádný další objekt už nemá právě tyto tři společné vlastnosti. Takové dvě množiny objektů a atributů pak tvoří \strong{koncept}. Množinu objektů konceptu nazýváme \strong{extent} a množinu atributů \strong{intent}. 
 
 
 \begin{table}
@@ -528,9 +484,6 @@ Kukuřice&\yes&&\yes&\yes&&\yes\\
 $a$: potřebuje k životu vodu, $b$: žije ve vodě, $c$: žije na zemi,\\ $d$: potřebuje chlorofyl, $e$: dvouděložná rostlina, $f$: jednoděložná rostlina,\\ $g$: může se pohybovat, $h$: má končetiny, $i$: kojí potomky
 \end{center}
 \end{table}
-
-
-Takové tabulce s daty říkáme \strong{kontext}. V tomto kontextu pak hledáme shluky potenciálně zajímavých dat. Shlukem může být například množina $\adds{\mbox{Cejn, Žába, Pes}}$, protože všechna tato zvířata sdílí společné atributy $\adds{a, g, h}$ -- potřebují vodu k životu, mohou se pohybovat a mají končetiny. Zároveň platí, že cejn, žába a pes žádné další společné atributy nesdílí a podobně u atributů: žádný další objekt už nemá právě tyto tři společné vlastnosti. Takové dvě množiny objektů a atributů pak tvoří \strong{koncept}. Množinu objektů konceptu nazýváme \strong{extent} a množinu atributů \strong{intent}. 
 
 Když se podíváme na tabulku, zjistíme, že koncept je tvořený křížky, které dohromady tvoří \uv{rozházený obdélník}. Pokud bychom ale sloupce, které reprezentují množinu společných atributů, přesunuly k sobě, získali bychom hezký obdélník (v tomto případě dokonce čtverec). Koncept je zvýrazněný v tabulce \ref{tab.con2} Vždy nás zajímá maximální obdélník, tj. pokud existuje objekt nebo atribut, který můžeme přidat a opět získáme obdélník, přidáme ho. 
 
@@ -868,6 +821,86 @@ $$
 \adds{a,b,c,g,h}\downup=\adds{a,b,c,g,h}
 $$
 Žádný další atribut už ale nepřibyl. Získali jsme tak koncept $\addsp{\adds{3}, \adds{a,b,c,g,h}}$. Když se podíváme na výčet všech konceptů na obrázku \ref{fig.concepts}, zjistíme, že to opravdu odpovídá konceptu $C_{16}$, jak jsme očekávali. Supremum spočítáme podobně. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% JAK VYHLEDÁVAČ TEORETICKY FUNGUJE %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Hledání souvisejících dokumentů}
+V této kapitole bude popsána druhá část vyhledávače, která se stará o nalezení souvisejících dotazů. 
+
+\ssection{O co nám půjde}
+
+\sssection{Motivace}
+
+Pokud uživatel položí vyhledávači nějaký dotaz, vyhledávač odpoví nějakým seznamem dokumentů, které jsou podle něj nejvíce relevantní. Pokud má uživatel štěstí, bude v tomto seznamu dokument, který zrovna potřebuje najít. Pokud bude mít velké štěstí, pak bude tento dokument na předních místech v seznamu. 
+
+Pokud ale toto štěstí mít nebude a dokument se mu nepodaří nalézt, musí uživatel nějakým způsobem přeformulovat svůj dotaz tak, aby vyhledávač vrátil jinou sadu výsledků. Obecně může upravit dotaz třemi různými způsoby. Může
+
+\begin{enumerate}
+\item přidat k dotazu jedno či více slov, díky čehož obdrží méně výsledků,
+\item změnit jedno či více slov, díky čehož obdrží podobné výsledky,
+\item odebrat jedno či více slov, díky čehož obdrží více výsledků.
+\end{enumerate}
+
+V různých situacích se hodí různé postupy. Pokud jsme zadali příliš konkrétní dotaz, na který vyhledávač odpověděl málo dokumenty, bude vhodné odebrat některá klíčová slova dotazu, abychom získali více výsledků. Pokud jsme naopak zadali příliš obecný dotaz, můžeme přidat nějaká klíčová slova, abychom obrželi méně dokumentů, která ale lépe odpovídají na náš dotaz. 
+
+\sssection{Hlavní cíl}
+
+Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
+
+My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
+
+K tomu využijeme formální konceptuální analýzu, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů -- ten musíme nějak najít -- představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
+
+\sssection{Výstup vyhledávače}
+
+Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat návrhy na úpravu dotazů ve všech třech kategorií -- konkrétnější, podobný a obecnější dotaz. Pokud tyto návrhy existují, což není vždy, měl by je uživateli zobazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{příležitostné příjmy} by měl vypadat přibližně takto:
+
+\begin{verbatim}
+1. Příležitostná činnost
+2. Ostatní příjmy a daňové přiznání
+3. ...
+
++ sleva | + potvrzení
++/- sleva, příjmy | +/- příjmy, paušální
+- příležitostné | -příjmy
+\end{verbatim}
+
+Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následující tři řádky jsou hlavním výsledkem vyhledávače, jsou to návrhy, jak upravit dotaz. 
+
+Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. první návrh, \code{+sleva}, nám říká, abychom zkusili vyhledat dotaz \uv{příležitostné příjmy sleva}, čímž bychom měli získat dokumenty, které nám řeknou, zda můžeme u příležitostných příjmů uplatnit nějakou slevu. To zní jako smysluplný dotaz. 
+
+Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva příjmy}, čímž bychom měli dostat dokumenty, které se věnují celkově slevám, které můžeme během danění příjmů uplatnit. Druhým dotazem, \uv{paušální příjmy}, bychom se měli dostat k informacím o paušálních výdajích, které můžeme uplatnit při danění příjmů. 
+
+Na poslední, řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. 
+
+
+
+
+
+
+
+
+
+
+
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
