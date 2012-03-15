@@ -795,6 +795,12 @@ $$
 
 Z toho vyplývá, že $\bigsup_{j\in J}A_j=C(\bigcup_{j\in J}A_j)$.
 
+\begin{mydef}[Supremálně a infimálně hustá množina]
+Množinu $K\subseteq V$ nazveme supremálně hustou ve $V$ právě tehdy, když pro všechna $v \in V$ existuje $K^\prime\subseteq K$ takové, že $v=\bigsup K^\prime$. Každý prvek množiny $V$ je tak supremem nějakých prvků z $K$.
+
+Duálně pro infimum: když pro všechna $v \in V$ existuje $K^\prime\subseteq K$ takové, že $v=\biginf K^\prime$.
+\end{mydef}
+
 \begin{theorem}[Hlavní věta konceptuálních svazů]
 Věta má dvě části:
 \begin{enumerate}
@@ -824,16 +830,44 @@ Dále víme, že konceputální svaz $\addsp{\lattice, \le}$ je isomorfní s $\a
 
 Pro nás to znamená, že pokud máme množinu konceptů $\addsp{A_j, B_j}$ a cheme spočítat jejich infimum, stačí nám spočítat infimum extentů $\adds{A_j}$, čímž dostaneme extent konceptu, který je infimem konceptů $\addsp{A_j, B_j}$. Protože pracujeme s uzávěrovým operátorem $\updown$, můžeme, dle věty \ref{th.sysfix} spočítat infimum $\adds{A_j}$ jako obyčejný prunik: $\biginf_{j\in J}\adds{A_j}=\bigcap_{j\in J}A_j$. 
 
-Intent tohoto konceptu bychom mohli zapsat jako $(\bigcap_{j\in J}A_j)\up$. Ale můžeme využít faktu, že intent je supremum množiny $\adds{B_j}$, což je dle věty \ref{th.sysfix} rovno $\bigsup_{j\in J}B_j=(\bigcap_{j\in J}B_j)\downup$.
+Intent tohoto konceptu bychom mohli zapsat jako $(\bigcap_{j\in J}A_j)\up$. Ale můžeme využít faktu, že intent je supremum množiny $\adds{B_j}$, což je dle věty \ref{th.sysfix} rovno $\bigsup_{j\in J}B_j=(\bigcup_{j\in J}B_j)\downup$.
 \end{proof}
 
 
+\sssection{Zobrazení konceptuálního svazu}
+Už máme definované uspořádání na množině koneptů a víme, jak počítat suprema a infima, tak si ukážeme, jak takový konceptuální svaz vypadá. Vrátíme se k tabulce \ref{tab.con1}, kde byl zobrazen kontext s živočichy a rostlinami. Všechny koncepty v tomto kontextu jsou vypsány na obrázku \ref{fig.concepts} 
 
-% \begin{mydef}[Nejmenší extent obsahující $A$]
-% Nejmenší extent, který obsahuje množinu $A$, je extent $A\updown$. Nejmenší intent, který obsahuje množinu $B$, je intent $B\downup$. 
-% \end{mydef}
+Tento svaz můžeme zobrazit klasickým Hasseovým diagramem. Viz obrázek \ref{fig.lattice}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{obrazky/koncepty.pdf}
+  \caption{Všechny koncepty z kontextu v tabulce \ref{tab.con1}}
+  \label{fig.concepts}
+\end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{obrazky/svaz.pdf}
+  \caption{Svaz, který vznikne z kontextu v tabulce \ref{tab.con1}}
+  \label{fig.lattice}
+\end{figure}
+
+Můžeme si na jednoduchým příkladech ukázat, jak se počítají infima a suprema. Vezměme si množinu konceptů $A=\adds{C_6, C_{15}}$. Z obrázku můžeme vyčíst, že infimum $A$ je rovno $C_{16}$ a supremum $C_5$. Nejdříve si zapíšeme koncepty všetně všech objektů a atributů
+$$\biginf \adds{\addsp{\adds{3, 4}, \adds{a, c, g, h}}, \addsp{\adds{3, 6}, \adds{a, b, c}}}$$
+a nyní spočítáme infimum množiny extentů těchtou konceptů. Počítáme tak
+$$
+\biginf\adds{\adds{3, 4}, \adds{3, 6}} = \bigcap\adds{\adds{3, 4}, \adds{3, 6}} =\adds{3}
+$$
+Extent infima bude obsahovat pouze objekt číslo tři. Intent spočítáme podobně, pouze použijeme supremum a jeden uzávěrový operátor navíc: 
+$$
+\bigsup\adds{\adds{a,c,g,h}, \adds{a,b,c}}=\bigcup\adds{\adds{a,c,g,h}, \adds{a,b,c}}=\adds{a,b,c,g,h}
+$$
+Tuto množinu ještě musíme uzavřít:
+$$
+\adds{a,b,c,g,h}\downup=\adds{a,b,c,g,h}
+$$
+Žádný další atribut už ale nepřibyl. Získali jsme tak koncept $\addsp{\adds{3}, \adds{a,b,c,g,h}}$. Když se podíváme na výčet všech konceptů na obrázku \ref{fig.concepts}, zjistíme, že to opravdu odpovídá konceptu $C_{16}$, jak jsme očekávali. Supremum spočítáme podobně. 
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
