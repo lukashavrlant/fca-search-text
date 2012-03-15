@@ -759,7 +759,7 @@ Dvojice $\addsp{\lattice, \le}$ se nazývá konceptuální svaz.
 
 K tomu, abychom dokázali, že $\addsp{\lattice, \le}$ je skutečně svaz, musíme dokázat, že pro každé dva koncepty $c_1, c_2\in\addsp{\lattice, \le}$ existuje v tomto svazu jejich supremum a infimum. Vrátíme se ještě k obecnému uzávěrovému operátoru. 
 
-\begin{theorem}[Systém pevných bodů uzávěrového operátoru]
+\begin{theorem}[Systém pevných bodů uzávěrového operátoru]\label{th.sysfix}
 Mějme uzávěrový operátor $C$ na množině $X$. Pak uspořádaná množina $\addsp{\fix(C), \le}$ pevných bodů tohoto operátoru je úplný svaz, kde infima a suprema získáme
 
 \begin{eqnarray}
@@ -800,18 +800,33 @@ Věta má dvě části:
 \begin{enumerate}
 	\item Nechť $\lattice$ je kompletní svaz, kde suprema a infima získáme
 	\begin{eqnarray}
-	\biginf_{j\in J}\addsp{A_j, B_j}&=&\addsp{\bigcap_{j\in J}A_j, \addk{\bigcup_{j\in J}B_j}\downup},\\
+	\biginf_{j\in J}\addsp{A_j, B_j}&=&\addsp{\bigcap_{j\in J}A_j, \addk{\bigcup_{j\in J}B_j}\downup},\label{eq.main1}\\
 	\bigsup_{j\in J}\addsp{A_j, B_j}&=&\addsp{\addk{\bigcup_{j\in J}A_j}\updown,\bigcap_{j\in J}B_j}.
 	\end{eqnarray}
 	\item Dále, libovolný úplný svaz \textbf{V} $=\addsp{V,\le}$ je izomorfní k $\lattice$ právě tehdy, když existují zobrazení $\gamma: X\rightarrow V, \mu:Y\rightarrow V$ tak, že
 	\begin{itemize}
-		\item $\gamma(X)$ je supremálně husté ve $V$ a $\mu(Y)$ je infomálně husté v $V$,
+		\item $\gamma(X)$ je supremálně hustá množina ve $V$ a $\mu(Y)$ je infomálně hustá množina v $V$,
 		\item $\gamma(x)\le\mu(y)$ právě tehdy, když $\addsp{x,y}\in I$.
 	\end{itemize}
 \end{enumerate}
 \end{theorem}
 
-První část nám říká, jak hledat suprema a infima množiny konceptů. Chceme-li najít 
+První část nám říká, jak hledat suprema a infima množiny konceptů. Důkaz první části hlavní věty o konceptuálních svazech:
+
+\begin{proof}
+Ověříme pouze rovnici \ref{eq.main1}, druhou rovnici bychom dokázali téměř stejně. Víme, že množiny extentů a intentů jsou pevnými body vzhledem k operátorům $\updown$ a $\downup$. Platí
+\begin{eqnarray}
+\addsp{\ext(X,Y,I), \subseteq}&=&\addsp{\fix(\updown),\subseteq}\\
+\addsp{\intfca(X,Y,I), \subseteq}&=&\addsp{\fix(\downup),\subseteq}
+\end{eqnarray}
+
+Dále víme, že konceputální svaz $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}$ a duálně isomorfní s $\addsp{\intfca(X,Y,I), \subseteq}$. Tedy infima v $\lattice$ korespondují s infimy v $\ext(X,Y,I)$ a supremy v $\intfca(X,Y,I)$. 
+
+Pro nás to znamená, že pokud máme množinu konceptů $\addsp{A_j, B_j}$ a cheme spočítat jejich infimum, stačí nám spočítat infimum extentů $\adds{A_j}$, čímž dostaneme extent konceptu, který je infimem konceptů $\addsp{A_j, B_j}$. Protože pracujeme s uzávěrovým operátorem $\updown$, můžeme, dle věty \ref{th.sysfix} spočítat infimum $\adds{A_j}$ jako obyčejný prunik: $\biginf_{j\in J}\adds{A_j}=\bigcap_{j\in J}A_j$. 
+
+Intent tohoto konceptu bychom mohli zapsat jako $(\bigcap_{j\in J}A_j)\up$. Ale můžeme využít faktu, že intent je supremum množiny $\adds{B_j}$, což je dle věty \ref{th.sysfix} rovno $\bigsup_{j\in J}B_j=(\bigcap_{j\in J}B_j)\downup$.
+\end{proof}
+
 
 
 % \begin{mydef}[Nejmenší extent obsahující $A$]
