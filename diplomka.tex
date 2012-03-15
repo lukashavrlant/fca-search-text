@@ -892,6 +892,17 @@ Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva p�
 Na posledním řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. 
 
 
+\ssection{Stručný popis funkčnosti celého vyhledávače}
+Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňuje spojení FCA s Information retrieval. 
+\begin{enumerate}
+	\item Uživatel vloží do vyhledávače dotaz. Vyhledávač odpoví seřazenou sadou výsledků. To zůstává stejné.
+	\item Pokud se jedná o dotaz s více než jedním klíčovým slovem, provedeme ještě jeden dotaz, kde všechna klíčová slova z dotazu spojíme operátorem OR.
+	\item Nyní přichází na řadu FCA část vyhledávače. Jako první se vytvoří kontext $\context$. Objekty budou dokumenty, které nám vyhledávač vrátil v předchozím bodě. Atributy budou atributy těchto dokumentů plus klíčová slova z dotazu. 
+	\item Relaci $I$ definujeme takto: $\addsp{x, y}\in I$ právě tehdy, když dokument $x$ obsahuje slovo $y$.
+	\item Nyní musíme nalézt Hledaný koncept. To je koncept, který odpovídá dotazu od uživatele. Můžeme ho nalézt tak, že vezmeme množinu dokumentů, které vyhledávač vrátil v prvním bodě, a spočítáme koncept, který těmto dokumentům odpovídá. 
+	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme ve spodních sousedech, generalizaci v horních sousedech a podobné dotazy v sosuedních konceptech. Pokud například Hledaný koncept má intent $\adds{\mbox{limita, funkce}}$ a nějaký spodní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
+\end{enumerate}
+
 
 
 
