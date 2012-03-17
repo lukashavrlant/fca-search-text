@@ -51,6 +51,8 @@
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\ext}{Ext}
 \DeclareMathOperator{\intfca}{Int}
+\DeclareMathOperator{\lowerneighbors}{LowerNeighbors}
+\DeclareMathOperator{\upperneighbors}{UpperNeighbors}
 
 \newcommand{\invstem}{\stem^{-1}}
 \newcommand{\alldoc}{\mathbb{D}}
@@ -66,6 +68,8 @@
 \newcommand{\biginf}{\bigwedge}
 \newcommand{\bigsup}{\bigvee}
 \newcommand{\hledany}{\mathbb{K}}
+\newcommand{\lowerc}{\mathbb{L}}
+\newcommand{\upperc}{\mathbb{U}}
 
 
 
@@ -1047,7 +1051,28 @@ Například bychom pokud pokračovali v předchozím příkladu a snažili se ov
 
 Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
 
+\ssection{Hledání návrhů ve svazu}
 
+V současné chvíli máme spočítáný Hledaný koncept a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. 
+
+\sssection{Specializace}
+Specializací budeme rozumět návrh, který konkretizuje dotaz tak, aby uživatel, z těch výsledků, které už má k dispozici, dostal nějakou významnou podmnožinu. Například pokud zadá slovo \uv{jaguár}, aby ho specializace dovedla na podmnožinu dokumentů, které se zabývají autem, nebo zvířetem. 
+
+Jako první si spočítáme dolní sousedy našeho Hledaného konceptu. Tím dostaneme množinu konceptů, kterou si označíme $\lowerc_\hledany$
+$$
+\lowerc_\hledany=\lowerneighbors(\hledany).
+$$
+
+Nyní z každého konceptu vytáhneme pouze jeho intent
+$$
+\lowerc_\hledany^I=\adds{M\sep \addsp{G, M} \in \lowerc_\hledany}.
+$$
+
+V tuto chvíli máme Hledaný koncept, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent Hledaného konceptu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$.
+
+$$
+\lowerc_\hledany^s=\adds{M\setminus\hledany_I\sep M \in \lowerc_\hledany^I}
+$$
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
