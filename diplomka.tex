@@ -1011,18 +1011,18 @@ To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v nov
 Nechť $\addsp{G, M} \in \lattice$ a $\addsp{G, M}\ne\addsp{X, X\up}$. Pak $(G\cup\adds{g})\updown$, kde $g\in X\setminus G$ je extent horního souseda konceptu $\addsp{G, M}$ právě tehdy, když pro všechna $x\in(G\cup\adds{g})\updown\setminus G$ platí $(G\cup\adds{x})\updown=(G\cup\adds{g})\updown$.
 \end{theorem}
 
-Pomocí této věty už můžeme napsat algoritmus \ref{alg.upper}, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{G, M}$ ve svazu $\lattice$.
+Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{G, M}$ ve svazu $\lattice$, viz obrázek \ref{alg.upper}
 
 \begin{figure} \label{alg.upper}
-\begin{algorithmic}
+\begin{algorithmic}[1]
 \Function{UpperNeighbors}{$\addsp{G, M}, \lattice$}
 	\State $candidates \gets X \setminus G$
     \State $neighbors \gets \emptyset$
-    \ForAll{$g \in X\setminus G$} 
-    	\State $M_1\gets(G\cup\adds{g})\up$
-    	\State $G_1\gets M_1\down$
-    	\If{$candidates \cap (G_1\setminus G\setminus\adds{g}) = \emptyset$}
-    		\State $neighbors\gets neighbors \cup(\addsp{G_1, M_1})$
+    \ForAll{$g \in X\setminus G$} \label{alg.upper.getg}
+    	\State $M'\gets(G\cup\adds{g})\up$
+    	\State $G'\gets M'^{\downarrow}$
+    	\If{$candidates \cap (G'\setminus G\setminus\adds{g}) = \emptyset$}\label{alg.upper.if}
+    		\State $neighbors\gets neighbors \cup(\addsp{G', M'})$
     	\Else
     		\State $candidates\gets candidates\setminus\adds{g}$
     	\EndIf
@@ -1032,6 +1032,22 @@ Pomocí této věty už můžeme napsat algoritmus \ref{alg.upper}, kterým vyge
 \end{algorithmic}
 \caption{Algoritmus UpperNeighbors na počítání horních sousedů konceptu}
 \end{figure}
+
+Algoritmus používá efektivnější systém detekce, zda se jedná o horního souseda, nebo zda jde o vyšší koncept. Množina $candidates$ obsahuje ty prvky, které budeme zkoušet přidávat k extentu $G$. Na řádku \ref{alg.upper.getg} vybereme prvek $g$ z této množiny a spočítáme nový extent a intent. 
+
+Na řádku \ref{alg.upper.if} se nachází hlavní změna. Rozdíl množin $G'\setminus G$ nám dá ty objekty, které v novém konceptu přibyly. Od nich ještě odstraníme ten prvek $g$, který jsme právě přidali. Pokud se žádný ze zbývajících prvků nenachází v množině $candidates$, máme horního souseda, přidáme ho do množiny $neighbors$ a prvek $g$ ponecháme v množině $candidates$, to je důležité. Pokud prvek $g$ negeneruje horního souseda, odstraníme ho z množiny $candidates$.
+
+Pokud prvek $g$ generuje horního souseda, musí tak být nutně poslední z těch objektů, které tento koncept mohou generovat. Pokud má horní soused o tři objekty více, než koncept, ke kterému souseda hledáme, podmínkou na řádku \ref{alg.upper.if} projde až ten třetí objekt, který zkusíme. 
+
+Pokud například máme koncept s extentem $\adds{a}$ a horní soused má extent $\adds{a,b,c,d}$, tak pokud zvolíme poprvé $g=b$, tak $\adds{a,b,c,d} \setminus \adds{a} \setminus \adds{b} = \adds{c, d}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{b, c, d}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $b$ a pokračovali s $g=c$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $g=d$, rozdíl by vyšel $\adds{a,b,c,d} \setminus \adds{a} \setminus \adds{d} = \adds{b, c}$. Z $candidates$ jsme prvky $b$ a $c$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $d$ zároveň zůstane v množině $candidates$.
+
+Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $g$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
+
+Například bychom pokud pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{a,b,c,d,e}$, kde zvolíme $g=e$, tak dojdeme k tomu, že $\adds{a,b,c,d,e} \setminus \adds{a} \setminus \adds{e} = \adds{b,c,d}$, ale prvek $d$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
+
+Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
+
+
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
