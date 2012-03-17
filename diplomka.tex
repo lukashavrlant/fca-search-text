@@ -65,6 +65,8 @@
 \newcommand{\downup}{^{\downarrow\uparrow}}
 \newcommand{\biginf}{\bigwedge}
 \newcommand{\bigsup}{\bigvee}
+\newcommand{\hledany}{\mathbb{K}}
+
 
 
 \newtheorem{mydef}{Definice}
@@ -904,31 +906,71 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 \end{enumerate}
 
 
-\ssection{Sestavení kontextu}
+\ssection{Jak vytvořit kontext}
+\sssection{Sestavení kontextu}
+\label{ch.sestaveni}
+Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Pro účely této kapitoly předpokládejme, že máme dokumenty v $D$ reprezentovány jako množinu všech stemů, které dokument obsahuje. 
 
-Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokumentu nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
+Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokumentu nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
 
 Kontext $\context$ sestavíme takto: ze seznamu dokumentů vezmeme prvních $n$ dokumentů, kde $n$ je hodnota daná nastavením vyhledávače. V základním nastavení platí $n=50$. Tento seznam $n$ dokumentů bude představovat objekty kontextu
 $$
-X=\adds{d_i\in D\sep i \le n}.
+X=\adds{D_i\sep i \le n}.
 $$
 
-Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet klíčových slov, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací maximálně $m$ atributů dokumentu
+Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet klíčových slov, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací $m$ atributů dokumentu s nejvyšším $\tfidf$ skórem
 $$
-\alpha_m(A_i)=\adds{a_j\in A_i\sep j<m}.
+\alpha_m(A_i)=\adds{A_i^j\sep j\le m},
 $$
-
-Nyní sjednotíme všechny atributy všech dokumentů do jedné množiny:
+kde $A_i^j$ označuje $j$-tý atribut dokumentu $D_i$. Tedy $A_i^1$ je atribut dokumentu $D_i$, který má nejvyšší hodnocení. Nyní sjednotíme všechny atributy všech dokumentů do jedné množiny:
 $$
 Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}
 $$
-K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstpupu vrací množinu slov, která se vyskytuje v dotazu, ale nevyskytuje se v NOT. Tato funkce se bude chvoat různě v závislosti na tom, jak vypadá dotaz $Q$:
+K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstpupu vrací množinu slov, která se vyskytuje v dotazu, ale nevyskytuje se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
 
 \begin{enumerate}
 	\item pokud je $Q$ pouze jedno slovo, označme ho $s$, pak $\beta(Q)=\adds{s}$,
 	\item pokud je $Q$ tvaru \uv{$a$ AND $b$} nebo \uv{$a$ OR $b$}, pak $\beta(Q)=\beta(a)\cup\beta(b)$,
 	\item pokud je $Q$ tvaru \uv{NOT $a$}, pak $\beta(Q)=\emptyset$.
 \end{enumerate}
+
+Celou množinu atributů našeho kontextu tak získáme tak, že k současných atributům v $Y_1$ ještě přidáme klíčová slova dotazu
+$$
+Y=Y_1\cup\beta(Q).
+$$
+
+Už zbývá pouze definovat relaci $I$. Křížek v tabulce bude tehdy, když daný dokument obsahuje dané slovo. Zapsáno formálně:
+$$
+\addsp{x,y} \in I \iff y \in x,
+$$
+kde $x \in X$ a $y \in Y$.
+
+\sssection{Nalezení Hledaného konceptu}
+Dalším úkolem je nalezení konceptu, který reprezentuje výsledek aktuálního dotazu. Máme v zásadě dvě možnosti, jak tento koncept nalézt. Vezmeme si slova z dotazu $\beta(Q)$ a spočítáme extent a zpět intent. Tím dostaneme koncept, který v intentu obsahuje slova z dotazu a zároveň je to nejmenší koncept, který tato slova obsahuje. Hledaný koncept budeme označovat $\hledany$:
+$$
+\hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}
+$$
+
+Tento postup má ale zásadní nevýhodu v případě, kdy se snažíme nalézt Hledaný koncept pro dotaz, který obsahuje jiný operátor než AND. Pokud má dotaz tvar $Q=$\uv{derivace OR integrál}, nemůžeme hledat Hledaný koncept tak, že spočítáme extent $\adds{\mbox{derivace, integrál}}\down$, protože bychom tím získali dokumenty, které obsahují jak slovo \uv{derivace}, tak slovo \uv{integrál}. Což jistě nepředstavuje koncept dotazu \uv{derivace OR integrál}.
+
+Lepším postupem tak je začít počítat Hledaný koncept dokumenty. Pokud vezmeme množinu dokumentů, které vyhledávač vrátil, přesněji tu podmnožinu, kterou jsme použili v kontextu, $X$, pokud jsme aplikovali omezení, a tuto množinu uzavřeme, dostaneme koncept, který přesně odpovídá našemu dotazu. Dostaneme tak koncept:
+$$
+\hledany=\addsp{X\updown, X\up}=\addsp{X, X\up}
+$$
+
+Problémem tohoto přístupu je, že vždy dostaneme ten největší koncept. Nemůžeme tak hledat obecnější dotazy v horních sousedech, ani související dotazy v okolních sousedech, protože ani horní, ani okolní sousedy tento koncept nemá. To vyřešíme jedině tak, že kontext, který používáme, sestavíme jinak. 
+
+
+\sssection{Sestavení rozšířeného kontextu}
+Kontext, který byl popsán v kapitole \ref{ch.sestaveni} nebudeme vůbec používat. Sestavíme jiný kontext. Nicméně provedeme pouze malé změny. 
+
+Začneme opět tím, že vyhledáme dotaz $Q$. Dostaneme dokumenty $D$. První změnou bude, že v případě, že dotaz bude mít více než jedno slovo, $|\beta(Q)|>1$, tak položíme vyhledávači ještě jeden dotaz. Nový dotaz označíme $Q'$ a bude mít tento tvar: vezmeme všechna slova z dotazu $Q$ a vložíme mezi každá vě slova OR. Pokud byl původní dotaz $Q=$\uv{formální konceptuální analýza}, tak nový dotaz bude mít tvar $Q'=$\uv{formální OR konceptuální OR analýza}. Dotaz $Q'$ položíme vyhledávači, čímž získáme dokumenty $D'$.
+
+Další postup už je stejný jako v kapitole \ref{ch.sestaveni}, pouze do kontextu vložíme dokumenty a atributy z množiny $D'$, nikoliv z $D$. Za $X$ vezmeme prvních $n$ dokumentů z $D'$, za $Y$ jejich atributy sjednocené s $\beta(Q)$. Relaci $I$ sestavíme stejně
+$$
+\addsp{x,y} \in I \iff y \in x.
+$$
+Tento rozšířený kontext si označíme $\addsp{X', Y', I'}$. Postup nalezení Hledaného konceptu se nijak nemění, pouze použijeme tento kontext, namísto původního $\context$.
 
 
 
