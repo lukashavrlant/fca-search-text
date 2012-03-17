@@ -964,17 +964,74 @@ Problémem tohoto přístupu je, že vždy dostaneme ten největší koncept. Ne
 \sssection{Sestavení rozšířeného kontextu}
 Kontext, který byl popsán v kapitole \ref{ch.sestaveni} nebudeme vůbec používat. Sestavíme jiný kontext. Nicméně provedeme pouze malé změny. 
 
-Začneme opět tím, že vyhledáme dotaz $Q$. Dostaneme dokumenty $D$. První změnou bude, že v případě, že dotaz bude mít více než jedno slovo, $|\beta(Q)|>1$, tak položíme vyhledávači ještě jeden dotaz. Nový dotaz označíme $Q'$ a bude mít tento tvar: vezmeme všechna slova z dotazu $Q$ a vložíme mezi každá vě slova OR. Pokud byl původní dotaz $Q=$\uv{formální konceptuální analýza}, tak nový dotaz bude mít tvar $Q'=$\uv{formální OR konceptuální OR analýza}. Dotaz $Q'$ položíme vyhledávači, čímž získáme dokumenty $D'$.
+Začneme opět tím, že vyhledáme dotaz $Q$. Dostaneme dokumenty $D$. První změnou bude, že v případě, že dotaz bude mít více než jedno slovo, $|\beta(Q)|>1$, tak položíme vyhledávači ještě jeden dotaz. Nový dotaz označíme $Q'$ a bude mít tento tvar: vezmeme všechna slova z dotazu $Q$ a vložíme mezi každá dvě slova OR. Pokud byl původní dotaz $Q=$\uv{formální konceptuální analýza}, tak nový dotaz bude mít tvar $Q'=$\uv{formální OR konceptuální OR analýza}. Dotaz $Q'$ položíme vyhledávači, čímž získáme dokumenty $D'$.
 
 Další postup už je stejný jako v kapitole \ref{ch.sestaveni}, pouze do kontextu vložíme dokumenty a atributy z množiny $D'$, nikoliv z $D$. Za $X$ vezmeme prvních $n$ dokumentů z $D'$, za $Y$ jejich atributy sjednocené s $\beta(Q)$. Relaci $I$ sestavíme stejně
 $$
 \addsp{x,y} \in I \iff y \in x.
 $$
-Tento rozšířený kontext si označíme $\addsp{X', Y', I'}$. Postup nalezení Hledaného konceptu se nijak nemění, pouze použijeme tento kontext, namísto původního $\context$.
+Tento rozšířený kontext si označíme $\addsp{X', Y', I'}$. 
 
+\sssection{Nalezení Hledaného konceptu v rozšířeném kontextu}
+Hledaný koncept nalezneme jednoduše v případě, že dotaz $Q$ se skládá pouze z AND operátorů. Pak je Hledaný koncept roven
+$$
+\hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}.
+$$
 
+V případě, že dotaz obsahuje OR nebo NOT operátor, musíme Hledaný koncept hledat jinak. Můžeme vzít všechny dokumenty, které vyhledávač vrátil během hledání prvního dotazu $Q$, tj. $D$. K těmto dokumentům nalezneme v kontextu $\addsp{X', Y', I'}$ intent a zpět extent. Dostáváme tak koncept
+$$
+\hledany=\addsp{D\updown, D\up}.
+$$
 
+Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Označme $\delta(D)=D\cap X'$. Pak Hledaný koncept je roven
+$$
+\hledany=\addsp{\delta(D)\updown, \delta(D)\up}.
+$$
 
+\ssection{Lindigův algoritmus pro hledání horních sousedů}
+Lindigův algoritmus je algoritmus pro budování konceptuálního svazu z kontextu. Součástí je i algoritmus na spočítání horních sousedů nějakého konceptu. Tento algoritmus budeme potřebovat, takže si ho popíšeme. Nejprve si ale zadefinujeme, co je to horní soused konceptu. 
+
+\begin{mydef}[Horní soused konceptu]
+Mějme kontext $\context$ a jemu příslušný konceptuální svaz $\lattice$. Dále mějme koncept $\addsp{G, M} \in \lattice$, který není největším konceptem svazu, tj. $\addsp{G, M}\ne\addsp{X, X\up}$. 
+
+Koncept $\addsp{G', M'}$ nazveme horním sousedem konceptu $\addsp{G, M}$, pokud platí, že $\addsp{G, M} < \addsp{G', M'}$ a zároveň platí, že neexistuje koncept $\addsp{G'', M''}$ takový, že $\addsp{G, M} < \addsp{G'', M''} < \addsp{G', M'}$.
+\end{mydef}
+
+Jinými slovy, horní koncepty jsou ty koncepty, které se nachází právě o jednu úroveň výše než koncept $\addsp{G, M}$.
+
+Myšlenka algoritmu je založena na tom, že když přidáme k extentu $G$ konceptu $\addsp{G, M}$ objekt z $X$, který není v $G$, a uzavřeme, získáme koncept, který je určitě větší. Pokud postupně přidáme všechny objekty z $X \setminus G$, dostaneme množinu konceptů, která obsahuje všechny horní sousedy. Množinu si pojmenujeme $S$:
+$$
+S=\adds{\addsp{(G\cup \adds{g})\updown, (G\cup \adds{g})\up}\sep g\in X\setminus G}
+$$
+Tato množina sice obsahuje všechny horní sousedy, ale bohužel i některé navíc. Může se stát, že přidáním objektu $g\in X\setminus G$ \uv{přeskočíme} nějaký koncept a dostaneme koncept, který je o více než jednu úroveň výše. Abychom tak získali pouze množinu horních sousedů, musíme při každém přidání nového objektu zkontrolovat, zda jsme skutečně vygenerovali horního souseda. 
+
+To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v novém konceptu $\addsp{G', M'}$, generují tentýž koncept. Přesněji to popisuje následující věta.
+
+\begin{theorem}[Jak nalézt horní sousedy]
+Nechť $\addsp{G, M} \in \lattice$ a $\addsp{G, M}\ne\addsp{X, X\up}$. Pak $(G\cup\adds{g})\updown$, kde $g\in X\setminus G$ je extent horního souseda konceptu $\addsp{G, M}$ právě tehdy, když pro všechna $x\in(G\cup\adds{g})\updown\setminus G$ platí $(G\cup\adds{x})\updown=(G\cup\adds{g})\updown$.
+\end{theorem}
+
+Pomocí této věty už můžeme napsat algoritmus \ref{alg.upper}, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{G, M}$ ve svazu $\lattice$.
+
+\begin{figure} \label{alg.upper}
+\begin{algorithmic}
+\Function{UpperNeighbors}{$\addsp{G, M}, \lattice$}
+	\State $candidates \gets X \setminus G$
+    \State $neighbors \gets \emptyset$
+    \ForAll{$g \in X\setminus G$} 
+    	\State $M_1\gets(G\cup\adds{g})\up$
+    	\State $G_1\gets M_1\down$
+    	\If{$candidates \cap (G_1\setminus G\setminus\adds{g}) = \emptyset$}
+    		\State $neighbors\gets neighbors \cup(\addsp{G_1, M_1})$
+    	\Else
+    		\State $candidates\gets candidates\setminus\adds{g}$
+    	\EndIf
+    \EndFor
+    \State \Return $neighbors$
+\EndFunction
+\end{algorithmic}
+\caption{Algoritmus UpperNeighbors na počítání horních sousedů konceptu}
+\end{figure}
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
