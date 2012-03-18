@@ -67,7 +67,7 @@
 \newcommand{\downup}{^{\downarrow\uparrow}}
 \newcommand{\biginf}{\bigwedge}
 \newcommand{\bigsup}{\bigvee}
-\newcommand{\hledany}{\mathbb{K}}
+\newcommand{\hledany}{\mathbb{H}}
 \newcommand{\lowerc}{\mathbb{L}}
 \newcommand{\upperc}{\mathbb{U}}
 
@@ -905,8 +905,8 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 	\item Pokud se jedná o dotaz s více než jedním klíčovým slovem, provedeme ještě jeden dotaz, kde všechna klíčová slova z dotazu spojíme operátorem OR.
 	\item Nyní přichází na řadu FCA část vyhledávače. Jako první se vytvoří kontext $\context$. Objekty budou dokumenty, které nám vyhledávač vrátil v předchozím bodě. Atributy budou atributy těchto dokumentů plus klíčová slova z dotazu. 
 	\item Relaci $I$ definujeme takto: $\addsp{x, y}\in I$ právě tehdy, když dokument $x$ obsahuje slovo $y$.
-	\item Nyní musíme nalézt Hledaný koncept. To je koncept, který odpovídá dotazu od uživatele. Můžeme ho nalézt tak, že vezmeme množinu dokumentů, které vyhledávač vrátil v prvním bodě, a spočítáme koncept, který těmto dokumentům odpovídá. 
-	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme ve spodních sousedech, generalizaci v horních sousedech a podobné dotazy v sosuedních konceptech. Pokud například Hledaný koncept má intent $\adds{\mbox{limita, funkce}}$ a nějaký spodní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
+	\item Nyní musíme nalézt koncept dotazu. To je koncept, který odpovídá dotazu od uživatele. Můžeme ho nalézt tak, že vezmeme množinu dokumentů, které vyhledávač vrátil v prvním bodě, a spočítáme koncept, který těmto dokumentům odpovídá. 
+	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme ve spodních sousedech, generalizaci v horních sousedech a podobné dotazy v sosuedních konceptech. Pokud například koncept dotazu má intent $\adds{\mbox{limita, funkce}}$ a nějaký spodní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
 \end{enumerate}
 
 
@@ -949,15 +949,15 @@ $$
 $$
 kde $x \in X$ a $y \in Y$.
 
-\sssection{Nalezení Hledaného konceptu}
-Dalším úkolem je nalezení konceptu, který reprezentuje výsledek aktuálního dotazu. Máme v zásadě dvě možnosti, jak tento koncept nalézt. Vezmeme si slova z dotazu $\beta(Q)$ a spočítáme extent a zpět intent. Tím dostaneme koncept, který v intentu obsahuje slova z dotazu a zároveň je to nejmenší koncept, který tato slova obsahuje. Hledaný koncept budeme označovat $\hledany$:
+\sssection{Nalezení konceptu dotazu}
+Dalším úkolem je nalezení konceptu, který reprezentuje výsledek aktuálního dotazu. Máme v zásadě dvě možnosti, jak tento koncept nalézt. Vezmeme si slova z dotazu $\beta(Q)$ a spočítáme extent a zpět intent. Tím dostaneme koncept, který v intentu obsahuje slova z dotazu a zároveň je to nejmenší koncept, který tato slova obsahuje. Koncept dotazu budeme označovat $\hledany$:
 $$
 \hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}
 $$
 
-Tento postup má ale zásadní nevýhodu v případě, kdy se snažíme nalézt Hledaný koncept pro dotaz, který obsahuje jiný operátor než AND. Pokud má dotaz tvar $Q=$\uv{derivace OR integrál}, nemůžeme hledat Hledaný koncept tak, že spočítáme extent $\adds{\mbox{derivace, integrál}}\down$, protože bychom tím získali dokumenty, které obsahují jak slovo \uv{derivace}, tak slovo \uv{integrál}. Což jistě nepředstavuje koncept dotazu \uv{derivace OR integrál}.
+Tento postup má ale zásadní nevýhodu v případě, kdy se snažíme nalézt koncept dotazu pro dotaz, který obsahuje jiný operátor než AND. Pokud má dotaz tvar $Q=$\uv{derivace OR integrál}, nemůžeme hledat koncept dotazu tak, že spočítáme extent $\adds{\mbox{derivace, integrál}}\down$, protože bychom tím získali dokumenty, které obsahují jak slovo \uv{derivace}, tak slovo \uv{integrál}. Což jistě nepředstavuje koncept dotazu \uv{derivace OR integrál}.
 
-Lepším postupem tak je začít počítat Hledaný koncept dokumenty. Pokud vezmeme množinu dokumentů, které vyhledávač vrátil, přesněji tu podmnožinu, kterou jsme použili v kontextu, $X$, pokud jsme aplikovali omezení, a tuto množinu uzavřeme, dostaneme koncept, který přesně odpovídá našemu dotazu. Dostaneme tak koncept:
+Lepším postupem tak je začít počítat koncept dotazu přes dokumenty. Pokud vezmeme množinu dokumentů, které vyhledávač vrátil, přesněji tu podmnožinu, kterou jsme použili v kontextu, $X$, pokud jsme aplikovali omezení, a tuto množinu uzavřeme, dostaneme koncept, který přesně odpovídá našemu dotazu. Dostaneme tak koncept:
 $$
 \hledany=\addsp{X\updown, X\up}=\addsp{X, X\up}
 $$
@@ -976,18 +976,18 @@ $$
 $$
 Tento rozšířený kontext si označíme $\addsp{X', Y', I'}$. 
 
-\sssection{Nalezení Hledaného konceptu v rozšířeném kontextu}
-Hledaný koncept nalezneme jednoduše v případě, že dotaz $Q$ se skládá pouze z AND operátorů. Pak je Hledaný koncept roven
+\sssection{Nalezení konceptu dotazu v rozšířeném kontextu}
+Koncept dotazu nalezneme jednoduše v případě, že dotaz $Q$ se skládá pouze z AND operátorů. Pak je koncept dotazu roven
 $$
 \hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}.
 $$
 
-V případě, že dotaz obsahuje OR nebo NOT operátor, musíme Hledaný koncept hledat jinak. Můžeme vzít všechny dokumenty, které vyhledávač vrátil během hledání prvního dotazu $Q$, tj. $D$. K těmto dokumentům nalezneme v kontextu $\addsp{X', Y', I'}$ intent a zpět extent. Dostáváme tak koncept
+V případě, že dotaz obsahuje OR nebo NOT operátor, musíme koncept dotazu hledat jinak. Můžeme vzít všechny dokumenty, které vyhledávač vrátil během hledání prvního dotazu $Q$, tj. $D$. K těmto dokumentům nalezneme v kontextu $\addsp{X', Y', I'}$ intent a zpět extent. Dostáváme tak koncept
 $$
 \hledany=\addsp{D\updown, D\up}.
 $$
 
-Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Označme $\delta(D)=D\cap X'$. Pak Hledaný koncept je roven
+Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Označme $\delta(D)=D\cap X'$. Pak koncept dotazu je roven
 $$
 \hledany=\addsp{\delta(D)\updown, \delta(D)\up}.
 $$
@@ -1053,12 +1053,12 @@ Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy.
 
 \ssection{Hledání návrhů ve svazu}
 
-V současné chvíli máme spočítáný Hledaný koncept a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. 
+V současné chvíli máme spočítáný koncept dotazu a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. 
 
 \sssection{Specializace}
 Specializací budeme rozumět návrh, který konkretizuje dotaz tak, aby uživatel, z těch výsledků, které už má k dispozici, dostal nějakou významnou podmnožinu. Například pokud zadá slovo \uv{jaguár}, aby ho specializace dovedla na podmnožinu dokumentů, které se zabývají autem, nebo zvířetem. 
 
-Jako první si spočítáme dolní sousedy našeho Hledaného konceptu. Tím dostaneme množinu konceptů, kterou si označíme $\lowerc_\hledany$
+Jako první si spočítáme dolní sousedy našeho konceptu dotazu. Tím dostaneme množinu konceptů, kterou si označíme $\lowerc_\hledany$
 $$
 \lowerc_\hledany=\lowerneighbors(\hledany).
 $$
@@ -1068,7 +1068,7 @@ $$
 \lowerc_\hledany^I=\adds{M\sep \addsp{G, M} \in \lowerc_\hledany}.
 $$
 
-V tuto chvíli máme Hledaný koncept, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent Hledaného konceptu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$.
+V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$.
 
 $$
 \lowerc_\hledany^s=\adds{M\setminus\hledany_I\sep M \in \lowerc_\hledany^I}
