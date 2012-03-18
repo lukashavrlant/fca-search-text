@@ -991,9 +991,9 @@ $$
 \hledany=\addsp{D\updown, D\up}.
 $$
 
-Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Označme $\delta(D)=D\cap X'$. Pak koncept dotazu je roven
+Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Pak koncept dotazu je roven
 $$
-\hledany=\addsp{\delta(D)\updown, \delta(D)\up}.
+\hledany=\addsp{(D\cap X')\updown, (D\cap X')\up}.
 $$
 
 \ssection{Lindigův algoritmus pro hledání horních sousedů}
