@@ -1089,6 +1089,23 @@ V extentech $G_1$ a $G_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelev
 \sssection{Generalizace}
 Generalizací budeme rozumět návrh, který zobecňuje dotaz tak, aby uživatel po této změně získal více dokumentů, které odpovídají nějakému obecnějšímu konceptu. Zobecnění bude prováděno odstraněním klíčových slov z dotazu. 
 
+Generalizace budeme hledat v horních sousedech konceptu dotazu, takže si je spočítáme
+$$
+\upperc_\hledany=\upperneighbors(\hledany).
+$$
+
+Nyní jsme v opačné situaci než během hledání specializací. Koncept dotazu může mít intent $\adds{\mbox{Jaguár, Zvíře}}$ a horní sousedé intenty $\adds{\mbox{Jaguár}}$ a $\adds{\mbox{Zvíře}}$. Tím že odečteme intent konceptu od intentu horního souseda, získáme slova, která se nachází v intentu konceptu, ale nenachází se v intentu horního souseda. Jsou to tak ta slova, která vyhledávač navrhne uživateli k odstranění. 
+$$
+Gen'=\adds{\hledany_I\setminus M\sep M\in\intfca(\upperc_\hledany)}
+$$
+
+Množina $Gen'$ obsahuje množiny slov, která může uživatel odebrat. Ale může obsahovat i slova, která neobsahuje samotný dotaz a která tak nelze odstranit. Například pokud uživatel zadá dotaz \uv{jaguár rychlost}, může být intent konceptu dotazu $\adds{\mbox{jaguár, rychlost, maximální}}$ a pokud má horní soused intent $\adds{\mbox{jaguár}}$, pak by v množině $Gen'$ bylo i slovo \uv{maximální} a vyhledávač by tak uživateli nabídl odstranit slovo \uv{maximální}, aniž by toto slovo v dotazu bylo. Protože ještě provedeme průnik všech prvků v množině $Gen'$ se slovy dotazu $Q$, abychom měli jistotu, že napovídáme odstranit jen ta slova, která uživatel skutečně do dotazu zadal
+$$
+Gen=\adds{g\cap\beta(Q)\sep g\in Gen'}.
+$$
+
+Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $g_1\in Gen$ je relevantnější než $g_2\in Gen$, zapíšeme $g_1\ge g_2$, právě tehdy, když koncepty pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \upperc_\hledany$, jejichž intenty generují $g_1$ a $g_2$, platí $|G_1|\ge|G_2|$. 
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
   Závěr práce v češtině.
