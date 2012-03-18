@@ -53,6 +53,8 @@
 \DeclareMathOperator{\intfca}{Int}
 \DeclareMathOperator{\lowerneighbors}{LowerNeighbors}
 \DeclareMathOperator{\upperneighbors}{UpperNeighbors}
+\DeclareMathOperator{\unfca}{UN}
+\DeclareMathOperator{\lnfca}{LN}
 
 \newcommand{\invstem}{\stem^{-1}}
 \newcommand{\alldoc}{\mathbb{D}}
@@ -70,6 +72,7 @@
 \newcommand{\hledany}{\mathbb{H}}
 \newcommand{\lowerc}{\mathbb{L}}
 \newcommand{\upperc}{\mathbb{U}}
+\newcommand{\sibl}{\mathbb{S}}
 
 
 
@@ -1084,7 +1087,7 @@ kde $\max$ v tomto případě vybere to slovo, které se v dokumentech $\alldoc$
 
 Řekneme, že návrh $s_1 \in Spec$ je relevantnější než návrh $s_2 \in Spec$, zapíšeme $s_1 \ge s_2$, právě tehdy, když pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \lowerc_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $|G_1|\ge|G_2|$. 
 
-V extentech $G_1$ a $G_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelevantjší návrh by měl zároveň vést na nejvíce dokumentů. 
+V extentech $G_1$ a $G_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelevantější návrh by měl zároveň vést na nejvíce dokumentů. 
 
 \sssection{Generalizace}
 Generalizací budeme rozumět návrh, který zobecňuje dotaz tak, aby uživatel po této změně získal více dokumentů, které odpovídají nějakému obecnějšímu konceptu. Zobecnění bude prováděno odstraněním klíčových slov z dotazu. 
@@ -1105,6 +1108,39 @@ Gen=\adds{g\cap\beta(Q)\sep g\in Gen'}.
 $$
 
 Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $g_1\in Gen$ je relevantnější než $g_2\in Gen$, zapíšeme $g_1\ge g_2$, právě tehdy, když koncepty pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \upperc_\hledany$, jejichž intenty generují $g_1$ a $g_2$, platí $|G_1|\ge|G_2|$. 
+
+\sssection{Podobné dotazy}
+% 2011_0035_Eklund
+\begin{figure}
+  \centering
+  \includegraphics[width=7cm]{obrazky/siblings.pdf}
+  \caption{Sourozenci konceptu $Z$}
+  \label{fig.siblings}
+\end{figure}
+
+V této části popíšeme, jak vygenerovat dotazy, které jsou podobné současnému dotazu, který uživatel zadal do vyhledávače. Když jsme hledali konkrétnější dotazy, hledali jsme je v dolních sosuedech; obecnější dotazy jsme hledali v horních sousedech. Podobné dotazy budeme hledat v konceptech, které se nachází na stejné úrovni. Můžeme tak říci, že je budeme hledat v sourozencích konceptu dotazu. 
+
+Otázkou je, jak definovat sourozence. Když se podíváme na obrázek \ref{fig.siblings}, jaké koncepty by měly být sourozenci konceptu $Z$? Když se budeme držet terminologie, která je běžná u binárních stromů, pak by sourozenci byli potomci rodiče, což by odpovídalo sourozencům $\adds{B, F}$. 
+
+U svazů ale mohou vznikat cykly, takže můžeme zvolit i opačnou cestu -- rodičové potomků. To by odpovídalo sourozencům $\adds{D, F}$. Dále můžeme říci, že sourozenci jsou všichni mezi potomky a rodiči, tj. všechny koncepty mezi konceptem $A$ a $E$, tj. $\adds{B, C, D, F}$. 
+
+Další rozumnou možností je vzít ty koncepty, které stejného rodiče jako koncept $Z$ a zároveň i stejného potomka. Tomu odpovídá koncept $F$.
+
+Pro jednu z těchto definic bychom se měli rozhodnout. Není vhodné uživateli napovídat všechny dotazy z konceptů $B, C$ a $D$, protože $D$ je konkrétnější dotaz než $C$ a $C$ je konkrétnější dotaz než $B$. Z této řady stačí uživateli navrhnout jeden dotaz. 
+
+Pokud budeme za sourozence brát potomky rodičů, budeme mu nabízet spíše obecnější dotazy. Pokud zvolíme rodiče potomků, pak mu budeme nabízet spíše konkrétnější dotazy. 
+
+Zvolíme tak zlatou střední cestu -- budeme mu nabízet dotazy, které generují koncepty, které mají společného rodiče i potomka. Zadefinujeme si funkce, které spočítají všechny horní a dolní sousedy všem prvkům množiny.
+
+\begin{eqnarray}
+\unfca(X)&=&\bigcup\adds{\upperneighbors(C)\sep C\in X}\\
+\lnfca(X)&=&\bigcup\adds{\lowerneighbors(C)\sep C\in X}
+\end{eqnarray}
+
+Nyní můžeme sourozence $\sibl$ konceptu $\hledany$ zadefinovat jako
+$$
+\sibl_\hledany = \addh{\lnfca(\unfca(\adds{\hledany}))\cap\unfca(\lnfca(\adds{\hledany}))}\setminus\adds{\hledany}
+$$
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
