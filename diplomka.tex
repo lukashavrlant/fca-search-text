@@ -1053,7 +1053,7 @@ Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy.
 
 \ssection{Hledání návrhů ve svazu}
 
-V současné chvíli máme spočítáný koncept dotazu a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. 
+V současné chvíli máme spočítaný koncept dotazu a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. 
 
 \sssection{Specializace}
 Specializací budeme rozumět návrh, který konkretizuje dotaz tak, aby uživatel, z těch výsledků, které už má k dispozici, dostal nějakou významnou podmnožinu. Například pokud zadá slovo \uv{jaguár}, aby ho specializace dovedla na podmnožinu dokumentů, které se zabývají autem, nebo zvířetem. 
@@ -1063,16 +1063,31 @@ $$
 \lowerc_\hledany=\lowerneighbors(\hledany).
 $$
 
-Nyní z každého konceptu vytáhneme pouze jeho intent
+Z každého konceptu budeme nejdříve potřebovat pouze intent, poté extent. Nechť tak funkce $\intfca$ a $\ext$ vrací z dané množiny konceptů $K$ intenty a extenty.
+\begin{eqnarray}
+\intfca(K)&=&\adds{M\sep \addsp{G, M} \in K}\\
+\ext(K)&=&\adds{G\sep \addsp{G, M} \in K}
+\end{eqnarray}
+
+V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$. Dostaneme množinu možných návrhů na specializaci dotazu. 
 $$
-\lowerc_\hledany^I=\adds{M\sep \addsp{G, M} \in \lowerc_\hledany}.
+Spec'=\adds{M\setminus\hledany_I\sep M \in \intfca(\lowerc_\hledany)}. 
 $$
 
-V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$.
+Množina $Spec'$ obsahuje možné návrhy na rozšíření dotazu, ale některé z rozšíření mohou obsahovat více než jedno slovo. Pokud má koncept dotazu intent $\adds{\mbox{Jaguár}}$ a dolní soused má intent $\adds{\mbox{Jaguár, rychlost, maximální}}$, pak v množině $Spec'$ bude návrh $\adds{\mbox{rychlost, maximální}}$. 
 
+Nicméně je zbytečné navrhovat úpravu \code{+rychlost, maximální}, protože stačí, když uživateli navrhneme přidat pouze jedno z těchto slov a dovedeme ho ke stejnému konceptu. Z každé množiny v $Spec'$ tak vybereme vždy jen to slovo, které se ve všech dokumentech vyskytuje nejčastěji. Dostaneme finální množinu
 $$
-\lowerc_\hledany^s=\adds{M\setminus\hledany_I\sep M \in \lowerc_\hledany^I}
+Spec=\adds{\max(s)\sep s\in Spec'},
 $$
+kde $\max$ v tomto případě vybere to slovo, které se v dokumentech $\alldoc$ vyskytuje nejčastěji. Množina $Spec$ už je finální a obsahuje všechny návrhy, které můžeme uživatel předložit. Zbývá jen definovat uspořádání, abychom uživateli navrhovali ty nejrelevantnější návrhy. 
+
+Řekneme, že návrh $s_1 \in Spec$ je relevantnější než návrh $s_2 \in Spec$, zapíšeme $s_1 \ge s_2$, právě tehdy, když pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \lowerc_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $|G_1|\ge|G_2|$. 
+
+V extentech $G_1$ a $G_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelevantjší návrh by měl zároveň vést na nejvíce dokumentů. 
+
+\sssection{Generalizace}
+Generalizací budeme rozumět návrh, který zobecňuje dotaz tak, aby uživatel po této změně získal více dokumentů, které odpovídají nějakému obecnějšímu konceptu. Zobecnění bude prováděno odstraněním klíčových slov z dotazu. 
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
