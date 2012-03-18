@@ -55,6 +55,7 @@
 \DeclareMathOperator{\upperneighbors}{UpperNeighbors}
 \DeclareMathOperator{\unfca}{UN}
 \DeclareMathOperator{\lnfca}{LN}
+\DeclareMathOperator{\simfca}{sim}
 
 \newcommand{\invstem}{\stem^{-1}}
 \newcommand{\alldoc}{\mathbb{D}}
@@ -1139,8 +1140,21 @@ Zvolíme tak zlatou střední cestu -- budeme mu nabízet dotazy, které generuj
 
 Nyní můžeme sourozence $\sibl$ konceptu $\hledany$ zadefinovat jako
 $$
-\sibl_\hledany = \addh{\lnfca(\unfca(\adds{\hledany}))\cap\unfca(\lnfca(\adds{\hledany}))}\setminus\adds{\hledany}
+\sibl_\hledany = \addh{\lnfca(\unfca(\adds{\hledany}))\cap\unfca(\lnfca(\adds{\hledany}))}\setminus\adds{\hledany}.
 $$
+
+Z této množiny už jen vytáhneme intenty a dostaneme množinu podobných dotazů
+$$
+Sibl=\intfca(\sibl_\hledany).
+$$
+
+Tyto dotazy setřídíme tak, že spočítáme podobnost konceptů z množiny $\sibl_\hledany$ s konceptem dotazu. Podobnost dvou konceptů spočítáme přes podobnost jejich extentů a intentů. Podobnost dvou extentů pak jednoduše definujeme jako podíl počtu společných objektů a počtu všech objektů. Podobnost dvou konceptů $\addsp{A, B}$ a $\addsp{C, D}$ je rovna
+$$
+\simfca(\addsp{A, B}, \addsp{C, D}) = \frac12\addk{\frac{|A\cap C|}{|A\cup C|} + \frac{|B\cap D|}{|B\cup D|}}.
+$$
+
+Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge s_2$, právě tehdy, když pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \sibl_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $\simfca(\addsp{G_1, M_1}, \hledany)\ge\simfca(\addsp{G_2, M_2}, \hledany)$. Jako první budeme zobrazovat dotaz, který je nejvíce podobný současnému dotazu $Q$.
+
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
