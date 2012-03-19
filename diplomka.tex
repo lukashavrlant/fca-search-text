@@ -111,7 +111,7 @@ Tento problém je typický pro slova, která mají několik významů. Napříkl
 
 Otázkou je, jak tyto návrhy získat. Pokud si vyhledávač uchovává historii všech hledání, která uživatelé provádějí, může se je pokusit vytáhnout právě z této historie. Pokud ovšem tato data vyhledávač nemá, nebo jich má málo, musí se použít jiná metoda. 
 
-Tato práce popisuje metodu, jak získat podobné dotazy pomocí formální konceptuální analýzy (anglicky Formal concept analysis, dále jen FCA) pouze na základně znalosti obsahu dokumentů. FCA pracuje s tabulkovými daty, ve kterých hledá nějaké potenciálně zajímavé shluky dat. Tyto shluky pro nás budou představovat množiny dokumentů, které jsou nějakým způsobem podobné a které sdílí nějaká zásadní klíčová slova. Tato klíčová slova poté dále využijeme při generování návrhů na nové dotazy. 
+Práce popisuje metodu, jak získat podobné dotazy pomocí formální konceptuální analýzy (anglicky Formal concept analysis, dále jen FCA) pouze na základně znalosti obsahu dokumentů. FCA pracuje s tabulkovými daty, ve kterých hledá nějaké potenciálně zajímavé shluky dat. Tyto shluky pro nás budou představovat množiny dokumentů, které jsou nějakým způsobem podobné a které sdílí nějaká zásadní klíčová slova. Tato klíčová slova poté dále využijeme při generování návrhů na nové dotazy. 
 
 %cDiplomová práce je rozdělena do několika kapitol. V první kapitole, \uv{Information retrieval}, je popsáno, jakým způsobem pracuje samotné jádro vyhledávače. 
 
@@ -208,7 +208,7 @@ Algoritmus, který by k libovolnému slovu vrátil jeho základ, je poměrně ko
 \end{description} 
 
 \subsection{Uložení indexu}
-V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále a můžeme vytvořit základní index. Do něj si uložíme informace o tom, ve kterých dokumentech se vyskytuje daný stem. Pokud pak budeme chtít získat dokumentu, které obsahují stem \uv{strom}, vyhledáme si v indexu záznam o stemu \uv{strom} a okamžitě získáme množinu dokumentů, která stem obsahuje. 
+V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále a můžeme vytvořit základní index. Do něj si uložíme informace o tom, ve kterých dokumentech se vyskytuje daný stem. Pokud pak budeme chtít získat dokumenty, které obsahují stem \uv{strom}, vyhledáme si v indexu záznam o stemu \uv{strom} a okamžitě získáme množinu dokumentů, která stem obsahuje. 
 
 Bude se nám také hodit informace o počtu stemů v daném dokumentu. To využijeme během řazení dokumentů od nejvíce relevantních. Nakonec si můžeme ještě uložit informaci o počtu výskytů daného stemu ve všech dokumentech. Všechny tyto informace můžeme uložit do struktury, která vypadá takto: 
 
@@ -232,7 +232,7 @@ Atributy jsou poměrně běžnou součástí různých vědeckých článků, kd
 
 Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu daného stemu ku počtu všech stemů v dokumentu je větší než 0,05}). 
 
-Tento postup může být úspěšný v případě, že máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Klíčové slovo pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
+Tento postup může být úspěšný v případě, kdy máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Klíčové slovo pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
 
 Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejné klíčové slovo a to není to, co bychom chtěli. 
 
@@ -240,13 +240,13 @@ Tento problém vyřešíme tím, že při hledání klíčových slov pro dokume
 
 
 \subsubsection{Algoritmus tf-idf}\label{tfidf}
-Tento postup má své jméno, jedná se o tf-idf algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která v základním nastavení vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
+Tento postup má své jméno, jedná se o $\tfidf$ algoritmus. Ten je rozdělený do několika částí. První je funkce $\mbox{tf}_{t,d}$, která v základním nastavení vrací počet výskytů slova $t$ v dokumentu $d$. Dále máme funkci $\mbox{df}_t$, která vrací počet dokumentů, které obsahují slovo $t$. Tuto funkci využijeme k tomu, abychom snížili skóre těch slov, která se vyskytují v příliš mnoha dokumentech. 
 
 Označme $N$ počet všech dokumentů v naší sadě. Pak vydělením $N/\mbox{df}_t$ získáme koeficient, který značí, jak moc je slovo $t$ unikátní. Pokud se vyskytuje jen v jednom dokumentu, získáme maximální hodnotu $N$. Při vyšším výskytu slov v dokumentech by tento koeficient klesal příliš rychle, proto ještě použijeme logaritmus. Získáme funkci $\mbox{idf}_t$
 $$\mbox{idf}_t=\log\frac{N}{\mbox{df}_t}.$$
 
-Složením funkcí tf a idf získáme funkci tf-idf' (za chvíli tuto funkci ještě vylepšíme, prozatím si ji označíme s apostrofem) definovanou jako
-$$\mbox{tf-idf}_{t,d}'=\mbox{tf}_{t,d}\cdot\mbox{idf}_t.$$
+Složením funkcí tf a idf získáme funkci $\tfidf'$ (za chvíli tuto funkci ještě vylepšíme, prozatím si ji označíme s apostrofem) definovanou jako
+$$\tfidf_{t,d}'=\mbox{tf}_{t,d}\cdot\mbox{idf}_t.$$
 
 Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
 
@@ -259,10 +259,10 @@ Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
 
 Problémem tohoto přístupu je, že příliš preferuje velké dokumenty, které obsahují mnoho slov. Máme-li například učebnici středoškolské matematiky, je pravděpodobné, že bude několikrát, řekněme 50krát, obsahovat slovo \uv{kombinace}. Vedle toho můžeme mít desetistránkový dokument pojednávající čistě o kombinacích, ale slovo \uv{kombinace} obsahuje pouze 25krát. Podle stávající $\mbox{tf}_{t,d}$ funkce bude učebnice na klíčové slovo \uv{kombinace} dvakrát relevantnější než článek přímo se zaměřující na kombinace. 
 
-Tento problém můžeme zkusit vyřešit tím, že hodnotu $\mbox{tf}_{t,d}$ ještě vydělíme celkovým počtem slov v dokumentu. Získáme tak relativní zastoupení slova $t$ mezi všemi slovy v dokumentu. Učebnice z předchozího příkladu pak bude mít mnohem nižší hodnotu $\mbox{tf}_{t,d}$, protože je mnohonásobně větší než článek. Vzorec funkce tf-idf by pak vypadal takto:
+Tento problém můžeme zkusit vyřešit tím, že hodnotu $\mbox{tf}_{t,d}$ ještě vydělíme celkovým počtem slov v dokumentu. Získáme tak relativní zastoupení slova $t$ mezi všemi slovy v dokumentu. Učebnice z předchozího příkladu pak bude mít mnohem nižší hodnotu $\mbox{tf}_{t,d}$, protože je mnohonásobně větší než článek. Vzorec funkce $\tfidf$ by pak vypadal takto:
 
 $$
-\mbox{tf-idf}_{t,d}^{\prime\prime} = \frac{\mbox{tf}_{t,d}}{|d|}\cdot\mbox{idf}_t,
+\tfidf_{t,d}^{\prime\prime} = \frac{\mbox{tf}_{t,d}}{|d|}\cdot\mbox{idf}_t,
 $$
 kde $|d|$ je počet slov v dokumentu $d$.
 
@@ -270,25 +270,25 @@ Problém jsme tím ale ve skutečnosti nevyřešili, jen jsme ho obrátili -- u�
 
 Vyhledávač nakonec hodnotu $\mbox{tf}_{t,d}$ ještě dělí logaritmem počtu všech slov v dokumentu. Hodnota $\mbox{tf}_{t,d}$ u velkých dokumentů tak bude vydělena větší hodnotou než u malých dokumentů. Zároveň ale tato hodnota, kterou dělíme, nebude růst lineárně, takže desetkrát větší dokument nepotřebuje i desetkrát více klíčových slov, aby dosáhl na stejné hodnocení.
 
-Nyní můžeme napsat finální verzi funkce tf-idf:
+Nyní můžeme napsat finální verzi funkce $\tfidf$:
 
 $$
-\mbox{tf-idf}_{t,d} = \frac{\mbox{tf}_{t,d}}{\log |d|}\cdot\mbox{idf}_t,
+\tfidf_{t,d} = \frac{\mbox{tf}_{t,d}}{\log |d|}\cdot\mbox{idf}_t,
 $$
 kde $|d|$ je počet slov v dokumentu $d$.
 
 \sssection{Vygenerování atributů dokumentu}
 
-Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho tf-idf$_{s,d}$ skóre. 
+Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho $\tfidf_{s,d}$ skóre. 
 
-Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici tf-idf skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici tf-idf skóre pro klíčová slova a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
+Za klíčová slova pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre nebo všechny stemy, které překročily určitou hranici $\tfidf$ skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici $\tfidf$ skóre pro klíčová slova a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
 
 Dále můžeme ve vyhledávači nastavit:
 
 \begin{itemize}
-	\item Minimální počet atributů. Pomocí tohoto nastavení můžeme specifikovat, že pro každý dokument chceme například alespoň tři atributy. Pokud se přes hranici dostanou pouze dva stemy, třetí stem s největším tf-idf skóre bude také považován za atribut dokumentu. 
+	\item Minimální počet atributů. Pomocí tohoto nastavení můžeme specifikovat, že pro každý dokument chceme například alespoň tři atributy. Pokud se přes hranici dostanou pouze dva stemy, třetí stem s největším $\tfidf$ skóre bude také považován za atribut dokumentu. 
 	\item Maximální počet atributů pro každý dokument. 
-	\item Vyhledávač umožňuje přepnout do druhého modelu, kdy se za atributy berou například tři stemy s největším tf-idf skórem. Žádná hranice se pak neuplatňuje. 
+	\item Vyhledávač umožňuje přepnout do druhého modelu, kdy se za atributy berou například tři stemy s největším $\tfidf$ skórem. Žádná hranice se pak neuplatňuje. 
 \end{itemize}
 
 \ssection{Další funkce vyhledávače}
@@ -298,7 +298,7 @@ Během zpracování textů jsme používali stemmer, který bral na vstup slovo 
 
 Například pro slovo \uv{množina} získáme s použitým stemmerem stem \uv{mnoh}. Toto chování nám nevadí v případě budování indexu, ale vadilo by nám v druhé části. Nemůžeme uživateli napovědět, že má k dotazu přidat klíčové slovo \uv{mnoh}, protože nebude vědět, jaké slovo ve skutečnosti přidává. 
 
-Potřebovali bychom inverzní funkci ke stemovací funkci. Bohužel, inverzní funkce neexistuje, protože stemovací funkce není prostá. Sestrojíme tak takovou funkci, která bude mít na vstupu stem $s$ a na výstupu jedno ze slov, které má $s$ jako svůj stem. Mějme tak původní stemmer, který označíme jako funkci $\stem$ z množiny slov do množiny stemů. Budeme chtít sestavit funkci $\invstem$ z množiny stemů do množiny slov.
+Potřebovali bychom inverzní funkci ke stemovací funkci. Bohužel, inverzní funkce neexistuje, protože stemovací funkce není prostá. Sestrojíme tak takovou funkci, která bude mít na vstupu stem $s$ a na výstupu jedno ze slov, které má $s$ jako svůj stem. Mějme tak původní stemmer, který označíme jako funkci $\stem$, která nám pro slovo vrací jeho stem. Budeme chtít sestavit funkci $\invstem$, která nám pro stem vrací nějaké přirozené slovo.
 
 Při používání funkce $\stem$ si tak u každého výsledného stemu $s$ budeme uchovávat množinu původních slov $P_s$, která se zobrazují právě na stem $s$. Tedy pokud $s=stem(w)$, pak $P_s=P_s\cup\adds{w}$. Množina $P_s$ pak splňuje $\forall x\in P_s: \stem(x)=s$. 
 
@@ -524,7 +524,7 @@ To samozřejmě není jediný koncept, který kontext obsahuje. Ve skutečnosti 
 
 První koncept můžeme pojmenovat \uv{pohybující se živočichové}, druhý koncept by byl \uv{živočichové, kteří k pohybu využívají končetiny}. Druhý koncept obsahuje všechny atributy jako první koncept, plus jeden navíc -- ten nějakým způsobem konkretizuje tento koncept. U objektů to platí naopak. Druhý koncept má více atributů, ale méně objektů. To je logické, pokud zvýšíme počet atributů, které objekty musí mít, zvýšíme tím na objekty nároky a objektů ubude. 
 
-Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký koncept konkrétnější než jiný, řekneme, že je menší. Koncept $A$ je konkrétnější než koncept $B$, zapíšeme $A < B$, pokud je extent koncept $A$ vlastní podmnožinou extentu konceptu $B$. Tím máme definováno uspořádání, kterým můžeme uspořádat všechny koncepty. Přesnější popis bude v následující kapitole. 
+Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký koncept konkrétnější než jiný, řekneme, že je menší. Koncept $A$ je konkrétnější než koncept $B$, zapíšeme $A < B$, pokud je extent konceptu $A$ vlastní podmnožinou extentu konceptu $B$. Tím máme definováno uspořádání, kterým můžeme uspořádat všechny koncepty. Přesnější popis bude v následující kapitole. 
 
 \ssection{Formální zavedení FCA}
 
@@ -650,7 +650,7 @@ Pevným bodem uzávěrového operátoru nad množinou herců rozumíme takovou m
 
 Je například množina $\adds{\mbox{Danny Glover, Mel Gibson}}$ pevným bodem? Věta \ref{th.galcl} nám říká, jak postupovat, pokud pevný bod chceme nalézt. Jako první vypočteme $f(\adds{\mbox{Danny Glover, Mel Gibson}})$. Tím získáme množinu filmů, ve kterých herci hráli spolu, tj. $\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}}$. Nyní zpět zjistíme herce, kteří hráli v těchto filmech, spočítáme $g(\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}})$. Kromě Gibsona a Glovera se tam objeví ještě Mary Ellen Trainor: $\adds{\mbox{Danny Glover, Mel Gibson, Mary Ellen Trainor}}$. Tato množina herců a hereček je už pevným bodem. 
 
-Uzávěrový operátor si můžeme ukázat i na úplně jiném příkladě, doplnění rovinného útvaru na nejmenší konvexní útvar. Máme-li tak nějaké útvar v rovině, který není konvexní, například klasický obrázek hvězdy, uzávěrový operátor ho doplní tak, aby z něj vznikl konvexní útvar a aby tento nový útvat byl nejmenší. Na tomto operátoru si můžeme ilustrovat podmínky v definici \ref{def.clop}.
+Uzávěrový operátor si můžeme ukázat i na úplně jiném příkladě, doplnění rovinného útvaru na nejmenší konvexní útvar. Máme-li tak nějaké útvar v rovině, který není konvexní, například klasický obrázek hvězdy, uzávěrový operátor ho doplní tak, aby z něj vznikl konvexní útvar a aby tento nový útvar byl nejmenší. Na tomto operátoru si můžeme ilustrovat podmínky v definici \ref{def.clop}.
 
 První vlastnost říká, původní útvar bude vždy podmnožinou uzavřeného útvaru. Původní rovinný útvar bude vždy celý obsažen v konvexním útvaru, který ho má obalovat -- uzavřením pouze \uv{přidáme} původnímu útvaru body tak, aby vznikl konvexní útvar. Druhá vlastnost říká, že pokud máme dva různé útvary, přičemž jeden je zanořený ve druhém, tak i jejich obaly budou zanořené. Poslední vlastnost říká, že obalem obalu je tentýž obal. Pokud obalíme hvězdu konvexním útvarem, pro příklad pravidelným pětiúhelníkem, tak obalem tohoto pětiúhelníku bude tentýž pětiúhelník.
 
