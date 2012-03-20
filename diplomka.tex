@@ -1272,7 +1272,11 @@ Dobré výsledky vrací vyhledávač i pro web jakpsatweb.cz:
 	\item Pokud přidáme slovo \uv{php}, dostaneme nový seznam specializací \code{+ serveru | + knihy | + google | + faq | + weblogu | + díky | + xml | + testování | + seo | + anglicky} a seznam podobných dotazů: \code{+/- hosting, serveru | +/- google, hosting | +/- knihy, php | +/- php, google | +/- php, serveru}.
 \end{itemize}
 
+\sssection{Příklady špatných výsledků}
 
+Ze současných databází dává většinou nejhorší výsledky web katedry informatiky. Příkladem budiž dotaz \uv{studium}, na který získáme specializace \code{+ zimní | + absolvent | + letní | + skupina | + jan | + martin | + arnošt | + činnosti | + szz | + bartl}. Většina těchto dotazů nejspíše k žádnému významnému konceptu nepovede. 
+
+Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek na stránku} nad databází jakpsatweb.cz. Vyhledávač odpoví specializacemi \code{+ obrázky | + soubor | + google | + mail}. Nabízí to dokonce slovo \uv{obrázky}, protože použitý stemmer zvolí jiný základ pro slovo \uv{obrázek} a pro \uv{obrázky}. Další návrhy nejsou o nic rozumnější. 
 
 
 %%% Závěr práce v~češtině
