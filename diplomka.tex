@@ -1198,10 +1198,10 @@ O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě 
 
 Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
 
-\ssection{Vyhodnocení výsledků}
-Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. Některé další aspekty lze ovlivnit nastavením vyhledávače. 
+\ssection{Požadavky na zpracovávané dokumenty}
+Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. V této části budou popsány některé vlastnosti, které by dokumenty měly mít, aby vyhledávač dobře fungoval. 
 
-\sssection{Kvalita obsahů dokumentů}
+\sssection{Kvalita obsahů dokumentů}\label{ch.kvalita}
 Zásadním požadavkem na dokument je, aby měl dobrý obsah, ze kterého půjde snadno pomocí $\tfidf$ algoritmu získat jeho atributy. Každý dokument by měl mít ideálně jedno hlavní téma a v jeho obsahu by se měla často vyskytovat slova, která toto téma charakterizují. 
 
 Pokud má vyhledávač dobře fungovat, nemělo by se stávat, že stránka \uv{studijní obory} obsahuje pouze seznam studijních oborů, ale samotná slova \uv{studijní} a \uv{obor} se tam nevyskytují buď vůbec, nebo jen v titulku. Vyhledávač se pak nemá čeho chytit, na dotaz \uv{studijní obory} tuto stránku zobrazí někde ke konci seznamu a jako atribut dokumentu zvolí nějaké nesmyslné slovo, které se tam objevuje poměrně často. 
@@ -1232,13 +1232,48 @@ Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{
 
 HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhé funkce se použije až v případě, kdy selže první funkce.
 
-Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. Vyhledávač nezkoumá http hlavičky, které server spolu se stránkou poslal. 
+Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. 
 
-\sssection{Některé nedostatky vyhledávače}
+\sssection{Některé nedostatky vyhledávače}\label{ch.nedostatky}
 
 Podstatný požadavek je, aby se rozumná klíčová slova nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
 
 Během výpočtu $\tfidf$ funkce hledáme taková slova, která se často vyskytují v daném dokumentu, ale co nejméně ve všech ostatních dokumentech. Funkce bohužel nezkoumá, kolikrát se dané slovo v těch ostatních dokumentech nachází, takže stačí, když se v dokumentu nachází jen jednou v navigaci a už se to bude počítat jako výskyt. 
+
+Kódování HTML stránky lze definovat i HTTP hlavičkou. Samotná stránka pak nemusí obsahovat element \code{<meta http-equiv='content-type'>}. Vzhledem k tomu, že vyhledávač HTTP hlavičky nezkoumá, použil by v tomto případě výchozí kódování \code{utf-8}. 
+
+\ssection{Hodnocení úspěšnosti vyhledávače}
+Ohodnotit, jak je vyhledávač úspěšný v řazení nebo v nabízených návrzích, nijak exaktně a automaticky nejde. Zbývá jen ruční zkoumání a slovní ohodnocení. 
+
+Ve vyhledávači je uloženo několik testovacích sad dokumentů. Jedná se o weby 
+\begin{itemize}
+	\item \code{jakpsatweb.cz}, který se zabývá tvorbou webových stránek a podobných věcech okolo, 
+	\item \code{matweb.cz}, který se zabývá především středoškolskou matematikou,
+	\item \code{jakpodnikat.cz}, který se zabývá podnikáním, jak danit příjmy a podobně,
+	\item \code{inf.upol.cz}, což je web katedry informatiky UP
+\end{itemize}
+a nakonec je ve vyhledávači použita i sada volně stažitelných odborných článků ve formátu PDF, které napsali zaměstananci katedry informatiky UP. 
+
+Kromě webu katedry informatiky se jedná o weby, které mají jasné zaměření každé stránky a bohatý obsah, takže na jejich webech vypadá analýza nejlépe. Web katedry informatiky je stručnější, obsahuje jisté chyby (například titulky pro každou stranu zvlášť, jak je psáno v kapitole \ref{ch.kvalita}, byly vytvořeny až během psaní této práce) a obsahuje nepříjemnost v podobě opakujících se slov na každé stránce, viz kapitola \ref{ch.nedostatky}, takže jeho analýza neprobíhá nejlépe. 
+
+\sssection{Příklady dobrých výsledků}
+Analýza webu jakpodnikat.cz dává několik dobrých výsledků, pro příklad:
+
+\begin{itemize}
+	\item Na dotaz \uv{živnostenský list} vrací seznam specializací \code{+ studenti | + příjmy | + provozovna | + nemocenské | + účetnictví | + jednotný | + dědická | + odkazy | + nemovitostí | + auto}.
+	\item Když k dotazu přidáme například slovo \uv{provozovna}, vyhledávač odpoví novými specializacemi \code{+ studenti | + příjmy | + zahájení | + služby | + autorský | + nemovitostí}. Zároveň přidá i podobné dotazy \code{+/- list, příjmy, živnostenský | +/- list, zahájení, živnostenský | +/- autorský, list, živnostenský | +/- nemovitostí, list, živnostenský}.
+	\item Po vyhledání dotazu \uv{slevy na dani} dostaneme specializace \code{+ příjmy | + studenti | + základ | + doklady | + tisíc | + příloha | + minimální}, z nichž všechny kromě slova \uv{tisíc} dávají nějaký smysl. Seznam podobných dotazů: \code{+/- dani, příjmy | +/- dani, základ | +/- dani, doklady | +/- tisíc, dani | +/- příloha, dani}. Opět kromě dotazu, který obsahuje klíčové slovo \uv{tisíc} to má nějaký smysl. 
+\end{itemize}
+
+Dobré výsledky vrací vyhledávač i pro web jakpsatweb.cz: 
+
+\begin{itemize}
+	\item Pro dotaz \uv{hosting} vrátí seznam specializací \code{+ php | + serveru | + seo | + google | + weblogu | + domény | + anglicky | + základní | + software | + firmy}. 
+	\item Pokud přidáme slovo \uv{php}, dostaneme nový seznam specializací \code{+ serveru | + knihy | + google | + faq | + weblogu | + díky | + xml | + testování | + seo | + anglicky} a seznam podobných dotazů: \code{+/- hosting, serveru | +/- google, hosting | +/- knihy, php | +/- php, google | +/- php, serveru}.
+\end{itemize}
+
+
+
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
