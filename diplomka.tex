@@ -11,7 +11,8 @@
 
 
 %%% Obecné věci
-\newcommand{\name}{CHANDLER}
+\newcommand{\name}{Chandler}
+\newcommand{\nameurl}{http://phoebe.inf.upol.cz/-havrlanl/fca/}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\sep}{\,|\,}
 \newcommand{\docs}{\mathbb{D}}
@@ -1168,6 +1169,70 @@ Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge 
 % Náš dotaz měl velikost dva, $|\beta(Q)|=2$, takže jako první provedeme druhý dotaz do vyhledávače. Dotaz bude mít tvar $Q'=$\uv{podnikat OR student}. Vyhledávač nám vrátí novou sadu dokumentů, $D'$, kterých je $|D'|=68$.
 
 % V dalším kroku sestavíme kontext. Máme nastaveno omezení na $50$ dokumentů, takže vezmeme prvních $50$ dokumentů z $D'$. To bude tvořit množinu objektů $X'$ rozšířeného kontextu $\addsp{X', Y', I'}$. 
+
+
+\section{Výsledky vyhledávače}
+
+\ssection{Uživatelské prostředí vyhledávače}
+Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty}. Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešeleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{obrazky/gui-zakladni.pdf}
+  \caption{Základní rozhraní vyhledávače}
+  \label{fig.gui.empty}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=14cm]{obrazky/gui-result1.pdf}
+  \caption{Výsledek vyhledávače na dotaz \uv{fuzzy attributes}}
+  \label{fig.gui.result1}
+\end{figure}
+
+Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotaz. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
+
+Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství čase je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
+
+O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě položky jsou počty objektů a atributů, které obsahuje kontext, počet dolních a horních sousedů konceptu dotazu a počet jeho sourozenců. Na konci jsou odkazy na zobrazení části svazu, se kterým pracujeme a na samotný kontext.
+
+Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
+
+\ssection{Vyhodnocení výsledků}
+Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. Některé další aspekty lze ovlivnit nastavením vyhledávače. 
+
+\sssection{Kvalita obsahů dokumentů}
+Zásadním požadavkem na dokument je, aby měl dobrý obsah, ze kterého půjde snadno pomocí $\tfidf$ algoritmu získat jeho atributy. Každý dokument by měl mít ideálně jedno hlavní téma a v jeho obsahu by se měla často vyskytovat slova, která toto téma charakterizují. 
+
+Pokud má vyhledávač dobře fungovat, nemělo by se stávat, že stránka \uv{studijní obory} obsahuje pouze seznam studijních oborů, ale samotná slova \uv{studijní} a \uv{obor} se tam nevyskytují buď vůbec, nebo jen v titulku. Vyhledávač se pak nemá čeho chytit, na dotaz \uv{studijní obory} tuto stránku zobrazí někde ke konci seznamu a jako atribut dokumentu zvolí nějaké nesmyslné slovo, které se tam objevuje poměrně často. 
+
+Například pro stránku o studijních oborech na \code{www.inf.upol.cz} zvolil vyhledávač jako hlavní atribut slovo \uv{stupeň}, protože jednotlivé obory jsou tam rozděleny podle stupňů -- 1. stupeň, 2. stupeň, 3. stupeň. Pro prezenční a kombinované studium zvlášť. Samozřejmě zůstává otázkou, jestli by zvýšený počet slov \uv{obor} pomohl i uživateli. 
+
+Vyhledávač si zároveň neumí efektivně poradit se stránkami, které obsahují příliš mnoho různých informací. Na webu katedry informatiky je například takovou stránkou kalendář nebo aktuality. Na těchto stránkách se vyskytují prakticky všechna důležitá klíčová slova. Nachází se zde informace o stážích jednotlivých zaměstnanců katedry, o pořádaných seminářích, informace o oborech a podobně. Každá zpráva v aktualitách nebo v kalendáři je obvykle krátká a podepsaná. 
+
+Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se mezi prvními výsledky zobrazí právě aktuality nebo kalendář, protože samotná stránka není příliš velká, aby to srazilo hodnocení $\tfidf$ a obvykle dané jméno obsahuje hodněkrát. Podobný výsledek se objeví, pokud vyhledáme slovo \uv{seminář}. Pokud se seminář koná dvacetkrát do roka, má v kalendáři dvacet různých záznamů a kalendář tak obsahuje minimálně dvacetkrát slovo \uv{seminář}. V hodnocení pak snadno předběhne stránku, která je pro informatický seminář přímo určena. Tyto problémy lze vyřešit různými způsoby:
+
+\begin{itemize}
+	\item Napsat obsah stránky o informatickém semináři tak, aby obsahoval vícekrát slovo \uv{seminář}.
+	\item V hodnocení dokumentů zvýšit důležitost titulků nebo URL, které slovo \uv{seminář} obsahují. 
+	\item Využít další informace z celého webu, například text odkazů, které na stránku o informatickém semináři vedou. 
+	\item Vyjmout stránky kalendáře a aktualit z indexu, aby se ve výsledcích nezobrazovaly vůbec.
+\end{itemize}
+
+\sssection{Technické požadavky na HTML stránky}
+Přestože vyhledávač podporuje další typy souborů jako PDF nebo ODT, je především stavěn pro HTML stránky. Aby vyhledávač dobře fungoval, měl by HTML dokument splňovat některá elementární pravidla. 
+
+Vyhledávač potřebuje u každého dokumentu znát jeho název. V případě HTML stránek ho zjišťuje v elementu \code{TITLE}. Tento element je dle specifikace HTML povinný, takže by ho měla obsahovat každá stránka. Nicméně pokud ho neobsahuje nebo je jeho obsah prázdný, tak se použije poslední část URL. 
+
+Obsah titulku by měl být pro každou stranu jiný. Není vhodné, aby mělo více stránek, nebo dokonce celý web, stejný titulek, protože pak je ve výsledcích vyhledávání nepůjde rozlišit jinak než jejich adresou. Toto pravidlo je důležité nejen pro tento vyhledávač, ale i pro běžné vyhledávače jako Google nebo Seznam. Zároveň se připravujeme o možnost zvýšit hodnocení stránky, pokud by klíčové slovo, které uživatel hledal, bylo v titulku. 
+
+Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí z stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horěí výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
+
+Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, Anderson}, takže tento element postupně běžné vyhledávače začali téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
+
+HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhé funkce se použije až v případě, kdy selže první funkce.
+
+Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. Vyhledávač nezkoumá http hlavičky, které server spolu se stránkou poslal. 
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
