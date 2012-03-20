@@ -1234,6 +1234,12 @@ HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Neh
 
 Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. Vyhledávač nezkoumá http hlavičky, které server spolu se stránkou poslal. 
 
+\sssection{Některé nedostatky vyhledávače}
+
+Podstatný požadavek je, aby se rozumná klíčová slova nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
+
+Během výpočtu $\tfidf$ funkce hledáme taková slova, která se často vyskytují v daném dokumentu, ale co nejméně ve všech ostatních dokumentech. Funkce bohužel nezkoumá, kolikrát se dané slovo v těch ostatních dokumentech nachází, takže stačí, když se v dokumentu nachází jen jednou v navigaci a už se to bude počítat jako výskyt. 
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
   Závěr práce v češtině.
