@@ -1279,6 +1279,24 @@ Ze současných databází dává většinou nejhorší výsledky web katedry in
 Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek na stránku} nad databází jakpsatweb.cz. Vyhledávač odpoví specializacemi \code{+ obrázky | + soubor | + google | + mail}. Nabízí to dokonce slovo \uv{obrázky}, protože použitý stemmer zvolí jiný základ pro slovo \uv{obrázek} a pro \uv{obrázky}. Další návrhy nejsou o nic rozumnější. 
 
 
+\ssection{Experimenty s nastavením}
+Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. 
+
+\sssection{Počet atributů dokumentu}
+Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitola \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
+
+Čím vyšší limit nastavíme, tím větší bude kontext a tím více bude mít koncept dotazu dolních sousedů a sourozenců. Což v důsledku znamená, že vyhledávač má na konci více návrhů na specializaci a více podobných dotazů. Zvyšuje se tím šance, že se v této množině návrhů najde nějaký smysluplný návrh, ale zároveň se zvyšuje šance, že se tam dostane nějaký nesmysl, protože některý dokument nemusí mít tolik kvalitních atributů. 
+
+Brát v úvahu vysoký počet atributů dokumentů má smysl v případě, kdy víme, že k většině dokumentů máme alespoň tolik kvalitních atributů. Pokud není pravděpodobné, že bychom k většině dokumentů nalezli tolik kvalitních atributů, raději snížíme počet atributů, které bereme v potaz. 
+
+Zvýšení počtu atributů má samozřejmě za následek mírně zpomalení celého programu, protože se pracuje s větším kontextem a větším svazem. 
+
+\sssection{Počet dokumentů v kontextu}
+V nastavení můžeme omezit počet dokumentů, které budou tvořit množinu objektů rozšířeného kontextu. Výsledek je podobný jako v předchozím případě -- pokud zvýšíme počet dokumentů, které pustíme do kontextu, zvýšíme tím šanci, že se mezi návrhy nějaký zajímavý, který by se tam jinak neobjevil. Současně tím ale zvyšujeme šanci, že se tam objeví nesmysl, protože jsme do kontextu pustili objekty, které jsou příliš vzdálené původnímu dotazu.
+
+
+
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
   Závěr práce v češtině.
