@@ -1292,9 +1292,20 @@ Brát v úvahu vysoký počet atributů dokumentů má smysl v případě, kdy v
 Zvýšení počtu atributů má samozřejmě za následek mírně zpomalení celého programu, protože se pracuje s větším kontextem a větším svazem. 
 
 \sssection{Počet dokumentů v kontextu}
-V nastavení můžeme omezit počet dokumentů, které budou tvořit množinu objektů rozšířeného kontextu. Výsledek je podobný jako v předchozím případě -- pokud zvýšíme počet dokumentů, které pustíme do kontextu, zvýšíme tím šanci, že se mezi návrhy nějaký zajímavý, který by se tam jinak neobjevil. Současně tím ale zvyšujeme šanci, že se tam objeví nesmysl, protože jsme do kontextu pustili objekty, které jsou příliš vzdálené původnímu dotazu.
+V nastavení můžeme omezit počet dokumentů, které budou tvořit množinu objektů rozšířeného kontextu. Výsledek je podobný jako v předchozím případě -- pokud zvýšíme počet dokumentů, které pustíme do kontextu, zvýšíme tím šanci, že se mezi návrhy nějaký zajímavý, který by se tam jinak neobjevil. Současně tím ale zvyšujeme šanci, že se tam objeví nesmysl, protože jsme do kontextu pustili dokumenty, které jsou příliš vzdálené původnímu dotazu.
 
+Zároveň při větším počtu dotazů roste výpočetní náročnost, protože se zvětšuje kontext a konceptuální svaz. Zvyšuje se více než v předchozím případě, protože tím, že zdvojnásobíme počet dokumentů, zdvojnásobí se i počet atributů. 
 
+\sssection{Limit pro atributy dokumentu}
+Během budování indexu je možné zvolit dvě hlavní kritéria, jak se budou hledat atributy dokumentů. Jednodušší verze je, že vyhledávač spočítá $\tfidf$ skóre pro všechna slova v dokumentu a poté vezme $n$ slov, která mají toto skóre nejvyšší. Druhý způsob je, že vezmeme jen ta slova, která překročila určitou hranici skóre. 
+
+První způsob je přímočarý, ale není příliš efektivní v případě, kdy máme různě kvalitní dokumenty. Pro ty nekvalitní dokumenty, u kterých lze jen těžko najít tolik smysluplných atributů, se budou za atributy postupně volit čím dál tím větší nesmysly. Výhodou je, že pro každý dokument máme stejný počet atributů.
+
+U druhého způsobu je o něco těžší nalézt ideální hranici. Hranice je číslo z intervalu $\addsp{0, 100}$ a bude aplikována takto: spočítáme hodnotu $\tfidf$ skóre pro všechna slova ve všech dokumentech. Tato čísla seřadíme, dostaneme tak uspořádaný seznam ohodnocených slov. 
+
+Ze začátku a z konce tohoto seznamu odstraníme setinu slov. Pokud seznam obsahuje 500 slov, pak ze začátku i z konce seznamu odstraníme pět slov. Tím odstraníme slova, která by mohla mít příliš vysoké nebo příliš nízké hodnocení. Dále spočítáme rozdíl největšího a nejmenšího hodnocení. Tento rozdíl si označíme $\delta$. Hranici vydělíme stem, abychom získali číslo v intervalu $\addsp{0, 1}$, označme tuto novou hodnotu $l$. Dále ještě označme nejmenší hodnotu skóre ze všech slov symbolem $m$. 
+
+Pak každé slovo, které má hodnotu $\tfidf$ skóre alespoň $l\cdot\delta+m$ bude považováno za atribut daného dokumentu. 
 
 
 %%% Závěr práce v~češtině
