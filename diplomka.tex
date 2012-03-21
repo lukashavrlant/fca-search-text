@@ -1001,39 +1001,39 @@ $$
 Lindigův algoritmus je algoritmus pro budování konceptuálního svazu z kontextu. Součástí je i algoritmus na spočítání horních sousedů nějakého konceptu. Tento algoritmus budeme potřebovat, takže si ho popíšeme. Nejprve si ale zadefinujeme, co je to horní soused konceptu. 
 
 \begin{mydef}[Horní soused konceptu]
-Mějme kontext $\context$ a jemu příslušný konceptuální svaz $\lattice$. Dále mějme koncept $\addsp{G, M} \in \lattice$, který není největším konceptem svazu, tj. $\addsp{G, M}\ne\addsp{X, X\up}$. 
+Mějme kontext $\context$ a jemu příslušný konceptuální svaz $\lattice$. Dále mějme koncept $\addsp{A, B} \in \lattice$, který není největším konceptem svazu, tj. $\addsp{A, B}\ne\addsp{X, X\up}$. 
 
-Koncept $\addsp{G', M'}$ nazveme horním sousedem konceptu $\addsp{G, M}$, pokud platí, že $\addsp{G, M} < \addsp{G', M'}$ a zároveň platí, že neexistuje koncept $\addsp{G'', M''}$ takový, že $\addsp{G, M} < \addsp{G'', M''} < \addsp{G', M'}$.
+Koncept $\addsp{A', B'}$ nazveme horním sousedem konceptu $\addsp{A, B}$, pokud platí, že $\addsp{A, B} < \addsp{A', B'}$ a zároveň platí, že neexistuje koncept $\addsp{A'', B''}$ takový, že $\addsp{A, B} < \addsp{A'', B''} < \addsp{A', B'}$.
 \end{mydef}
 
-Jinými slovy, horní koncepty jsou ty koncepty, které se nachází právě o jednu úroveň výše než koncept $\addsp{G, M}$.
+Jinými slovy, horní koncepty jsou ty koncepty, které se nachází právě o jednu úroveň výše než koncept $\addsp{A, B}$.
 
-Myšlenka algoritmu je založena na tom, že když přidáme k extentu $G$ konceptu $\addsp{G, M}$ objekt z $X$, který není v $G$, a uzavřeme, získáme koncept, který je určitě větší. Pokud postupně přidáme všechny objekty z $X \setminus G$, dostaneme množinu konceptů, která obsahuje všechny horní sousedy. Množinu si pojmenujeme $S$:
+Myšlenka algoritmu je založena na tom, že když přidáme k extentu $A$ konceptu $\addsp{A, B}$ objekt z $X$, který není v $A$, a uzavřeme, získáme koncept, který je určitě větší. Pokud postupně přidáme všechny objekty z $X \setminus A$, dostaneme množinu konceptů, která obsahuje všechny horní sousedy. Množinu si pojmenujeme $S$:
 $$
-S=\adds{\addsp{(G\cup \adds{g})\updown, (G\cup \adds{g})\up}\sep g\in X\setminus G}
+S=\adds{\addsp{(A\cup \adds{a})\updown, (A\cup \adds{a})\up}\sep a\in X\setminus A}
 $$
-Tato množina sice obsahuje všechny horní sousedy, ale bohužel i některé navíc. Může se stát, že přidáním objektu $g\in X\setminus G$ \uv{přeskočíme} nějaký koncept a dostaneme koncept, který je o více než jednu úroveň výše. Abychom tak získali pouze množinu horních sousedů, musíme při každém přidání nového objektu zkontrolovat, zda jsme skutečně vygenerovali horního souseda. 
+Tato množina sice obsahuje všechny horní sousedy, ale bohužel i některé navíc. Může se stát, že přidáním objektu $a\in X\setminus A$ \uv{přeskočíme} nějaký koncept a dostaneme koncept, který je o více než jednu úroveň výše. Abychom tak získali pouze množinu horních sousedů, musíme při každém přidání nového objektu zkontrolovat, zda jsme skutečně vygenerovali horního souseda. 
 
-To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v novém konceptu $\addsp{G', M'}$, generují tentýž koncept. Přesněji to popisuje následující věta.
+To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v novém konceptu $\addsp{A', B'}$, generují tentýž koncept. Přesněji to popisuje následující věta.
 
 \begin{theorem}[Jak nalézt horní sousedy]
-Nechť $\addsp{G, M} \in \lattice$ a $\addsp{G, M}\ne\addsp{X, X\up}$. Pak $(G\cup\adds{g})\updown$, kde $g\in X\setminus G$ je extent horního souseda konceptu $\addsp{G, M}$ právě tehdy, když pro všechna $x\in(G\cup\adds{g})\updown\setminus G$ platí $(G\cup\adds{x})\updown=(G\cup\adds{g})\updown$.
+Nechť $\addsp{A, B} \in \lattice$ a $\addsp{A, B}\ne\addsp{X, X\up}$. Pak $(A\cup\adds{a})\updown$, kde $a\in X\setminus A$ je extent horního souseda konceptu $\addsp{A, B}$ právě tehdy, když pro všechna $x\in(A\cup\adds{a})\updown\setminus A$ platí $(A\cup\adds{x})\updown=(A\cup\adds{a})\updown$.
 \end{theorem}
 
-Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{G, M}$ ve svazu $\lattice$, viz obrázek \ref{alg.upper}
+Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{A, B}$ ve svazu $\lattice$, viz obrázek \ref{alg.upper}
 
 \begin{figure} \label{alg.upper}
 \begin{algorithmic}[1]
-\Function{UpperNeighbors}{$\addsp{G, M}, \lattice$}
-	\State $candidates \gets X \setminus G$
+\Function{UpperNeighbors}{$\addsp{A, B}, \lattice$}
+	\State $candidates \gets X \setminus A$
     \State $neighbors \gets \emptyset$
-    \ForAll{$g \in X\setminus G$} \label{alg.upper.getg}
-    	\State $M'\gets(G\cup\adds{g})\up$
-    	\State $G'\gets M'^{\downarrow}$
-    	\If{$candidates \cap (G'\setminus G\setminus\adds{g}) = \emptyset$}\label{alg.upper.if}
-    		\State $neighbors\gets neighbors \cup(\addsp{G', M'})$
+    \ForAll{$a \in X\setminus A$} \label{alg.upper.getg}
+    	\State $B'\gets(A\cup\adds{a})\up$
+    	\State $A'\gets B'^{\downarrow}$
+    	\If{$candidates \cap (A'\setminus A\setminus\adds{a}) = \emptyset$}\label{alg.upper.if}
+    		\State $neighbors\gets neighbors \cup(\addsp{A', B'})$
     	\Else
-    		\State $candidates\gets candidates\setminus\adds{g}$
+    		\State $candidates\gets candidates\setminus\adds{a}$
     	\EndIf
     \EndFor
     \State \Return $neighbors$
@@ -1042,17 +1042,17 @@ Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechn
 \caption{Algoritmus UpperNeighbors na počítání horních sousedů konceptu}
 \end{figure}
 
-Algoritmus používá efektivnější systém detekce, zda se jedná o horního souseda, nebo zda jde o vyšší koncept. Množina $candidates$ obsahuje ty prvky, které budeme zkoušet přidávat k extentu $G$. Na řádku \ref{alg.upper.getg} vybereme prvek $g$ z této množiny a spočítáme nový extent a intent. 
+Algoritmus používá efektivnější systém detekce, zda se jedná o horního souseda, nebo zda jde o vyšší koncept. Množina $candidates$ obsahuje ty prvky, které budeme zkoušet přidávat k extentu $A$. Na řádku \ref{alg.upper.getg} vybereme prvek $a$ z této množiny a spočítáme nový extent a intent. 
 
-Na řádku \ref{alg.upper.if} se nachází hlavní změna. Rozdíl množin $G'\setminus G$ nám dá ty objekty, které v novém konceptu přibyly. Od nich ještě odstraníme ten prvek $g$, který jsme právě přidali. Pokud se žádný ze zbývajících prvků nenachází v množině $candidates$, máme horního souseda, přidáme ho do množiny $neighbors$ a prvek $g$ ponecháme v množině $candidates$, to je důležité. Pokud prvek $g$ negeneruje horního souseda, odstraníme ho z množiny $candidates$.
+Na řádku \ref{alg.upper.if} se nachází hlavní změna. Rozdíl množin $A'\setminus A$ nám dá ty objekty, které v novém konceptu přibyly. Od nich ještě odstraníme ten prvek $a$, který jsme právě přidali. Pokud se žádný ze zbývajících prvků nenachází v množině $candidates$, máme horního souseda, přidáme ho do množiny $neighbors$ a prvek $a$ ponecháme v množině $candidates$, to je důležité. Pokud prvek $a$ negeneruje horního souseda, odstraníme ho z množiny $candidates$.
 
-Pokud prvek $g$ generuje horního souseda, musí tak být nutně poslední z těch objektů, které tento koncept mohou generovat. Pokud má horní soused o tři objekty více, než koncept, ke kterému souseda hledáme, podmínkou na řádku \ref{alg.upper.if} projde až ten třetí objekt, který zkusíme. 
+Pokud prvek $a$ generuje horního souseda, musí tak být nutně poslední z těch objektů, které tento koncept mohou generovat. Pokud má horní soused o tři objekty více, než koncept, ke kterému souseda hledáme, podmínkou na řádku \ref{alg.upper.if} projde až ten třetí objekt, který zkusíme. 
 
-Pokud například máme koncept s extentem $\adds{a}$ a horní soused má extent $\adds{a,b,c,d}$, tak pokud zvolíme poprvé $g=b$, tak $\adds{a,b,c,d} \setminus \adds{a} \setminus \adds{b} = \adds{c, d}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{b, c, d}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $b$ a pokračovali s $g=c$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $g=d$, rozdíl by vyšel $\adds{a,b,c,d} \setminus \adds{a} \setminus \adds{d} = \adds{b, c}$. Z $candidates$ jsme prvky $b$ a $c$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $d$ zároveň zůstane v množině $candidates$.
+Pokud například máme koncept s extentem $\adds{1}$ a horní soused má extent $\adds{1,2,3,4}$, tak pokud zvolíme poprvé $a=2$, tak $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{2} = \adds{3, 4}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{2, 3, 4}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $2$ a pokračovali s $a=3$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $g=4$, rozdíl by vyšel $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{4} = \adds{2, 3}$. Z $candidates$ jsme prvky $2$ a $3$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $4$ zároveň zůstane v množině $candidates$.
 
-Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $g$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
+Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $a$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
 
-Například bychom pokud pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{a,b,c,d,e}$, kde zvolíme $g=e$, tak dojdeme k tomu, že $\adds{a,b,c,d,e} \setminus \adds{a} \setminus \adds{e} = \adds{b,c,d}$, ale prvek $d$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
+Například bychom pokud pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{1,2,3,4,5}$, kde zvolíme $a=5$, tak dojdeme k tomu, že $\adds{1,2,3,4,5} \setminus \adds{1} \setminus \adds{5} = \adds{2,3,4}$, ale prvek $4$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
 
 Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
 
@@ -1070,13 +1070,13 @@ $$
 
 Z každého konceptu budeme nejdříve potřebovat pouze intent, poté extent. Nechť tak funkce $\intfca$ a $\ext$ vrací z dané množiny konceptů $K$ intenty a extenty.
 \begin{eqnarray}
-\intfca(K)&=&\adds{M\sep \addsp{G, M} \in K}\\
-\ext(K)&=&\adds{G\sep \addsp{G, M} \in K}
+\intfca(K)&=&\adds{B\sep \addsp{A, B} \in K}\\
+\ext(K)&=&\adds{A\sep \addsp{A, B} \in K}
 \end{eqnarray}
 
 V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$. Dostaneme množinu možných návrhů na specializaci dotazu. 
 $$
-Spec'=\adds{M\setminus\hledany_I\sep M \in \intfca(\lowerc_\hledany)}. 
+Spec'=\adds{B\setminus\hledany_I\sep B \in \intfca(\lowerc_\hledany)}. 
 $$
 
 Množina $Spec'$ obsahuje možné návrhy na rozšíření dotazu, ale některé z rozšíření mohou obsahovat více než jedno slovo. Pokud má koncept dotazu intent $\adds{\mbox{Jaguár}}$ a dolní soused má intent $\adds{\mbox{Jaguár, rychlost, maximální}}$, pak v množině $Spec'$ bude návrh $\adds{\mbox{rychlost, maximální}}$. 
@@ -1087,9 +1087,9 @@ Spec=\adds{\max(s)\sep s\in Spec'},
 $$
 kde $\max$ v tomto případě vybere to slovo, které se v dokumentech $\alldoc$ vyskytuje nejčastěji. Množina $Spec$ už je finální a obsahuje všechny návrhy, které můžeme uživatel předložit. Zbývá jen definovat uspořádání, abychom uživateli navrhovali ty nejrelevantnější návrhy. 
 
-Řekneme, že návrh $s_1 \in Spec$ je relevantnější než návrh $s_2 \in Spec$, zapíšeme $s_1 \ge s_2$, právě tehdy, když pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \lowerc_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $|G_1|\ge|G_2|$. 
+Řekneme, že návrh $s_1 \in Spec$ je relevantnější než návrh $s_2 \in Spec$, zapíšeme $s_1 \ge s_2$, právě tehdy, když pro koncepty $\addsp{A_1, B_1}, \addsp{A_2, B_2} \in \lowerc_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $|A_1|\ge|A_2|$. 
 
-V extentech $G_1$ a $G_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelevantnější návrh by měl zároveň vést na nejvíce dokumentů. 
+V extentech $A_1$ a $A_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelevantnější návrh by měl zároveň vést na nejvíce dokumentů. 
 
 \sssection{Generalizace}
 Generalizací budeme rozumět návrh, který zobecňuje dotaz tak, aby uživatel po této změně získal více dokumentů, které odpovídají nějakému obecnějšímu konceptu. Zobecnění bude prováděno odstraněním klíčových slov z dotazu. 
@@ -1109,7 +1109,7 @@ $$
 Gen=\adds{g\cap\beta(Q)\sep g\in Gen'}.
 $$
 
-Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $g_1\in Gen$ je relevantnější než $g_2\in Gen$, zapíšeme $g_1\ge g_2$, právě tehdy, když koncepty pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \upperc_\hledany$, jejichž intenty generují $g_1$ a $g_2$, platí $|G_1|\ge|G_2|$. 
+Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $a_1\in Gen$ je relevantnější než $a_2\in Gen$, zapíšeme $a_1\ge a_2$, právě tehdy, když koncepty pro koncepty $\addsp{A_1, B_1}, \addsp{A_2, B_2} \in \upperc_\hledany$, jejichž intenty generují $a_1$ a $a_2$, platí $|A_1|\ge|A_2|$. 
 
 \sssection{Podobné dotazy}
 % 2011_0035_Eklund
@@ -1154,7 +1154,7 @@ $$
 \simfca(\addsp{A, B}, \addsp{C, D}) = \frac12\addk{\frac{|A\cap C|}{|A\cup C|} + \frac{|B\cap D|}{|B\cup D|}}.
 $$
 
-Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge s_2$, právě tehdy, když pro koncepty $\addsp{G_1, M_1}, \addsp{G_2, M_2} \in \sibl_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $\simfca(\addsp{G_1, M_1}, \hledany)\ge\simfca(\addsp{G_2, M_2}, \hledany)$. Jako první budeme zobrazovat dotaz, který je nejvíce podobný současnému dotazu $Q$.
+Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge s_2$, právě tehdy, když pro koncepty $\addsp{A_1, B_1}, \addsp{A_2, B_2} \in \sibl_\hledany$, jejichž intenty generují $s_1$ a $s_2$, platí $\simfca(\addsp{A_1, B_1}, \hledany)\ge\simfca(\addsp{A_2, B_2}, \hledany)$. Jako první budeme zobrazovat dotaz, který je nejvíce podobný současnému dotazu $Q$.
 
 
 % \ssection{Příklad}
@@ -1353,7 +1353,7 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 
 	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. 
 	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA zobrazuje výsledky ve formě formálního kontextu. 
-	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth také spolupracoval s Googlem a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. 
+	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth také spolupracoval s Googlem a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. Jinak je FCA část obou vyhledávačů velice podobná. 
 \end{description}
 
 %%% Závěr práce v~češtině
