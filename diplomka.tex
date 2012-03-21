@@ -1344,6 +1344,18 @@ Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdroj
 	\item[Test API]
 \end{description}
 
+
+\ssection{Podobné vyhledávače}
+V historii již existovaly vyhledávače, které fungovaly velice podobně jako \name. Jedná se o vyhledávače \uv{CREDO}, \uv{FooCA} a \uv{SearchSleuth}. V současné době CREDO a SearchSleuth nefungují vůbec a k použití FooCA je nutné zažádat o registraci tvůrce tohoto vyhledávače. 
+
+\begin{description}
+	\item[CREDO] Zkratka pochází z \uv{Conceptual REorganization of DOcuments}. Jeho autory jsou C. Carpineto a G. Romano. CREDO spolupracovalo s Googlem, vložený dotaz nejprve vložile pomocí do Google SOAP API, nechalo si vrátit prvních 100 výsledků a poté nad těmito daty provedlo FCA analýzu. CREDO počítalo pouze spodní sousedy a to do druhé úrovně. Začínalo se u největšího konceptu. Smyslem bylo, abych z těch sto výsledků, které dostal na začátku, postupně ukazoval uživateli ty odkazy, které odpovídají nějakému konceptu. 
+
+	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. 
+	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA zobrazuje výsledky ve formě formálního kontextu. 
+	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth také spolupracoval s Googlem a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. 
+\end{description}
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
   Závěr práce v češtině.
