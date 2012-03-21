@@ -1176,7 +1176,7 @@ Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge 
 \section{Výsledky vyhledávače}
 
 \ssection{Uživatelské prostředí vyhledávače}
-Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty}. Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešeleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
+Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty}. Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
 
 \begin{figure}
   \centering
@@ -1212,7 +1212,7 @@ Například pro stránku o studijních oborech na \code{www.inf.upol.cz} zvolil 
 
 Vyhledávač si zároveň neumí efektivně poradit se stránkami, které obsahují příliš mnoho různých informací. Na webu katedry informatiky je například takovou stránkou kalendář nebo aktuality. Na těchto stránkách se vyskytují prakticky všechna důležitá klíčová slova. Nachází se zde informace o stážích jednotlivých zaměstnanců katedry, o pořádaných seminářích, informace o oborech a podobně. Každá zpráva v aktualitách nebo v kalendáři je obvykle krátká a podepsaná. 
 
-Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se mezi prvními výsledky zobrazí právě aktuality nebo kalendář, protože samotná stránka není příliš velká, aby to srazilo hodnocení $\tfidf$ a obvykle dané jméno obsahuje hodněkrát. Podobný výsledek se objeví, pokud vyhledáme slovo \uv{seminář}. Pokud se seminář koná dvacetkrát do roka, má v kalendáři dvacet různých záznamů a kalendář tak obsahuje minimálně dvacetkrát slovo \uv{seminář}. V hodnocení pak snadno předběhne stránku, která je pro informatický seminář přímo určena. Tyto problémy lze vyřešit různými způsoby:
+Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se mezi prvními výsledky zobrazí právě aktuality nebo kalendář, protože samotná stránka není příliš velká, aby to srazilo hodnocení $\tfidf$ a obvykle dané jméno obsahuje mockrát. Podobný výsledek se objeví, pokud vyhledáme slovo \uv{seminář}. Pokud se seminář koná dvacetkrát do roka, má v kalendáři dvacet různých záznamů a kalendář tak obsahuje minimálně dvacetkrát slovo \uv{seminář}. V hodnocení pak snadno předběhne stránku, která je pro informatický seminář přímo určena. Tyto problémy lze vyřešit různými způsoby:
 
 \begin{itemize}
 	\item Napsat obsah stránky o informatickém semináři tak, aby obsahoval vícekrát slovo \uv{seminář}.
@@ -1230,7 +1230,7 @@ Obsah titulku by měl být pro každou stranu jiný. Není vhodné, aby mělo v�
 
 Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí z stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horěí výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
 
-Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, Anderson}, takže tento element postupně běžné vyhledávače začali téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
+Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, anderson}, takže tento element postupně běžné vyhledávače začali téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
 
 HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhé funkce se použije až v případě, kdy selže první funkce.
 
@@ -1254,7 +1254,7 @@ Ve vyhledávači je uloženo několik testovacích sad dokumentů. Jedná se o w
 	\item \code{jakpodnikat.cz}, který se zabývá podnikáním, jak danit příjmy a podobně,
 	\item \code{inf.upol.cz}, což je web katedry informatiky UP
 \end{itemize}
-a nakonec je ve vyhledávači použita i sada volně stažitelných odborných článků ve formátu PDF, které napsali zaměstananci katedry informatiky UP. 
+a nakonec je ve vyhledávači použita i sada volně stažitelných odborných článků ve formátu PDF, které napsali zaměstnanci katedry informatiky UP. 
 
 Kromě webu katedry informatiky se jedná o weby, které mají jasné zaměření každé stránky a bohatý obsah, takže na jejich webech vypadá analýza nejlépe. Web katedry informatiky je stručnější, obsahuje jisté chyby (například titulky pro každou stranu zvlášť, jak je psáno v kapitole \ref{ch.kvalita}, byly vytvořeny až během psaní této práce) a obsahuje nepříjemnost v podobě opakujících se slov na každé stránce, viz kapitola \ref{ch.nedostatky}, takže jeho analýza neprobíhá nejlépe. 
 
@@ -1333,7 +1333,7 @@ Výsledkem budou opět data ve formátu JSON, která budou obsahovat výsledek F
 
 Tohoto můžeme využít na vylepšení výsledků běžného vyhledávače, například Googlu. Napíšeme webovou aplikaci, na které bude textové pole pro zadání dotazu. Uživatel zadá dotaz, aplikace tento dotaz přepošle API Googlu a získá výsledky pro zadaný dotaz. Následně převede výsledky z Googlu do takového formátu, kterému rozumí vyhledávač.
 
-My od Google získáme seznam několika odkazů, které odpovídají zadanéhmu dotazu. Pro každý odkaz máme k dispozici tři zásadní údaje: URL, titulek a popisek. Z těchto tří údajů vytvoříme sadu dokumentů takto: každý odkaz bude tvořit jeden samostatný dokument. Takže pokud nám Google vrátí na dotaz 50 výsledků, budeme vytvářet 50 dokumentů. URL dokumentu bude stejné jako URL, které vrátil Google; stejně tak titulek. Obsahem dokumentu pak bude popisek odkazu. Popisek dokumentu může být buď stejný jako jeho obsah nebo bude prázdný.
+My od Google získáme seznam několika odkazů, které odpovídají zadanému dotazu. Pro každý odkaz máme k dispozici tři zásadní údaje: URL, titulek a popisek. Z těchto tří údajů vytvoříme sadu dokumentů takto: každý odkaz bude tvořit jeden samostatný dokument. Takže pokud nám Google vrátí na dotaz 50 výsledků, budeme vytvářet 50 dokumentů. URL dokumentu bude stejné jako URL, které vrátil Google; stejně tak titulek. Obsahem dokumentu pak bude popisek odkazu. Popisek dokumentu může být buď stejný jako jeho obsah nebo bude prázdný.
 
 Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
 
