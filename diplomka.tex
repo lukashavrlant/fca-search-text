@@ -1308,6 +1308,42 @@ Ze začátku a z konce tohoto seznamu odstraníme setinu slov. Pokud seznam obsa
 Pak každé slovo, které má hodnotu $\tfidf$ skóre alespoň $l\cdot\delta+m$ bude považováno za atribut daného dokumentu. 
 
 
+
+
+\section{Dodatky}
+
+\ssection{API vyhledávače}
+
+API aplikace je rozhraní, pomocí něhož může uživatel s danou aplikací komunikovat. Uživatel aplikaci posílá nějaké dotazy ve specifickém formátu a aplikace na ně opět ve specifickém formátu odpovídá. Uživatel tak může danou aplikaci používat, ačkoliv ji přímo nezkompiluje do své aplikace.  
+
+Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. Webové API je přístupné komukoliv, interní API je přístupné tomu, kdo si nainstaluje vyhledávač k sobě. Webové API je RESTové, to znamená, že využívá HTTP protokol a běžné metody jako GET nebo POST. Všechna data, která vyhledávač vrací na výstupu, jsou ve formátu JSON. 
+
+\sssection{Získávání dat z indexu}
+
+Vyhledávač umožňuje získávat data o existujících indexech. Ta se získávají pomocí HTTP GET požadavku s požadovanými parametry. Je možné zjistit například informace o daném dokumentu, jaký má titulek, jakou adresu a podobně. Zároveň lze zjisit další informace o indexu, například počet všech zaindexovaných dokumentů nebo seznam URL adres všech dokumentů.
+
+Například dotazem \code{/api.php?d=jpw\&docinfo=147\&title} zjistíme název dokumentu z databáze \code{jpw}, který má ID 147.
+
+\sssection{Posílání vlastních dat na server}
+API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. Vyhledávač tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v předchozích částech dokumentu. 
+
+Výsledkem budou opět data ve formátu JSON, která budou obsahovat výsledek FCA analýzy. Nalezneme tam specializace, generalizace a podobné dotazy a některá další data o kontextu a konceptuálním svazu. Dále tam bude seznam dokumentů, který bude seřazený dle relevance. Výstup je prakticky stejný, jako je grafický výstup vyhledávače, pouze máme výsledky v surové JSON podobě. 
+
+Tohoto můžeme využít na vylepšení výsledků běžného vyhledávače, například Googlu. Napíšeme webovou aplikaci, na které bude textové pole pro zadání dotazu. Uživatel zadá dotaz, aplikace tento dotaz přepošle API Googlu a získá výsledky pro zadaný dotaz. Následně převede výsledky z Googlu do takového formátu, kterému rozumí vyhledávač.
+
+My od Google získáme seznam několika odkazů, které odpovídají zadanéhmu dotazu. Pro každý odkaz máme k dispozici tři zásadní údaje: URL, titulek a popisek. Z těchto tří údajů vytvoříme sadu dokumentů takto: každý odkaz bude tvořit jeden samostatný dokument. Takže pokud nám Google vrátí na dotaz 50 výsledků, budeme vytvářet 50 dokumentů. URL dokumentu bude stejné jako URL, které vrátil Google; stejně tak titulek. Obsahem dokumentu pak bude popisek odkazu. Popisek dokumentu může být buď stejný jako jeho obsah nebo bude prázdný.
+
+Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
+
+\ssection{Dokumentace}
+Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \code{www.github.com}, přesné adresy jednotlivých projektů: 
+
+\begin{description}
+	\item[Jádro vyhledávače] 
+	\item[Webové rozhraní]
+	\item[Test API]
+\end{description}
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
   Závěr práce v češtině.
