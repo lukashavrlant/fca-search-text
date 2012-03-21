@@ -913,7 +913,7 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 	\item Nyní přichází na řadu FCA část vyhledávače. Jako první se vytvoří kontext $\context$. Objekty budou dokumenty, které nám vyhledávač vrátil v předchozím bodě. Atributy budou atributy těchto dokumentů plus klíčová slova z dotazu. 
 	\item Relaci $I$ definujeme takto: $\addsp{x, y}\in I$ právě tehdy, když dokument $x$ obsahuje slovo $y$.
 	\item Nyní musíme nalézt koncept dotazu. To je koncept, který odpovídá dotazu od uživatele. Můžeme ho nalézt tak, že vezmeme množinu dokumentů, které vyhledávač vrátil v prvním bodě, a spočítáme koncept, který těmto dokumentům odpovídá. 
-	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme ve spodních sousedech, generalizaci v horních sousedech a podobné dotazy v sousedních konceptech. Pokud například koncept dotazu má intent $\adds{\mbox{limita, funkce}}$ a nějaký spodní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
+	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme v dolních sousedech, generalizaci v horních sousedech a podobné dotazy v sousedních konceptech. Pokud například koncept dotazu má intent $\adds{\mbox{limita, funkce}}$ a nějaký dolní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
 \end{enumerate}
 
 
@@ -1056,7 +1056,7 @@ Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme 
 
 Například bychom pokud pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{1,2,3,4,5}$, kde zvolíme $a=5$, tak dojdeme k tomu, že $\adds{1,2,3,4,5} \setminus \adds{1} \setminus \adds{5} = \adds{2,3,4}$, ale prvek $4$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
 
-Tento algoritmus můžeme jednoduše upravit tak, aby generoval spodní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
+Tento algoritmus můžeme jednoduše upravit tak, aby generoval dolní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
 
 \ssection{Hledání návrhů ve svazu}
 
@@ -1351,7 +1351,7 @@ Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdroj
 V historii již existovaly vyhledávače, které fungovaly velice podobně jako \name. Jedná se o vyhledávače \uv{CREDO}, \uv{FooCA} a \uv{SearchSleuth}. V současné době CREDO a SearchSleuth nefungují vůbec a k použití FooCA je nutné zažádat o registraci tvůrce tohoto vyhledávače. 
 
 \begin{description}
-	\item[CREDO] Zkratka pochází z \uv{Conceptual REorganization of DOcuments}. Jeho autory jsou C. Carpineto a G. Romano. CREDO spolupracovalo s Googlem, vložený dotaz nejprve vložile pomocí do Google SOAP API, nechalo si vrátit prvních 100 výsledků a poté nad těmito daty provedlo FCA analýzu. CREDO počítalo pouze spodní sousedy a to do druhé úrovně. Začínalo se u největšího konceptu. Smyslem bylo, abych z těch sto výsledků, které dostal na začátku, postupně ukazoval uživateli ty odkazy, které odpovídají nějakému konceptu. 
+	\item[CREDO] Zkratka pochází z \uv{Conceptual REorganization of DOcuments}. Jeho autory jsou C. Carpineto a G. Romano. CREDO spolupracovalo s Googlem, vložený dotaz nejprve vložile pomocí do Google SOAP API, nechalo si vrátit prvních 100 výsledků a poté nad těmito daty provedlo FCA analýzu. CREDO počítalo pouze dolní sousedy a to do druhé úrovně. Začínalo se u největšího konceptu. Smyslem bylo, abych z těch sto výsledků, které dostal na začátku, postupně ukazoval uživateli ty odkazy, které odpovídají nějakému konceptu. 
 
 	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. 
 	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA zobrazuje výsledky ve formě formálního kontextu. 
