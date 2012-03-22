@@ -1191,11 +1191,11 @@ Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní pr�
   \label{fig.gui.result1}
 \end{figure}
 
-Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotaz. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
+Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
 
-Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství čase je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
+Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství času je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
 
-O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě položky jsou počty objektů a atributů, které obsahuje kontext, počet dolních a horních sousedů konceptu dotazu a počet jeho sourozenců. Na konci jsou odkazy na zobrazení části svazu, se kterým pracujeme a na samotný kontext.
+O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě položky jsou počty objektů a atributů, které obsahuje kontext, počet dolních a horních sousedů konceptu dotazu a počet jeho sourozenců. Na konci jsou odkazy na zobrazení části svazu, se kterým pracujeme, a na samotný kontext.
 
 Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
 
@@ -1231,7 +1231,7 @@ Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do
 
 Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, anderson}, takže tento element postupně běžné vyhledávače začali téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
 
-HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhé funkce se použije až v případě, kdy selže první funkce.
+HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhá funkce se použije až v případě, kdy selže první funkce.
 
 Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. 
 
@@ -1354,7 +1354,7 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 
 	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. 
 	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA zobrazuje výsledky ve formě formálního kontextu. 
-	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth také spolupracoval s Googlem a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. Jinak je FCA část obou vyhledávačů velice podobná. 
+	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth  spolupracoval s Yahoo a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. Jinak je FCA část obou vyhledávačů velice podobná. 
 \end{description}
 
 %%% Závěr práce v~češtině
