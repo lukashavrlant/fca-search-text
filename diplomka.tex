@@ -1341,6 +1341,22 @@ My od Google získáme seznam několika odkazů, které odpovídají zadanému d
 
 Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
 
+
+\ssection{Struktura aplikace}
+\sssection{Jádro vyhledávače}
+Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na Pythonu 3.2. Zdrojové soubory jsou rozděleny do balíčků, které obsahují moduly. Mezi nejdůležitější balíčky patří: 
+
+\begin{description}
+	\item[\code{preprocess}:] Obsahuje moduly, které jsou zodpovědné za budování nového indexu, úpravu existujícího indexu, odstranění HTML značek z HTML stránek a podobně. 
+	\item[\code{retrieval}:] Tento balíček je zodpovědný za dolování informací z indexu, parsování dotazu nebo hodnocení dokumentů. 
+	\item[\code{fca}:] Definuje základní struktury pro práci s FCA, jako například kontext nebo koncept. 
+	\item[\code{fca-extension}:] Po získání dat z indexu se moduly z tohoto balíčku snaží nalézt správné návrhy na vylepšení dotazu. 
+\end{description}
+
+Veškerou komunikaci s externími aplikacemi pak obstarává soubor \code{/src/search}, který volá funkce z modulu \code{/src/other/interface.py}. Ten obsahuje funkce zodpovědné za komunikaci se všemi ostatními balíčky a moduly. 
+
+Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, který napsal Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus a jehož autorem je Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
+
 \ssection{Dokumentace}\label{ch.dokumentace}
 Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \code{www.github.com}, přesné adresy jednotlivých projektů: 
 
