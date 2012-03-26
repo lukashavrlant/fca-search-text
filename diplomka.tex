@@ -1342,8 +1342,7 @@ My od Google získáme seznam několika odkazů, které odpovídají zadanému d
 Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
 
 
-\ssection{Struktura aplikace}
-\sssection{Jádro vyhledávače}
+\ssection{Struktura aplikace a používané programy}
 Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na Pythonu 3.2. Zdrojové soubory jsou rozděleny do balíčků, které obsahují moduly. Mezi nejdůležitější balíčky patří: 
 
 \begin{description}
@@ -1356,6 +1355,8 @@ Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na 
 Veškerou komunikaci s externími aplikacemi pak obstarává soubor \code{/src/search}, který volá funkce z modulu \code{/src/other/interface.py}. Ten obsahuje funkce zodpovědné za komunikaci se všemi ostatními balíčky a moduly. 
 
 Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, který napsal Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus a jehož autorem je Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
+
+Webové rozhraní je napsáno v PHP 5. HTML kód je validní dle současného návrhu HTML 5. 
 
 \ssection{Dokumentace}\label{ch.dokumentace}
 Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \code{www.github.com}, přesné adresy jednotlivých projektů: 
@@ -1380,7 +1381,6 @@ Zdrojového kódy ukázky práce s API se nachází na adrese:
 \begin{itemize}
 	\item \code{https://github.com/havrlant/fca-seach-api-test}
 \end{itemize}
-
 
 \ssection{Podobné vyhledávače}
 V historii již existovaly vyhledávače, které fungovaly velice podobně jako \name. Jedná se o vyhledávače \uv{CREDO}, \uv{FooCA} a \uv{SearchSleuth}. V současné době CREDO a SearchSleuth nefungují vůbec a k použití FooCA je nutné zažádat o registraci tvůrce tohoto vyhledávače. 
