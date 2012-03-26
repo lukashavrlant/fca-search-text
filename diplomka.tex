@@ -1286,7 +1286,7 @@ Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek n
 
 
 \ssection{Experimenty s nastavením}
-Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. 
+Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}.
 
 \sssection{Počet atributů dokumentu}
 Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitola \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
@@ -1322,7 +1322,7 @@ Pak každé slovo, které má hodnotu $\tfidf$ skóre alespoň $l\cdot\delta+m$ 
 
 API aplikace je rozhraní, pomocí něhož může uživatel s danou aplikací komunikovat. Uživatel aplikaci posílá nějaké dotazy ve specifickém formátu a aplikace na ně opět ve specifickém formátu odpovídá. Uživatel tak může danou aplikaci používat, ačkoliv ji přímo nezkompiluje do své aplikace.  
 
-Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. Webové API je přístupné komukoliv, interní API je přístupné tomu, kdo si nainstaluje vyhledávač k sobě. Webové API je RESTové, to znamená, že využívá HTTP protokol a běžné metody jako GET nebo POST. Všechna data, která vyhledávač vrací na výstupu, jsou ve formátu JSON. 
+Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. Webové API je přístupné komukoliv, konzolové API je přístupné tomu, kdo si nainstaluje vyhledávač k sobě. Webové API je RESTové, to znamená, že využívá HTTP protokol a běžné metody jako GET nebo POST. Všechna data, která vyhledávač vrací na výstupu, jsou ve formátu JSON. Pro detaily viz kapitola \ref{ch.dokumentace}
 
 \sssection{Získávání dat z indexu}
 
@@ -1341,14 +1341,28 @@ My od Google získáme seznam několika odkazů, které odpovídají zadanému d
 
 Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
 
-\ssection{Dokumentace}
+\ssection{Dokumentace}\label{ch.dokumentace}
 Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \code{www.github.com}, přesné adresy jednotlivých projektů: 
 
-\begin{description}
-	\item[Jádro vyhledávače: ] \code{https://github.com/havrlant/fca-search}
-	\item[Webové rozhraní: ] \code{https://github.com/havrlant/fca-seach-web}
-	\item[Test API: ] \code{https://github.com/havrlant/fca-seach-api-test}
-\end{description}
+Zdrojové kódy jádra vyhledávače se nachází na adrese
+\begin{itemize}
+	\item \code{https://github.com/havrlant/fca-search}
+\end{itemize}
+Dokumentace, popis všech možností nastavení a popis API jádra aplikace se nachází na wiki stránce
+\begin{itemize}
+\end{itemize}
+Zdrojové kódy webového rozhraní se nachází na adrese
+\begin{itemize}
+	\item \code{https://github.com/havrlant/fca-seach-web}
+\end{itemize}
+Dokumentace, popis všech možností nastavení a popis API webového rozhraní se nachází na wiki stránce
+\begin{itemize}
+	\item \code{https://github.com/havrlant/fca-seach-web/wiki/dokumentace}
+\end{itemize}
+Zdrojového kódy ukázky práce s API se nachází na adrese:
+\begin{itemize}
+	\item \code{https://github.com/havrlant/fca-seach-api-test}
+\end{itemize}
 
 
 \ssection{Podobné vyhledávače}
