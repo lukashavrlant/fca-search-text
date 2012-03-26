@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99d (TeX Live 2010)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: diplomka.aux
+The style file: czechiso.bst
+Database file #1: citace.bib
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Warning--to sort, need author or key in pydiff
+Warning--empty journal in belfcaskr
+Warning--empty journal in fcaslajdy1
+Warning--empty journal in fcaslajdy2
+Warning--empty journal in fcaslajdy3
+You've used 9 entries,
+            3151 wiz_defined-function locations,
+            700 strings with 6589 characters,
+and the built_in function-call counts, 3353 in all, are:
+= -- 207
+> -- 78
+< -- 1
++ -- 37
+- -- 22
+* -- 174
+:= -- 384
+add.period$ -- 18
+call.type$ -- 9
+change.case$ -- 32
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 364
+empty$ -- 368
+format.name$ -- 24
+if$ -- 717
+int.to.chr$ -- 0
+int.to.str$ -- 9
+missing$ -- 91
+newline$ -- 43
+num.names$ -- 16
+pop$ -- 210
+preamble$ -- 1
+purify$ -- 29
+quote$ -- 0
+skip$ -- 118
+stack$ -- 0
+substring$ -- 79
+swap$ -- 153
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 30
+warning$ -- 5
+while$ -- 19
+width$ -- 10
+write$ -- 90
+(There were 5 warnings)

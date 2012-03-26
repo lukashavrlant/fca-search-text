@@ -6,7 +6,9 @@
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{url}
 
+\DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>} \urlstyle{tt}}
 
 
 %%% Obecné věci
@@ -177,7 +179,7 @@ Další částí vyhledávače je hledání souvisejících dotazů. Tato část
 \label{prepr}
 Při budování indexu máme na vstupu sadu dokumentů a na výstupu strukturu, která reprezentuje index této sady. Během samotného budování indexu procházíme jednotlivé dokumenty a upravujeme je do takové podoby, která se hodí pro uložení. Budeme uvažovat pouze textové dokumenty jako je HTML nebo PDF a budeme předpokládat statickou sadu dokumentů, takže se nebudeme příliš zatěžovat aktualizací indexu. 
 
-Na samotném začátku tak musíme upravit jednotlivé textové dokumenty do nějaké kanonické podoby. To budeme dělat postupnými úpravami jednotlivých dokumentů. S každým dokumentem budeme provádět identické operace v identickém pořadí. Jednotlivé operace budou popsány v takovém pořadí, v jakém se aplikují ve vyhledávači. 
+Na samotném začátku tak musíme upravit jednotlivé textové dokumenty do nějaké kanonické podoby. To budeme dělat postupnými úpravami jednotlivých dokumentů. S každým dokumentem budeme provádět identické operace v identickém pořadí. Jednotlivé operace budou popsány v takovém pořadí, v jakém se aplikují ve vyhledávači. Všechny operace jsou popsány v \cite{modernir}, kapitola 7 a v \cite{introir}, kapitola 2.
 
 \begin{description}
 % \item[Zjištění názvu dokumentu] U některých typů dokumentů můžeme z jejich obsahu zjistit název dokumentu. Například pokud máme na vstupu HTML stránku, můžeme zjistit název stránky z TITLE elementu. U ostatních dokumentů vezmeme jako název obyčejný název souboru. Pokud zpracováváme soubor \code{prikazy.pdf}, bude názvem právě \uv{prikazy.pdf}.
@@ -218,7 +220,7 @@ stem => (počet výskytů slova ve všech dokumentech,
           (docN, počet výskytů v docN)])
 \end{verbatim}
 
-Proměnné \code{doc1}, \code{doc2}, \dots představují ID dokumentů, které obsahují daný stem a každé slovo tak může obsahovat různou sadu docID. Pokud dokument \code{docA} stem neobsahuje, pak ve struktuře vůbec řádek \code{(docA, počet výskytů v docA)} není. 
+Proměnné \code{doc1}, \code{doc2}, \dots představují ID dokumentů, které obsahují daný stem a každé slovo tak může obsahovat různou sadu docID. Pokud dokument \code{docA} stem neobsahuje, pak ve struktuře vůbec řádek \code{(docA, počet výskytů v docA)} není. Myšlenka indexu je popsána v \cite{introir}, kapitola 1 a 2.
 
 \subsection{Vyhledání atributů dokumentu} 
 
@@ -253,6 +255,8 @@ Tato funkce přiřazuje slovu $t$ a dokumentu $d$ hodnotu, která je
 \item nízká, pokud se slovo vyskytuje málo v dokumentu $d$ nebo pokud se vyskytuje hodně v ostatních dokumentech.
 \end{itemize}
 
+Algoritmus $\tfidf$ je popsán v \cite{introir}, kapitola 6. 
+
 \subsubsection{Vylepšení algoritmu tf-idf}
 
 Problémem tohoto přístupu je, že příliš preferuje velké dokumenty, které obsahují mnoho slov. Máme-li například učebnici středoškolské matematiky, je pravděpodobné, že bude několikrát, řekněme 50krát, obsahovat slovo \uv{kombinace}. Vedle toho můžeme mít desetistránkový dokument pojednávající čistě o kombinacích, ale slovo \uv{kombinace} obsahuje pouze 25krát. Podle stávající $\mbox{tf}_{t,d}$ funkce bude učebnice na klíčové slovo \uv{kombinace} dvakrát relevantnější než článek přímo se zaměřující na kombinace. 
@@ -273,7 +277,7 @@ Nyní můžeme napsat finální verzi funkce $\tfidf$:
 $$
 \tfidf_{t,d} = \frac{\mbox{tf}_{t,d}}{\log |d|}\cdot\mbox{idf}_t,
 $$
-kde $|d|$ je počet slov v dokumentu $d$.
+kde $|d|$ je počet slov v dokumentu $d$. Tato modifikace je vlastní, v \cite{introir} jsou popsány jiné možné modifikace $\tfidf$ algoritmu. 
 
 \sssection{Vygenerování atributů dokumentu}
 
@@ -320,7 +324,7 @@ Jako popisek stránky se použije element \code{META} obsahují popisek, pokud e
 \sssection{Kontrola překlepů}
 Vyhledávač má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
 
-Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody
+Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody.
 
 \begin{itemize}
 	\item Kontrola překlepů bude rychlejší, protože množina slov z dané databáze bude pravděpodobně menší než množina všech slov daného jazyka. Vyhledávač tak bude hledat správná slova v menší množině. 
@@ -330,7 +334,7 @@ Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správn
 Nyní potřebujeme algoritmus, který dokáže porovnat dvě slova a vrátit hodnotu reprezentující jejich podobnost. Jedním z klasických algoritmů je Levenstheinova vzdálenost, který počítá počet překlepů mezi dvěma slovy. Takže pro slova \uv{kotel} a \uv{hotel} vrátí hodnotu $1$, protože se liší pouze v prvním písmenu. 
 
 % source: http://epydoc.sourceforge.net/stdlib/difflib.SequenceMatcher-class.html
-\name{} používá složitější algoritmus, který je založen na myšlence hledání největších společných subsekvencí. V prvním kroku nalezneme nejdelší společný řetězec mezi dvěma slovy. Uložíme si indexy, na kterých řetězec v jednotlivých slovech začíná a délku tohoto řetězce. Poté aplikujeme stejný postup na zbylé kousky řetězce. Nakonec dostaneme seznam všech společných řetězců, pomocí nichž můžeme vypočítat stupeň podobnosti, což je číslo z intervalu $[0, 1]$. Vyhledávač na to používá funkci ze standardní knihovny Pythonu. 
+\name{} používá složitější algoritmus, který je založen na myšlence hledání největších společných subsekvencí. V prvním kroku nalezneme nejdelší společný řetězec mezi dvěma slovy. Uložíme si indexy, na kterých řetězec v jednotlivých slovech začíná a délku tohoto řetězce. Poté aplikujeme stejný postup na zbylé kousky řetězce. Nakonec dostaneme seznam všech společných řetězců, pomocí nichž můžeme vypočítat stupeň podobnosti, což je číslo z intervalu $[0, 1]$. Vyhledávač na to používá funkci ze standardní knihovny Pythonu, viz \cite{pydiff}.
 
 % todo: počet slov
 
@@ -356,7 +360,7 @@ Na rychlosti získání těchto informací už bude přímo záležet rychlost c
 
 
 \ssection{Odpovídání na dotazy}
-Hlavním účelem vyhledávače je samozřejmě odpovídání na dotazy. Uživatel vloží do rozhraní vyhledávače svůj dotaz, který je dále zpracován vyhledávačem, který vrátí nějaký seznam výsledků. 
+Hlavním účelem vyhledávače je samozřejmě odpovídání na dotazy. Uživatel vloží do rozhraní vyhledávače svůj dotaz, který je dále zpracován vyhledávačem, který vrátí nějaký seznam výsledků. Princip fungování boolean dotazů je popsán v \cite{introir}, kapitola 1. 
 
 \sssection{Syntax dotazu}
 Dotazem může být libovolný text, přičemž může obsahovat jisté řídicí příkazy, kterým říkáme operátory. \name{} podporuje tři operátory: AND, OR a NOT. Pokud se tato tři slova objeví v dotazu, budou vyhledávačem pochopena jako operátory, nikoli jako obyčejná text. Musí být psány velkými písmeny, takže pokud chce uživatel použít daná slova jako obyčejný text, stačí použít jejich variantu s malými písmeny. 
@@ -444,9 +448,9 @@ Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slo
 
 Nyní seřadíme dokumenty $\getdocs_Q$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde 
 $$n=\left|\getdocs_Q\right|\quad\mbox{a}\quad \bigcup_{i=1}^n d_i=\getdocs_Q$$ 
-tak, aby platilo $\rank_{d_1, S} \ge \rank_{d_2, S} \ge \ldots \ge \rank_{d_n, S}$.
+tak, aby platilo $\rank_{d_1, S} \ge \rank_{d_2, S} \ge \ldots \ge \rank_{d_n, S}$. Tato seřazená $n$-tice je výstupem algoritmu vyhledávání.
 
-Tato seřazená $n$-tice je výstupem algoritmu vyhledávání. 
+Idea a postup řazení dokumentů je popsán v \cite{introir}, včetně zvýhodňování určitých částí dokumentu. 
 
 
 
@@ -460,7 +464,7 @@ Tato seřazená $n$-tice je výstupem algoritmu vyhledávání.
 \section{Formální konceptuální analýza}
 Formální konceptuální analýzu budeme používat jako matematický základ pro hledání souvisejících dotazů. V této kapitole bude popsána nezbytná teorie FCA. 
 
-Základní teorie kolem FCA byla poprvé představena roku 1984 v článku \uv{Restructuring Lattice Theory: An Approach Based on Hierarchies of Concepts}, jehož autorem je německý matematik Rudolf Wille. 
+Základní teorie kolem FCA byla poprvé představena roku 1984 v článku \uv{Restructuring Lattice Theory: An Approach Based on Hierarchies of Concepts}, jehož autorem je německý matematik Rudolf Wille, viz \cite{wille}.
 
 \ssection{Neformální úvod do formální konceptuální analýzy}
 Formální konceptuální analýza (dále jen FCA) pracuje s tabulkovými daty. V řádcích máme objekty, ve sloupcích máme atributy objektů. Obsahem každé buňky je pak informace, zda daný objekt má daný atribut. Tato informace je binární, daný objekt buď daný atribut má, nebo nemá. 
@@ -488,7 +492,7 @@ Kukuřice&\yes&&\yes&\yes&&\yes\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Formální kontext} \label{tab.con1}
+\caption{Formální kontext, zdroj: \cite{belfcaskr}} \label{tab.con1}
 
 \begin{center}
 $a$: potřebuje k životu vodu, $b$: žije ve vodě, $c$: žije na zemi,\\ $d$: potřebuje chlorofyl, $e$: dvouděložná rostlina, $f$: jednoděložná rostlina,\\ $g$: může se pohybovat, $h$: má končetiny, $i$: kojí potomky
@@ -527,6 +531,8 @@ První koncept můžeme pojmenovat \uv{pohybující se živočichové}, druhý k
 Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký koncept konkrétnější než jiný, řekneme, že je menší. Koncept $A$ je konkrétnější než koncept $B$, zapíšeme $A < B$, pokud je extent konceptu $A$ vlastní podmnožinou extentu konceptu $B$. Tím máme definováno uspořádání, kterým můžeme uspořádat všechny koncepty. Přesnější popis bude v následující kapitole. 
 
 \ssection{Formální zavedení FCA}
+
+Všechny definice a všechny věty z této kapitoly jsou citací z \cite{belfcaskr}. Další materiály o FCA: \cite{fcabook}, \cite{fcaslajdy1}, \cite{fcaslajdy2}, \cite{fcaslajdy3}.
 
 \sssection{Základní pojmy}
 \begin{mydef}[Formální kontext]
@@ -780,21 +786,21 @@ Věta má dvě části:
 \end{enumerate}
 \qed\end{theorem}
 
-První část nám říká, jak hledat suprema a infima množiny konceptů. Důkaz první části hlavní věty o konceptuálních svazech:
+% První část nám říká, jak hledat suprema a infima množiny konceptů. Důkaz první části hlavní věty o konceptuálních svazech:
 
-\begin{proof}
-Ověříme pouze rovnici \ref{eq.main1}, druhou rovnici bychom dokázali téměř stejně. Víme, že množiny extentů a intentů jsou pevnými body vzhledem k operátorům $\updown$ a $\downup$. Platí
-\begin{eqnarray}
-\addsp{\ext(X,Y,I), \subseteq}&=&\addsp{\fix(\updown),\subseteq}\\
-\addsp{\intfca(X,Y,I), \subseteq}&=&\addsp{\fix(\downup),\subseteq}
-\end{eqnarray}
+% \begin{proof}
+% Ověříme pouze rovnici \ref{eq.main1}, druhou rovnici bychom dokázali téměř stejně. Víme, že množiny extentů a intentů jsou pevnými body vzhledem k operátorům $\updown$ a $\downup$. Platí
+% \begin{eqnarray}
+% \addsp{\ext(X,Y,I), \subseteq}&=&\addsp{\fix(\updown),\subseteq}\\
+% \addsp{\intfca(X,Y,I), \subseteq}&=&\addsp{\fix(\downup),\subseteq}
+% \end{eqnarray}
 
-Dále víme, že konceptuální svaz $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}$ a duálně isomorfní s $\addsp{\intfca(X,Y,I), \subseteq}$. Tedy infima v $\lattice$ korespondují s infimy v $\ext(X,Y,I)$ a supremy v $\intfca(X,Y,I)$. 
+% Dále víme, že konceptuální svaz $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}$ a duálně isomorfní s $\addsp{\intfca(X,Y,I), \subseteq}$. Tedy infima v $\lattice$ korespondují s infimy v $\ext(X,Y,I)$ a supremy v $\intfca(X,Y,I)$. 
 
-Pro nás to znamená, že pokud máme množinu konceptů $\addsp{A_j, B_j}$ a cheme spočítat jejich infimum, stačí nám spočítat infimum extentů $\adds{A_j}$, čímž dostaneme extent konceptu, který je infimem konceptů $\addsp{A_j, B_j}$. Protože pracujeme s uzávěrovým operátorem $\updown$, můžeme, dle věty \ref{th.sysfix} spočítat infimum $\adds{A_j}$ jako obyčejný průnik: $\biginf_{j\in J}\adds{A_j}=\bigcap_{j\in J}A_j$. 
+% Pro nás to znamená, že pokud máme množinu konceptů $\addsp{A_j, B_j}$ a cheme spočítat jejich infimum, stačí nám spočítat infimum extentů $\adds{A_j}$, čímž dostaneme extent konceptu, který je infimem konceptů $\addsp{A_j, B_j}$. Protože pracujeme s uzávěrovým operátorem $\updown$, můžeme, dle věty \ref{th.sysfix} spočítat infimum $\adds{A_j}$ jako obyčejný průnik: $\biginf_{j\in J}\adds{A_j}=\bigcap_{j\in J}A_j$. 
 
-Intent tohoto konceptu bychom mohli zapsat jako $(\bigcap_{j\in J}A_j)\up$. Ale můžeme využít faktu, že intent je supremum množiny $\adds{B_j}$, což je dle věty \ref{th.sysfix} rovno $\bigsup_{j\in J}B_j=(\bigcup_{j\in J}B_j)\downup$.
-\end{proof}
+% Intent tohoto konceptu bychom mohli zapsat jako $(\bigcap_{j\in J}A_j)\up$. Ale můžeme využít faktu, že intent je supremum množiny $\adds{B_j}$, což je dle věty \ref{th.sysfix} rovno $\bigsup_{j\in J}B_j=(\bigcup_{j\in J}B_j)\downup$.
+% \end{proof}
 
 
 \sssection{Zobrazení konceptuálního svazu}
@@ -805,14 +811,14 @@ Tento svaz můžeme zobrazit klasickým Hasseovým diagramem. Viz obrázek \ref{
 \begin{figure}
   \centering
   \includegraphics[width=14cm]{obrazky/koncepty.pdf}
-  \caption{Všechny koncepty z kontextu v tabulce \ref{tab.con1}}
+  \caption{Všechny koncepty z kontextu v tabulce \ref{tab.con1}, zdroj: \cite{belfcaskr}}
   \label{fig.concepts}
 \end{figure}
 
 \begin{figure}
   \centering
   \includegraphics[width=14cm]{obrazky/svaz.pdf}
-  \caption{Svaz, který vznikne z kontextu v tabulce \ref{tab.con1}}
+  \caption{Svaz, který vznikne z kontextu v tabulce \ref{tab.con1}, zdroj: \cite{belfcaskr}}
   \label{fig.lattice}
 \end{figure}
 
@@ -878,6 +884,8 @@ Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky
 My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
 
 K tomu využijeme formální konceptuální analýzu, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů -- ten musíme nějak najít -- představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
+
+Tato idea není nijak nová a už byla implementována v několika prototypech jako například CREDO, FooCA a SearchSleuth, podrobnější popis těchto vyhledávačů, včetně popisu odlišností, se nachází v kapitole \ref{ch.fcaengines} Zde popisovaný vyhledávač je velice podobný vyhledávači SearchSleuth, přebírá některé vizuální prvky a FCA část je také téměř stejná. Vyhledávač \name{} je vlastní pokus o ověření funkčnosti celé ideje. 
 
 \sssection{Výstup vyhledávače}
 
@@ -1382,7 +1390,7 @@ Zdrojového kódy ukázky práce s API se nachází na adrese:
 	\item \code{https://github.com/havrlant/fca-seach-api-test}
 \end{itemize}
 
-\ssection{Podobné vyhledávače}
+\ssection{Podobné vyhledávače}\label{ch.fcaengines}
 V historii již existovaly vyhledávače, které fungovaly velice podobně jako \name. Jedná se o vyhledávače \uv{CREDO}, \uv{FooCA} a \uv{SearchSleuth}. V současné době CREDO a SearchSleuth nefungují vůbec a k použití FooCA je nutné zažádat o registraci tvůrce tohoto vyhledávače. 
 
 \begin{description}
@@ -1404,5 +1412,8 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
   Conclusion in english.
 \end{conclusions-en}
 
+\newpage
+\bibliographystyle{czechiso}
+\bibliography{citace}
 
 \end{document}

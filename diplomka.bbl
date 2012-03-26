@@ -1,0 +1,52 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{pydiff}
+Python documentation: difflib --- Helpers for computing deltas. 2012, [Online].
+\newline\urlprefix\url{http://docs.python.org/py3k/library/difflib.html}
+
+\bibitem{modernir}
+Baeza-Yates, R.~A.; Ribeiro-Neto, B.: \emph{Modern Information Retrieval}.
+  Boston, MA, USA: Addison-Wesley Longman Publishing Co., Inc., 1999, ISBN
+  020139829X.
+
+\bibitem{fcabook}
+Bernhard~Ganter, R.~W.: \emph{Formal Concept Analysis: Mathematical
+  Foundations}. Springer, 1998, ISBN 3540627715.
+
+\bibitem{belfcaskr}
+Bělohlávek, R.: Introduction to Formal Concept Analysis. 2008.
+\newline\urlprefix\url{http://phoenix.inf.upol.cz/esf/ucebni/formal.pdf}
+
+\bibitem{introir}
+Manning, C.~D.; Raghavan, P.; Schtze, H.: \emph{Introduction to Information
+  Retrieval}. New York, NY, USA: Cambridge University Press, 2008, ISBN
+  0521865719, 9780521865715.
+
+\bibitem{fcaslajdy1}
+Radim~Bělohlávek, J.~O.: Relational Data Analysis 1. 2008.
+\newline\urlprefix\url{http://phoenix.inf.upol.cz/esf/ucebni/rda_fca_I.pdf}
+
+\bibitem{fcaslajdy2}
+Radim~Bělohlávek, J.~O.: Relational Data Analysis 2. 2008.
+\newline\urlprefix\url{http://phoenix.inf.upol.cz/esf/ucebni/rda_fca_II.pdf}
+
+\bibitem{fcaslajdy3}
+Radim~Bělohlávek, J.~O.: Relational Data Analysis 3. 2008.
+\newline\urlprefix\url{http://phoenix.inf.upol.cz/esf/ucebni/rda_fca_III.pdf}
+
+\bibitem{wille}
+Wille, R.: RESTRUCTURING LATTICE THEORY: AN APPROACH BASED ON HIERARCHIES OF
+  CONCEPTS. In \emph{Proceedings of the 7th International Conference on Formal
+  Concept Analysis}, ICFCA '09, Berlin, Heidelberg: Springer-Verlag, 2009, ISBN
+  978-3-642-01814-5, s. 314--339, \doi{10.1007/978-3-642-01815-2_23}.
+\newline\urlprefix\url{http://dx.doi.org/10.1007/978-3-642-01815-2_23}
+
+\end{thebibliography}
