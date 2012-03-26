@@ -6,48 +6,52 @@ Database file #1: citace.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Warning--to sort, need author or key in pydiff
 Warning--empty journal in belfcaskr
+Warning--empty pages in searchsleuth
+Warning--empty pages in fcasim
+Warning--empty journal in fcairslajdy
+Warning--empty year in fcairslajdy
 Warning--empty journal in fcaslajdy1
 Warning--empty journal in fcaslajdy2
 Warning--empty journal in fcaslajdy3
-You've used 9 entries,
+You've used 15 entries,
             3151 wiz_defined-function locations,
-            700 strings with 6589 characters,
-and the built_in function-call counts, 3353 in all, are:
-= -- 207
-> -- 78
-< -- 1
-+ -- 37
-- -- 22
-* -- 174
-:= -- 384
-add.period$ -- 18
-call.type$ -- 9
-change.case$ -- 32
+            732 strings with 7400 characters,
+and the built_in function-call counts, 6148 in all, are:
+= -- 396
+> -- 137
+< -- 4
++ -- 64
+- -- 39
+* -- 319
+:= -- 697
+add.period$ -- 29
+call.type$ -- 15
+change.case$ -- 58
 chr.to.int$ -- 0
-cite$ -- 14
-duplicate$ -- 364
-empty$ -- 368
-format.name$ -- 24
-if$ -- 717
+cite$ -- 24
+duplicate$ -- 657
+empty$ -- 659
+format.name$ -- 43
+if$ -- 1326
 int.to.chr$ -- 0
-int.to.str$ -- 9
-missing$ -- 91
-newline$ -- 43
-num.names$ -- 16
-pop$ -- 210
+int.to.str$ -- 15
+missing$ -- 158
+newline$ -- 63
+num.names$ -- 29
+pop$ -- 370
 preamble$ -- 1
-purify$ -- 29
+purify$ -- 49
 quote$ -- 0
-skip$ -- 118
+skip$ -- 233
 stack$ -- 0
-substring$ -- 79
-swap$ -- 153
-text.length$ -- 1
+substring$ -- 204
+swap$ -- 297
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 30
-warning$ -- 5
-while$ -- 19
-width$ -- 10
-write$ -- 90
-(There were 5 warnings)
+type$ -- 54
+warning$ -- 9
+while$ -- 40
+width$ -- 17
+write$ -- 138
+(There were 9 warnings)
