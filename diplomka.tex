@@ -619,7 +619,7 @@ Pro Galoisovo spojení $\addsp{f,g}$ mezi $X$ a $Y$ a pro všechna $A\subseteq X
 f(A)&=&f(g(f(A)))\\
 g(B)&=&g(f(g(B)))
 \end{eqnarray}
-\end{theorem}
+\qed\end{theorem}
 
 Toto je zajímavá vlastnost. Na začátku máme množinu herců $A$. Nalezneme filmy, ve kterých tito herci hráli. Tím získáme $f(A)$. Dále nalezneme herce, kteří hráli ve všech těchto nalezených filmech. Tam se určitě objeví herci z $A$, viz definice \ref{def.gal}, ale mohou se tam objevit i další herci. Tím získáme hodnotu $g(f(A))$. Nakonec zpátky spočítáme filmy, ve kterých tito herci hráli. Musíme nutně získat množinu filmů $f(A)$, protože $g(f(A))$ jsou právě herci, kteří hrají všech filmech z $f(A)$.
 
@@ -641,8 +641,8 @@ jako množinu pevných bodů uzávěrového operátoru $C$.
 \end{mydef}
 
 \begin{theorem}[Od Galoisova spojení k uzávěrovému operátoru]\label{th.galcl}
-Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$.
-\end{theorem}
+Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$. 
+\qed\end{theorem}
 
 Zápis $f \circ g$ značí skládání množin ve smyslu $(f \circ g)(x) = g(f(x))$.
 
@@ -661,11 +661,11 @@ Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Pak pro každé $A_j\
 f(\bigcup_{j\in J}A_j)&=&\bigcap_{j\in J}f(A_j)\\
 g(\bigcup_{j\in J}B_j)&=&\bigcap_{j\in J}g(B_j)
 \end{eqnarray}
-\end{theorem}
+\qed\end{theorem}
 
 \begin{theorem}[Šipečkové operátory tvoří Galoisovo spojení]
 Pro formální kontext $\context$ tvoří dvojice $\addsp{\up, \down}$ Galoisovo spojení mezi $X$ a $Y$.
-\end{theorem}
+\qed\end{theorem}
 
 Předchozí věta je důležitým výsledkem. Odpovídá nám na otázku, jak jednoduše počítat extenty a intenty k libovolným podmnožinám objektů či atributů. Protože pro kontext $\context$ je $\addsp{\up, \down}$ Galoisovo spojení, platí, že zobrazení $\up\circ\down$ je uzávěrový operátor na množině $X$, tj. na množině objektů. 
 
@@ -703,7 +703,7 @@ Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{b
 	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou duálně isomorfní. Tj. existuje zobrazení $f: \ext(X,Y,I)\rightarrow\intfca(X,Y,I)$ takové, že platí $A_1\subseteq A_2$ právě tehdy, když $f(A_2)\subseteq f(A_1)$.
 	\item $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}.$
 \end{enumerate}
-\end{theorem}
+\qed\end{theorem}
 
 \begin{mydef}[Svaz]
 Nechť $\addsp{X, \le}$ je uspořádaná množina. Pokud pro každé $x,y\in X$ existuje $\sup(x,y)$ a $\inf(x,y)$, pak $\addsp{X, \le}$ nazveme svaz. Pokud můžeme nalézt infima a suprema pro jakoukoliv podmnožinu množiny $X$, pak se jedná o úplný svaz. 
@@ -729,7 +729,7 @@ Mějme uzávěrový operátor $C$ na množině $X$. Pak uspořádaná množina $
 \biginf_{j\in J}A_j&=&\bigcap_{j\in J}A_j,\label{eq.clinf}\\
 \bigsup_{j\in J}A_j&=&C(\bigcup_{j\in J}A_j).\label{eq.clsup}
 \end{eqnarray}
-\end{theorem}
+\qed\end{theorem}
 
 Ukážeme si na příkladu myšlenku důkazu. Rovnice \ref{eq.clinf} říká, že pokud máme dva pevné body uzávěrového operátoru a provedeme jejich průnik, pak opět získáme pevný bod a tento bod bude zároveň infimem původních dvou bodů (rovnice je ve skutečnosti obecnější a povoluje libovolně velkou množinu pevných bodů, ne jen dva).
 
@@ -778,7 +778,7 @@ Věta má dvě části:
 		\item $\gamma(x)\le\mu(y)$ právě tehdy, když $\addsp{x,y}\in I$.
 	\end{itemize}
 \end{enumerate}
-\end{theorem}
+\qed\end{theorem}
 
 První část nám říká, jak hledat suprema a infima množiny konceptů. Důkaz první části hlavní věty o konceptuálních svazech:
 
@@ -1017,7 +1017,7 @@ To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v nov
 
 \begin{theorem}[Jak nalézt horní sousedy]
 Nechť $\addsp{A, B} \in \lattice$ a $\addsp{A, B}\ne\addsp{X, X\up}$. Pak $(A\cup\adds{a})\updown$, kde $a\in X\setminus A$ je extent horního souseda konceptu $\addsp{A, B}$ právě tehdy, když pro všechna $x\in(A\cup\adds{a})\updown\setminus A$ platí $(A\cup\adds{x})\updown=(A\cup\adds{a})\updown$.
-\end{theorem}
+\qed\end{theorem}
 
 Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{A, B}$ ve svazu $\lattice$, viz obrázek \ref{alg.upper}
 
