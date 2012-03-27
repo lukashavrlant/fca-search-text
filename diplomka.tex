@@ -1195,6 +1195,12 @@ Téma sousedních konceptů a jejich podobnosti je blíže rozebráno v článku
 \ssection{Uživatelské prostředí vyhledávače}
 Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty} Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
 
+Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
+
+Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství času je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
+
+O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě položky jsou počty objektů a atributů, které obsahuje kontext, počet dolních a horních sousedů konceptu dotazu a počet jeho sourozenců. Na konci jsou odkazy na zobrazení části svazu, se kterým pracujeme, a na samotný kontext.
+
 \begin{figure}
   \centering
   \includegraphics[width=14cm]{obrazky/gui-zakladni.pdf}
@@ -1208,12 +1214,6 @@ Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní pr�
   \caption{Výsledek vyhledávače na dotaz \uv{fuzzy attributes}}
   \label{fig.gui.result1}
 \end{figure}
-
-Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
-
-Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství času je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
-
-O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě položky jsou počty objektů a atributů, které obsahuje kontext, počet dolních a horních sousedů konceptu dotazu a počet jeho sourozenců. Na konci jsou odkazy na zobrazení části svazu, se kterým pracujeme, a na samotný kontext.
 
 Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
 
