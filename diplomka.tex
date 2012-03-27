@@ -1179,18 +1179,7 @@ Návrh $s_1\in Sibl$ je relevantnější než $s_2\in Sibl$, zapíšeme $s_1\ge 
 Téma sousedních konceptů a jejich podobnosti je blíže rozebráno v článku \cite{searchsleuth} a \cite{fcasim}.
 
 
-% \ssection{Příklad}
-% \sssection{Information retrieval část}
-% Ukážeme si postup vyhledávače na příkladu. Mějme sadu zaindexovaných dokumentů $\alldoc$, kde bude $100$ článků s radami ohledně podnikání. Položme vyhledávači dotaz $Q=$\uv{Jak podnikat, jsem student?}. Jako první vyhledávač aplikuje textové transformace popsané v kapitole \ref{prepr}. Tj. převede text na malá písmena, převede na stemy, odstraní diakritiku a podobně. Na konci těchto transformací dostaneme dotaz \uv{podnik AND student}. 
 
-% Vyhledávače pomocí svého indexu nalezne dokumenty, které obsahují slovo \uv{podnik}. Dále nalezne dokumenty, které obsahují slovo \uv{student}. Protože výchozí logická spojka je AND, udělá vyhledávač průnik mezi oběma množinami, čímž získáme množinu dokumentů, která odpovídá našemu zadanému dotazu, množinu $D$. Těchto dokumentů je $|D|=23$.
-
-% V dalším kroku tyto dokumenty seřadíme dle relevance. K tomu použijeme $\tfidf$ funkci. Pro každý dokument spočítáme $\tfidf$ skóre pro obě slova zvlášť a tyto hodnoty sečteme. Upravíme skóre, pokud se klíčová slova vyskytují v titulku, URL nebo popisku. To je konec klasické části vyhledávače, plynule přejdeme do FCA části. 
-
-% \sssection{FCA část}
-% Náš dotaz měl velikost dva, $|\beta(Q)|=2$, takže jako první provedeme druhý dotaz do vyhledávače. Dotaz bude mít tvar $Q'=$\uv{podnikat OR student}. Vyhledávač nám vrátí novou sadu dokumentů, $D'$, kterých je $|D'|=68$.
-
-% V dalším kroku sestavíme kontext. Máme nastaveno omezení na $50$ dokumentů, takže vezmeme prvních $50$ dokumentů z $D'$. To bude tvořit množinu objektů $X'$ rozšířeného kontextu $\addsp{X', Y', I'}$. 
 
 \newpage
 \section{Výsledky vyhledávače}
