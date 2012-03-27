@@ -927,7 +927,7 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 
 Tato idea není nijak nová a už byla implementována v několika prototypech jako například CREDO, FooCA a SearchSleuth, podrobnější popis těchto vyhledávačů, včetně popisu odlišností, se nachází v kapitole \ref{ch.fcaengines} Myšlenka vyhledávače, který spolupracuje s FCA je pak popsána například v \cite{fcairslajdy}. Zde popisovaný vyhledávač je velice podobný vyhledávači SearchSleuth, přebírá některé vizuální prvky a FCA část je také téměř stejná. Vyhledávač \name{} je vlastní pokus o ověření funkčnosti celé ideje. 
 
-Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů; na vstupu bere seznam dokumentů, ty stáhne, zaindexuje a pak pracuje nad tímto statickým indexem. Nicméně skrze poskytované API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth.
+Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů; na vstupu bere seznam dokumentů, ty stáhne, zaindexuje a pak pracuje nad tímto statickým indexem. Nicméně skrze poskytované API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth, viz kapitolu \ref{ch.apipost}
 
 \ssection{Jak vytvořit kontext}
 \sssection{Sestavení kontextu}
@@ -1261,7 +1261,7 @@ Vyhledávač si dále poradí s dokumenty ve formátu PDF a ODT. Formát ODT je 
 
 S PDF už je větší problém. Vyhledávač používá externí aplikace na dolování textu z PDF souboru, ale žádná aplikace si neporadí se všemi PDF soubory. Největším problémem je diakritika, spousta převaděčů nedokázala po převodu na prostý text správně zobrazit diakritiku. V lepším případě převaděč zobrazil místo správného znaku nějaký nesprávný znak, v horším případě písmeno s dikritikou zcela vypustil, případně vypustil i následující písmeno. S takto převedeným textem už se toho moc dělat nedá. 
 
-Některé PDF dokumenty na webu katedry informatiky jsou v nějakém podivném stavu, kdy i nakopírování textu v některém ze známých PDF prohlížečů, například Adobe Reader, nefunguje jak má. Typická chyba je, že po vložení textu do jiné aplikace jsou zcela oddělené háčky a čárky, občas jsou ještě různě náhodně vloženy mezery, takže zpětná rekonstrukce textu je více či méně nemožná. 
+Některé PDF dokumenty na webu katedry informatiky jsou v nějakém podivném stavu, kdy i nakopírování textu v některém ze známých PDF prohlížečů, například Adobe Reader, nefunguje jak má. Typická chyba je, že po vložení textu do jiné aplikace jsou zcela oddělené háčky a čárky, občas jsou ještě různě náhodně vloženy mezery. Vyhledávač se snaží alespoň o částečnou rekonstrukci textu, ale úplná rekonstrukce je nemožná. 
 
 \sssection{Některé nedostatky vyhledávače}\label{ch.nedostatky}
 
@@ -1353,7 +1353,7 @@ Vyhledávač umožňuje získávat data o existujících indexech. Ta se získá
 
 Například dotazem \code{/api.php?d=jpw\&docinfo=147\&title} zjistíme název dokumentu z databáze \code{jpw}, který má ID 147.
 
-\sssection{Posílání vlastních dat na server}
+\sssection{Posílání vlastních dat na server}\label{ch.apipost}
 API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. Vyhledávač tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v předchozích částech dokumentu. 
 
 Výsledkem budou opět data ve formátu JSON, která budou obsahovat výsledek FCA analýzy. Nalezneme tam specializace, generalizace a podobné dotazy a některá další data o kontextu a konceptuálním svazu. Dále tam bude seznam dokumentů, který bude seřazený dle relevance. Výstup je prakticky stejný, jako je grafický výstup vyhledávače, pouze máme výsledky v surové JSON podobě. 
@@ -1362,7 +1362,9 @@ Tohoto můžeme využít na vylepšení výsledků běžného vyhledávače, nap
 
 My od Google získáme seznam několika odkazů, které odpovídají zadanému dotazu. Pro každý odkaz máme k dispozici tři zásadní údaje: URL, titulek a popisek. Z těchto tří údajů vytvoříme sadu dokumentů takto: každý odkaz bude tvořit jeden samostatný dokument. Takže pokud nám Google vrátí na dotaz 50 výsledků, budeme vytvářet 50 dokumentů. URL dokumentu bude stejné jako URL, které vrátil Google; stejně tak titulek. Obsahem dokumentu pak bude popisek odkazu. Popisek dokumentu může být buď stejný jako jeho obsah nebo bude prázdný.
 
-Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. 
+Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. Tím dostaneme aplikaci, která už téměř stejná jako SearchSleuth.
+
+Jednou z cest, kam může směřovat tento vyhledávač, je rozšíření API a napsání dalších aplikací, které toto API využívají. Jednoduchou úpravou algoritmů ve vyhledávači můžeme například vytvořit API, které bere na vstupu seznam dokumentů a na výstupu vrací kategorizovaný seznam dokumentů -- ke každému dokumentu přiřadí jednu, případně i více, kategorii. To se může hodit v případě, kdy máme velké množství dokumentů, které chceme setřídit do nějakých kategorií. Podobných způsobů využití lze jistě vymyslet více. 
 
 
 \ssection{Struktura aplikace a používané programy}
@@ -1413,7 +1415,7 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 
 	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. Detailnější informace jsou v článku \cite{credo}.
 
-	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCa, podobně jako CREDO, spolupracuje s webovými vyhledávači, konkrétně s Googlem a Yahoo. Uživatel vloží dotaz do FooCA, ten přepošle dotaz beze změny do Google API nebo do Yahoo API a dále pracuje s navrácenými výsledky. Po skončení FCA analýzy zobrazí uživateli výsledek ve formě tabulky -- kontextu -- nebo ve formě diagramu znázorňující konceptuální svaz. 
+	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA, podobně jako CREDO, spolupracuje s webovými vyhledávači, konkrétně s Googlem a Yahoo. Uživatel vloží dotaz do Foo\-CA, ten přepošle dotaz beze změny do Google API nebo do Yahoo API a dále pracuje s navrácenými výsledky. Po skončení FCA analýzy zobrazí uživateli výsledek ve formě tabulky -- kontextu -- nebo ve formě diagramu znázorňující konceptuální svaz. 
 
 	Detailnější informace jsou v článku \cite{fooca}.
 	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth  spolupracoval s Yahoo a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. Jinak je FCA část obou vyhledávačů velice podobná. 
