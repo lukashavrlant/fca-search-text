@@ -13,7 +13,7 @@
 
 %%% Obecné věci
 \newcommand{\name}{Chandler}
-\newcommand{\nameurl}{http://phoebe.inf.upol.cz/fcasearch/}
+\newcommand{\nameurl}{\url{http://phoebe.inf.upol.cz/fcasearch/}}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\sep}{\,|\,}
 \newcommand{\docs}{\mathbb{D}}
@@ -293,6 +293,8 @@ Dále můžeme ve vyhledávači nastavit:
 	\item Vyhledávač umožňuje přepnout do druhého modelu, kdy se za atributy berou například tři stemy s největším $\tfidf$ skórem. Žádná hranice se pak neuplatňuje. 
 \end{itemize}
 
+Podrobnější informace o nastavení je v dokumentaci, viz kapitolu \ref{ch.dokumentace}
+
 \ssection{Další funkce vyhledávače}
 \sssection{Inverzní stemovací funkce}
 
@@ -398,6 +400,8 @@ Například dotazu \uv{(matematika AND (spočetné OR nespočetné)) OR (NOT (mn
 
 Nakonec celý výraz zjednodušíme -- odstraníme uzly, které obsahují stop slova, protože stop slova nepoužíváme při vyhledávání a převedeme slova na stemy. 
 
+Více informací o parsování dotazu je například v \cite{compilers}.
+
 \sssection{Vyhledání odpovídajících dokumentů}
 
 Ve chvíli, kdy máme syntaktický strom, se můžeme pustit do hledání dokumentů. K tomu využijeme vybudovaný index, který nám umožňuje snadno zjistit, v jakých dokumentech se vyskytuje dané slovo. Pro účely popisu mechanismu si definujeme funkci $\getdocs$, která bere na vstupu dotaz (syntaktický strom) $Q$ a na výstupu vrací množinu dokumentů, které odpovídají zadanému dotazu. Tato funkce se bude chovat odlišně v závislosti na tom, jak vypadá dotaz $Q$. 
@@ -428,7 +432,7 @@ $$\score_{d,S}=\sum_{s\in S} \tfidf_{s, d}.$$
 Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slova z dotazu nevyskytují v důležitých částech dokumentu, konkrétně jde o název, adresa a popisek stránky. Za každé klíčové slovo, které se vyskytuje v názvu stránky $d$ nebo v adrese stránky, ztrojnásobíme hodnotu $\score_{d,S}$. Za každé klíčové slovo, které se vyskytuje v popisu stránky $d$, zdvojnásobíme hodnotu $\score_{d,S}$. Ve výsledku tak dostáváme funkci $\rank$, která nejprve vypočte hodnotu $\score_{d,S}$ a poté aplikuje pravidla o ztrojnásobení a zdvojnásobení. Funkce $\rank$ bere na vstupu dva parametry: dokument $d$, pro který počítáme skóre a slova $S$ z dotazu $Q$.
 
 \begin{figure}
-\begin{algorithmic}
+\begin{algorithmic}[1]
 \Function{rank}{$d, S$}
     \State $score \gets \score_{d, S}$
     \ForAll{$s \in S$} 
@@ -532,7 +536,7 @@ Tím už se blížíme k definici uspořádání konceptů. Pokud je nějaký ko
 
 \ssection{Formální zavedení FCA}
 
-Všechny definice a všechny věty z této kapitoly jsou citací z \cite{belfcaskr}. Další materiály o FCA: \cite{fcabook}, \cite{fcaslajdy1}, \cite{fcaslajdy2}, \cite{fcaslajdy3}.
+Všechny definice a všechny věty z této kapitoly jsou citovány z \cite{belfcaskr}. Další materiály o FCA: \cite{fcabook}, \cite{fcaslajdy1}, \cite{fcaslajdy2}, \cite{fcaslajdy3}.
 
 \sssection{Základní pojmy}
 \begin{mydef}[Formální kontext]
@@ -627,7 +631,7 @@ g(B)&=&g(f(g(B)))
 \end{eqnarray}
 \qed\end{theorem}
 
-Toto je zajímavá vlastnost. Na začátku máme množinu herců $A$. Nalezneme filmy, ve kterých tito herci hráli. Tím získáme $f(A)$. Dále nalezneme herce, kteří hráli ve všech těchto nalezených filmech. Tam se určitě objeví herci z $A$, viz definice \ref{def.gal}, ale mohou se tam objevit i další herci. Tím získáme hodnotu $g(f(A))$. Nakonec zpátky spočítáme filmy, ve kterých tito herci hráli. Musíme nutně získat množinu filmů $f(A)$, protože $g(f(A))$ jsou právě herci, kteří hrají všech filmech z $f(A)$.
+Toto je zajímavá vlastnost. Na začátku máme množinu herců $A$. Nalezneme filmy, ve kterých tito herci hráli. Tím získáme $f(A)$. Dále nalezneme herce, kteří hráli ve všech těchto nalezených filmech. Tam se určitě objeví herci z $A$, viz definici \ref{def.gal}, ale mohou se tam objevit i další herci. Tím získáme hodnotu $g(f(A))$. Nakonec zpátky spočítáme filmy, ve kterých tito herci hráli. Musíme nutně získat množinu filmů $f(A)$, protože $g(f(A))$ jsou právě herci, kteří hrají všech filmech z $f(A)$.
 
 \begin{mydef}[Uzávěrový operátor]\label{def.clop}
 Uzávěrový operátor $C$ na množině $X$ je zobrazení $C: 2^X\rightarrow2^X$, které pro každé $A, A_1, A_2\subseteq X$ splňuje:
@@ -885,8 +889,6 @@ My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouz
 
 K tomu využijeme formální konceptuální analýzu, která v daných datech vyhledává jisté shluky potenciálně zajímavých dat a zároveň je ukládá do hierarchie, se kterou můžeme dále pracovat. Pro základní představu si můžeme představit výstup FCA jako Hasseův diagram, kde jeden z uzlů -- ten musíme nějak najít -- představuje aktuální výsledky, které nám vyhledávač zobrazil, \uv{otcové} tohoto uzlu jsou obecnější dotazy, \uv{synové} jsou konkrétnější dotazy a \uv{sourozenci} jsou podobné dotazy. 
 
-Tato idea není nijak nová a už byla implementována v několika prototypech jako například CREDO, FooCA a SearchSleuth, podrobnější popis těchto vyhledávačů, včetně popisu odlišností, se nachází v kapitole \ref{ch.fcaengines} Myšlenka vyhledávače, který spolupracuje s FCA je pak popsána například v \cite{fcairslajdy}. Zde popisovaný vyhledávač je velice podobný vyhledávači SearchSleuth, přebírá některé vizuální prvky a FCA část je také téměř stejná. Vyhledávač \name{} je vlastní pokus o ověření funkčnosti celé ideje. 
-
 \sssection{Výstup vyhledávače}
 
 Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřazenou sadu klasických výsledků, na tom se nic nemění. Dále by měl spočítat návrhy na úpravu dotazů ve všech třech kategorií -- konkrétnější, podobný a obecnější dotaz. Pokud tyto návrhy existují, což není vždy, měl by je uživateli zobrazit. Tyto návrhy by měl vyhledávač opět seřadit podle relevance, tj. aby první úpravy dotazů byly nejsmysluplnější. Výstup pro dotaz \uv{příležitostné příjmy} by měl vypadat přibližně takto:
@@ -907,7 +909,7 @@ Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. 
 
 Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva příjmy}, čímž bychom měli dostat dokumenty, které se věnují celkově slevám, které můžeme během danění příjmů uplatnit. Druhým dotazem, \uv{paušální příjmy}, bychom se měli dostat k informacím o paušálních výdajích, které můžeme uplatnit při danění příjmů. 
 
-Na posledním řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. Vizualizace nalezených návrhů je přebrána z vyhledávače Search\-Sleuth, viz kapitola \ref{ch.fcaengines}
+Na posledním řádku nám vyhledávač nabízí odstranit slova, abychom získali více dokumentů. Vizualizace nalezených návrhů je přebrána z vyhledávače Search\-Sleuth, viz kapitolu \ref{ch.fcaengines}
 
 
 \ssection{Stručný popis funkčnosti celého vyhledávače}
@@ -921,6 +923,7 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 	\item Jednotlivé návrhy poté nalezneme v intentech okolních konceptů. Specializaci nalezneme v dolních sousedech, generalizaci v horních sousedech a podobné dotazy v sousedních konceptech. Pokud například koncept dotazu má intent $\adds{\mbox{limita, funkce}}$ a nějaký dolní soused má intent $\adds{\mbox{limita, funkce, vlastní}}$, odvodíme z toho specializaci \code{+vlastní}. 
 \end{enumerate}
 
+Tato idea není nijak nová a už byla implementována v několika prototypech jako například CREDO, FooCA a SearchSleuth, podrobnější popis těchto vyhledávačů, včetně popisu odlišností, se nachází v kapitole \ref{ch.fcaengines} Myšlenka vyhledávače, který spolupracuje s FCA je pak popsána například v \cite{fcairslajdy}. Zde popisovaný vyhledávač je velice podobný vyhledávači SearchSleuth, přebírá některé vizuální prvky a FCA část je také téměř stejná. Vyhledávač \name{} je vlastní pokus o ověření funkčnosti celé ideje. 
 
 \ssection{Jak vytvořit kontext}
 \sssection{Sestavení kontextu}
@@ -942,7 +945,7 @@ kde $A_i^j$ označuje $j$-tý atribut dokumentu $D_i$. Tedy $A_i^1$ je atribut d
 $$
 Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}
 $$
-K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstupu vrací množinu slov, která se vyskytuje v dotazu, ale nevyskytuje se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
+K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstupu vrací množinu slov, které se vyskytují v dotazu, ale nevyskytují se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
 
 \begin{enumerate}
 	\item pokud je $Q$ pouze jedno slovo, označme ho $s$, pak $\beta(Q)=\adds{s}$,
@@ -1274,7 +1277,7 @@ Ve vyhledávači je uloženo několik testovacích sad dokumentů. Jedná se o w
 \end{itemize}
 a nakonec je ve vyhledávači použita i sada volně stažitelných odborných článků ve formátu PDF, které napsali zaměstnanci katedry informatiky UP. 
 
-Kromě webu katedry informatiky se jedná o weby, které mají jasné zaměření každé stránky a bohatý obsah, takže na jejich webech vypadá analýza nejlépe. Web katedry informatiky je stručnější, obsahuje jisté chyby (například titulky pro každou stranu zvlášť, jak je psáno v kapitole \ref{ch.kvalita}, byly vytvořeny až během psaní této práce) a obsahuje nepříjemnost v podobě opakujících se slov na každé stránce, viz kapitola \ref{ch.nedostatky}, takže jeho analýza neprobíhá nejlépe. 
+Kromě webu katedry informatiky se jedná o weby, které mají jasné zaměření každé stránky a bohatý obsah, takže na jejich webech vypadá analýza nejlépe. Web katedry informatiky je stručnější, obsahuje jisté chyby (například titulky pro každou stranu zvlášť, jak je psáno v kapitole \ref{ch.kvalita}, byly vytvořeny až během psaní této práce) a obsahuje nepříjemnost v podobě opakujících se slov na každé stránce, viz kapitolu \ref{ch.nedostatky}, takže jeho analýza neprobíhá nejlépe. 
 
 \sssection{Příklady dobrých výsledků}
 Analýza webu jakpodnikat.cz dává několik dobrých výsledků, pro příklad:
@@ -1300,10 +1303,10 @@ Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek n
 
 
 \ssection{Experimenty s nastavením}
-Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}.
+Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}
 
 \sssection{Počet atributů dokumentu}
-Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitola \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
+Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitolu \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
 
 Čím vyšší limit nastavíme, tím větší bude kontext a tím více bude mít koncept dotazu dolních sousedů a sourozenců. Což v důsledku znamená, že vyhledávač má na konci více návrhů na specializaci a více podobných dotazů. Zvyšuje se tím šance, že se v této množině návrhů najde nějaký smysluplný návrh, ale zároveň se zvyšuje šance, že se tam dostane nějaký nesmysl, protože některý dokument nemusí mít tolik kvalitních atributů. 
 
@@ -1336,7 +1339,7 @@ Pak každé slovo, které má hodnotu $\tfidf$ skóre alespoň $l\cdot\delta+m$ 
 
 API aplikace je rozhraní, pomocí něhož může uživatel s danou aplikací komunikovat. Uživatel aplikaci posílá nějaké dotazy ve specifickém formátu a aplikace na ně opět ve specifickém formátu odpovídá. Uživatel tak může danou aplikaci používat, ačkoliv ji přímo nezkompiluje do své aplikace.  
 
-Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. Webové API je přístupné komukoliv, konzolové API je přístupné tomu, kdo si nainstaluje vyhledávač k sobě. Webové API je RESTové, to znamená, že využívá HTTP protokol a běžné metody jako GET nebo POST. Všechna data, která vyhledávač vrací na výstupu, jsou ve formátu JSON. Pro detaily viz kapitola \ref{ch.dokumentace}
+Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. Webové API je přístupné komukoliv, konzolové API je přístupné tomu, kdo si nainstaluje vyhledávač k sobě. Webové API je RESTové, to znamená, že využívá HTTP protokol a běžné metody jako GET nebo POST. Všechna data, která vyhledávač vrací na výstupu, jsou ve formátu JSON. Pro detaily viz kapitolu \ref{ch.dokumentace}
 
 \sssection{Získávání dat z indexu}
 
@@ -1368,7 +1371,7 @@ Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na 
 
 Veškerou komunikaci s externími aplikacemi pak obstarává soubor \code{/src/search}, který volá funkce z modulu \code{/src/other/interface.py}. Ten obsahuje funkce zodpovědné za komunikaci se všemi ostatními balíčky a moduly. 
 
-Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, který napsal Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus a jehož autorem je Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
+Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, který napsal Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus a jehož autorem je Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf \url{http://www.foolabs.com/xpdf/}. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
 
 Webové rozhraní je napsáno v PHP 5. HTML kód je validní dle současného návrhu HTML 5. 
 
@@ -1408,7 +1411,11 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 
 	Detailnější informace jsou v článku \cite{fooca}.
 	\item[SearchSleuth] je nejvíce podobný vyhledávači popsanému v této práci. Jeho autory jsou J. Ducrou a P. Eklund. SearchSleuth  spolupracoval s Yahoo a jeho API. Po obdržení výsledků od vyhledávače sestaví kontext, nalezne koncept dotazu a znovu vyhledá ve vyhledávači obsah intentů horních sousedů, čímž SearchSleuth získá více výsledků a může sestavit rozšířený kontext. \name{} toto provádí pomocí dodatečného OR dotazu. SearchSleuth také do kontextu nepřidává klíčová slova z dotazu. Jinak je FCA část obou vyhledávačů velice podobná. 
+
+	Detailnější informace jsou v článku \cite{searchsleuth} a \cite{fcasim}. Podobný systém byl také použit například pro analýzu CHM souborů, proprietárního formátu Microsoftu pro nápovědu. Více informací v \cite{helpsleuth}.
 \end{description}
+
+Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů. Nicméně skrze webové API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth. 
 
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
