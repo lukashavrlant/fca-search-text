@@ -166,7 +166,7 @@ Celou práci vyhledávače tak můžeme rozdělit do dvou částí -- budování
 
 Součástí této diplomové práce je naprogramovaný vyhledávač \name, který bude v dalších částech textu popsán. \name{} je vyhledávač napsaný v Pythonu 3. Pracuje se statickou sadou dokumentů, předpokládá se, že se sada dokumentů bude měnit pouze nárazově jednou za čas. Samotná sada dokumentů, nad kterou má vyhledávač pracovat, nebude příliš velká, řádově stovky dokumentů. 
 
-Jedná se vyhledávač používající index. Při budování indexu je vstupem seznam URL adres, které si vyhledávač sám stáhne a zaindexuje je. Výsledný index je pak uložen do několika souborů, ke kterým pak vyhledávač přistupuje. 
+Jedná se vyhledávač používající index. Při budování indexu je vstupem seznam URL adres, které si vyhledávač sám stáhne a zaindexuje je. Výsledný index je pak uložen do několika souborů, ke kterým pak \name{} přistupuje. 
 
 \name{} má rozumět logickým operátorům AND, OR a NOT. Po zadání dotazu má vrátit výsledky seřazené podle relevance, kterou spočítá pomocí klasického $\tfidf$ algoritmu. Výstup bude textový ve formátu JSON, se kterým pak mohou pracovat další programy, v tomto případě webové rozhraní, které je napsáno v PHP. 
 
@@ -270,7 +270,7 @@ kde $|d|$ je počet slov v dokumentu $d$.
 
 Problém jsme tím ale ve skutečnosti nevyřešili, jen jsme ho obrátili -- už nejsou preferované velké dokumenty, ale malé dokumenty, které dané klíčové slovo obsahují. Pokud bychom zpracovali dokument, jehož obsahem by byla pouze věta \uv{Sázky a kurzy na severskou kombinaci.}, pak by hodnota $\mbox{tf}_{t,d}$ pro slovo \uv{kombinace} byla $\frac14$ -- v dokumentu jsou čtyři slova (slova \uv{a} a \uv{na} nepočítáme, jsou to stop slova) a jedno z nich je právě \uv{kombinace} (po převedení na stem). Pokud by měl mít zmíněný článek, který obsahuje 25krát slovo \uv{kombinace}, alespoň stejnou hodnotu $\mbox{tf}_{t,d}$, nesměl by mít více než sto slov. 
 
-Vyhledávač nakonec hodnotu $\mbox{tf}_{t,d}$ ještě dělí logaritmem počtu všech slov v dokumentu. Hodnota $\mbox{tf}_{t,d}$ u velkých dokumentů tak bude vydělena větší hodnotou než u malých dokumentů. Zároveň ale tato hodnota, kterou dělíme, nebude růst lineárně, takže desetkrát větší dokument nepotřebuje i desetkrát více klíčových slov, aby dosáhl na stejné hodnocení.
+\name{} nakonec hodnotu $\mbox{tf}_{t,d}$ ještě dělí logaritmem počtu všech slov v dokumentu. Hodnota $\mbox{tf}_{t,d}$ u velkých dokumentů tak bude vydělena větší hodnotou než u malých dokumentů. Zároveň ale tato hodnota, kterou dělíme, nebude růst lineárně, takže desetkrát větší dokument nepotřebuje i desetkrát více klíčových slov, aby dosáhl na stejné hodnocení.
 
 Nyní můžeme napsat finální verzi funkce $\tfidf$:
 
@@ -326,7 +326,7 @@ Moderní vyhledávače typu Google nebo Seznam zobrazují ve výsledcích vyhled
 Jako popisek stránky se použije element \code{META} obsahují popisek, pokud existuje. V opačném případě vyhledávač v dokumentu nalezne několik vět, které obsahují atribut dokumentu, a tyto věty pak uloží jako popisek dokumentu. Oproti řešení, které volí Google nebo Seznam, je nevýhoda v tom, že se popisek nemění s dotazem uživatele, je vždy stejný. 
 
 \sssection{Kontrola překlepů}
-Vyhledávač má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
+\name{} má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
 
 Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody.
 
@@ -338,7 +338,7 @@ Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správn
 Nyní potřebujeme algoritmus, který dokáže porovnat dvě slova a vrátit hodnotu reprezentující jejich podobnost. Jedním z klasických algoritmů je Levenstheinova vzdálenost, který počítá počet překlepů mezi dvěma slovy. Takže pro slova \uv{kotel} a \uv{hotel} vrátí hodnotu $1$, protože se liší pouze v prvním písmenu. 
 
 % source: http://epydoc.sourceforge.net/stdlib/difflib.SequenceMatcher-class.html
-\name{} používá složitější algoritmus, který je založen na myšlence hledání největších společných subsekvencí. V prvním kroku nalezneme nejdelší společný řetězec mezi dvěma slovy. Uložíme si indexy, na kterých řetězec v jednotlivých slovech začíná a délku tohoto řetězce. Poté aplikujeme stejný postup na zbylé kousky řetězce. Nakonec dostaneme seznam všech společných řetězců, pomocí nichž můžeme vypočítat stupeň podobnosti, což je číslo z intervalu $[0, 1]$. Vyhledávač na to používá funkci ze standardní knihovny Pythonu, viz \cite{pydiff}.
+\name{} používá složitější algoritmus, který je založen na myšlence hledání největších společných subsekvencí. V prvním kroku nalezneme nejdelší společný řetězec mezi dvěma slovy. Uložíme si indexy, na kterých řetězec v jednotlivých slovech začíná a délku tohoto řetězce. Poté aplikujeme stejný postup na zbylé kousky řetězce. Nakonec dostaneme seznam všech společných řetězců, pomocí nichž můžeme vypočítat stupeň podobnosti, což je číslo z intervalu $[0, 1]$. \name{} na to používá funkci ze standardní knihovny Pythonu, viz \cite{pydiff}.
 
 % todo: počet slov
 
@@ -383,7 +383,7 @@ Každý operátor má jinou prioritu. Seřazeno od nejmenší priority: OR, AND,
 
 \sssection{Parsování dotazu}
 
-Samotný dotaz zapsaný uživatelem musí vyhledávač přeložit do nějaké interní formy, které bude rozumět. K tomu využívá jednoduchý parser. 
+Samotný dotaz zapsaný uživatelem musí \name{} přeložit do nějaké interní formy, které bude rozumět. K tomu využívá jednoduchý parser. 
 
 V prvním kroku převedeme holý text na lexémy. Lexém je nějaká základní jednotka dotazovacího jazyka. V našem případě může být lexém slovo, operátor nebo závorky. Takže lexém je například slovo \uv{matematika}, operátor \uv{AND} nebo otevírací závorka \uv{(}. Lexém není \uv{matematika)}, protože na konci slova máme závorku -- tento výraz by měl být rozdělen do dvou lexémů. Po aplikaci této části tak dostáváme seznam lexémů. 
 
@@ -1011,7 +1011,7 @@ $$
 \hledany=\addsp{(D\cap X')\updown, (D\cap X')\up}.
 $$
 
-Idea rozšířeného kontextu a hledání konceptu dotazu byla použita vy vyhledávač SearchSleuth a je popsána v \cite{searchsleuth}. Search\-Sleuth používá k tvorbě rozšířeného kontextu horní sousedy konceptu dotazu -- nejprve sestaví nerozšířený formální kontext, spočítá koncept dotazu, nalezne horní sousedy a intenty těch sousedů znovu vyhledá a výsledné dokumenty připojí k kontextu, čímž vznikne rozšířený kontext. \name{} používá jiný postup, hledá rozšířený koncept přes OR dotaz. 
+Idea rozšířeného kontextu a hledání konceptu dotazu byla použita ve vyhledávači SearchSleuth a je popsána v \cite{searchsleuth}. Search\-Sleuth používá k tvorbě rozšířeného kontextu horní sousedy konceptu dotazu -- nejprve sestaví nerozšířený formální kontext, spočítá koncept dotazu, nalezne horní sousedy a intenty těch sousedů znovu vyhledá a výsledné dokumenty připojí k kontextu, čímž vznikne rozšířený kontext. \name{} používá jiný postup, hledá rozšířený koncept přes OR dotaz. 
 
 Zároveň také SearchSleuth nepřidává do kontextu klíčová slova z dotazu, protože předpokládá, že se slova vyskytnou v titulcích a popiscích jednotlivých odkazů, které vrátí webový vyhledávač. To nemusí vždy nastat, takže ve formálních kontextu mohou některá klíčová slova chybět. SearchSleuth dále odstraňuje atributy, které sdílí méně než 5 \% objektů. 
 
@@ -1195,7 +1195,7 @@ Téma sousedních konceptů a jejich podobnosti je blíže rozebráno v článku
 \ssection{Uživatelské prostředí vyhledávače}
 Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty} Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
 
-Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a vyhledávač vyhledá nový dotaz. 
+Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a \name{} vyhledá nový dotaz. 
 
 Níže se nachází část s výsledky vyhledávání a před nimi ještě nějaké informace o dotazu. Na prvním řádku je vypsán celkový počet nalezených dotazů a čas, který byl potřebný na jejich nalezení. Měří to čistě jen práci vyhledávače, jádra, větší množství času je obvykle ztraceno samotnou komunikací mezi jednotlivými vrstvami. 
 
@@ -1218,7 +1218,7 @@ O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě 
 Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
 
 \ssection{Požadavky na zpracovávané dokumenty}
-Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. V této části budou popsány některé vlastnosti, které by dokumenty měly mít, aby vyhledávač dobře fungoval. 
+Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. V této části budou popsány některé vlastnosti, které by dokumenty měly mít, aby \name{} dobře fungoval. 
 
 \sssection{Kvalita obsahů dokumentů}\label{ch.kvalita}
 Zásadním požadavkem na dokument je, aby měl dobrý obsah, ze kterého půjde snadno pomocí $\tfidf$ algoritmu získat jeho atributy. Každý dokument by měl mít ideálně jedno hlavní téma a v jeho obsahu by se měla často vyskytovat slova, která toto téma charakterizují. 
@@ -1239,7 +1239,7 @@ Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se
 \end{itemize}
 
 \sssection{Technické požadavky na HTML stránky}
-Přestože vyhledávač podporuje další typy souborů jako PDF nebo ODT, je především stavěn pro HTML stránky. Aby vyhledávač dobře fungoval, měl by HTML dokument splňovat některá elementární pravidla. 
+Přestože \name{} podporuje další typy souborů jako PDF nebo ODT, je především stavěn pro HTML stránky. Aby vyhledávač dobře fungoval, měl by HTML dokument splňovat některá elementární pravidla. 
 
 Vyhledávač potřebuje u každého dokumentu znát jeho název. V případě HTML stránek ho zjišťuje v elementu \code{TITLE}. Tento element je dle specifikace HTML povinný, takže by ho měla obsahovat každá stránka. Nicméně pokud ho neobsahuje nebo je jeho obsah prázdný, tak se použije poslední část URL. 
 
@@ -1254,7 +1254,7 @@ HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Neh
 Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. 
 
 \sssection{Zpracování PDF a ODT}
-Vyhledávač si dále poradí s dokumenty ve formátu PDF a ODT. Formát ODT je pouze zabalené XML, takže daný soubor stačí pouze rozbalit, najít soubor obsahující obsah celého dokumentu a zpracovat XML. To můžeme udělat podobně jako HTML stránky, stačí odstranit všechny XML značky a nechat pouze textové obsahy elementů. 
+\name{} si dále poradí s dokumenty ve formátu PDF a ODT. Formát ODT je pouze zabalené XML, takže daný soubor stačí pouze rozbalit, najít soubor obsahující obsah celého dokumentu a zpracovat XML. To můžeme udělat podobně jako HTML stránky, stačí odstranit všechny XML značky a nechat pouze textové obsahy elementů. 
 
 S PDF už je větší problém. Vyhledávač používá externí aplikace na dolování textu z PDF souboru, ale žádná aplikace si neporadí se všemi PDF soubory. Největším problémem je diakritika, spousta převaděčů nedokázala po převodu na prostý text správně zobrazit diakritiku. V lepším případě převaděč zobrazil místo správného znaku nějaký nesprávný znak, v horším případě písmeno s dikritikou zcela vypustil, případně vypustil i následující písmeno. S takto převedeným textem už se toho moc dělat nedá. 
 
@@ -1266,10 +1266,10 @@ Podstatný požadavek je, aby se rozumná klíčová slova nevyskytovala na vše
 
 Během výpočtu $\tfidf$ funkce hledáme taková slova, která se často vyskytují v daném dokumentu, ale co nejméně ve všech ostatních dokumentech. Funkce bohužel nezkoumá, kolikrát se dané slovo v těch ostatních dokumentech nachází, takže stačí, když se v dokumentu nachází jen jednou v navigaci a už se to bude počítat jako výskyt. 
 
-Kódování HTML stránky lze definovat i HTTP hlavičkou. Samotná stránka pak nemusí obsahovat element \code{<meta http-equiv='content-type'>}. Vzhledem k tomu, že vyhledávač HTTP hlavičky nezkoumá, použil by v tomto případě výchozí kódování \code{utf-8}. 
+Kódování HTML stránky lze definovat i HTTP hlavičkou. Samotná stránka pak nemusí obsahovat element \code{<meta http-equiv='content-type'>}. Vzhledem k tomu, že \name{} HTTP hlavičky nezkoumá, použil by v tomto případě výchozí kódování \code{utf-8}. 
 
 \ssection{Hodnocení úspěšnosti vyhledávače}
-Ohodnotit, jak je vyhledávač úspěšný v řazení nebo v nabízených návrzích, nijak exaktně a automaticky nejde. Zbývá jen ruční zkoumání a slovní ohodnocení. 
+Ohodnotit, jak je \name{} úspěšný v řazení nebo v nabízených návrzích, nijak exaktně a automaticky nejde. Zbývá jen ruční zkoumání a slovní ohodnocení. 
 
 Ve vyhledávači je uloženo několik testovacích sad dokumentů. Jedná se o weby 
 \begin{itemize}
@@ -1291,7 +1291,7 @@ Analýza webu jakpodnikat.cz dává několik dobrých výsledků, pro příklad:
 	\item Po vyhledání dotazu \uv{slevy na dani} dostaneme specializace \code{+ příjmy | + studenti | + základ | + doklady | + tisíc | + příloha | + minimální}, z nichž všechny kromě slova \uv{tisíc} dávají nějaký smysl. Seznam podobných dotazů: \code{+/- dani, příjmy | +/- dani, základ | +/- dani, doklady | +/- tisíc, dani | +/- příloha, dani}. Opět kromě dotazu, který obsahuje klíčové slovo \uv{tisíc} to má nějaký smysl. 
 \end{itemize}
 
-Dobré výsledky vrací vyhledávač i pro web jakpsatweb.cz: 
+Dobré výsledky vrací \name{} i pro web jakpsatweb.cz: 
 
 \begin{itemize}
 	\item Pro dotaz \uv{hosting} vrátí seznam specializací \code{+ php | + serveru | + seo | + google | + weblogu | + zdarma | + nástroje | + statistiky | + domény | + anglicky}. 
@@ -1306,7 +1306,7 @@ Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek n
 
 
 \ssection{Experimenty s nastavením}
-Vyhledávač umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}
+\name{} umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}
 
 \sssection{Počet atributů dokumentu}
 Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitolu \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
@@ -1357,12 +1357,12 @@ Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. We
 
 \sssection{Získávání dat z indexu}
 
-Vyhledávač umožňuje získávat data o existujících indexech. Ta se získávají pomocí HTTP GET požadavku s požadovanými parametry. Je možné zjistit například informace o daném dokumentu, jaký má titulek, jakou adresu a podobně. Zároveň lze zjisit další informace o indexu, například počet všech zaindexovaných dokumentů nebo seznam URL adres všech dokumentů.
+\name{} umožňuje získávat data o existujících indexech. Ta se získávají pomocí HTTP GET požadavku s požadovanými parametry. Je možné zjistit například informace o daném dokumentu, jaký má titulek, jakou adresu a podobně. Zároveň lze zjisit další informace o indexu, například počet všech zaindexovaných dokumentů nebo seznam URL adres všech dokumentů.
 
 Například dotazem \code{/api.php?d=jpw\&docinfo=147\&title} zjistíme název dokumentu z databáze \code{jpw}, který má ID 147.
 
 \sssection{Posílání vlastních dat na server}\label{ch.apipost}
-API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. Vyhledávač tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v předchozích částech dokumentu. 
+API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. \name{} tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v předchozích částech dokumentu. 
 
 Výsledkem budou opět data ve formátu JSON, která budou obsahovat výsledek FCA analýzy. Nalezneme tam specializace, generalizace a podobné dotazy a některá další data o kontextu a konceptuálním svazu. Dále tam bude seznam dokumentů, který bude seřazený dle relevance. Výstup je prakticky stejný, jako je grafický výstup vyhledávače, pouze máme výsledky v surové JSON podobě. 
 
