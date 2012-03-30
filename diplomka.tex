@@ -82,7 +82,8 @@
 \newtheorem{mydef}{Definice}
 \newtheorem{theorem}[mydef]{Věta}
 
-
+\clubpenalty 10000
+\widowpenalty 10000
 
 
 
@@ -232,7 +233,7 @@ Atributy jsou poměrně běžnou součástí různých vědeckých článků, kd
 
 Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu daného stemu ku počtu všech stemů v dokumentu je větší než 0,05}). 
 
-Tento postup může být úspěšný v případě, kdy máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Klíčové slovo pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
+Tento postup může být úspěšný v případě, kdy máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Atribut pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
 
 Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejné klíčové slovo a to není to, co bychom chtěli. 
 
@@ -452,7 +453,7 @@ Toto základní skóre ještě dále upravíme podle toho, zda se klíčová slo
 
 
 
-Nyní seřadíme dokumenty $\getdocs_Q$ do $n$-tice $\addh{d_1, d_2, \ldots, d_n}$, kde 
+Nyní seřadíme dokumenty $\getdocs_Q$ do $n$-tice $\addsp{d_1, d_2, \ldots, d_n}$, kde 
 $$n=\left|\getdocs_Q\right|\quad\mbox{a}\quad \bigcup_{i=1}^n d_i=\getdocs_Q$$ 
 tak, aby platilo $\rank_{d_1, S} \ge \rank_{d_2, S} \ge \ldots \ge \rank_{d_n, S}$. Tato seřazená $n$-tice je výstupem algoritmu vyhledávání.
 
@@ -545,7 +546,7 @@ Všechny definice a všechny věty z této kapitoly jsou citovány z \cite{belfc
 Formální kontext je trojice $\addsp{X, Y, I}$, kde $X$ je neprázdná množina objektů, $Y$ je neprázdná množina atributů a $I$ je binární relace mezi $X$ a $Y$, tj. $I\subseteq X\times Y$.
 \end{mydef}
 
-V předchozím příkladě byla množina $X$ rovna živočichům a rostlinám a množina $Y$ byla rovna vlastnostem těchto živočichů a rostlin. Relace $I$ pak vyznačuje, zda má objekt $x$ atribut $y$. Objekt $x$ má atribut $y$ právě tehdy když $\addsp{x, y}\in I$. Formální kontext, jak jsme viděli, může být reprezentován pomocí tabulky. 
+V předchozím příkladě byla množina $X$ rovna živočichům a rostlinám a množina $Y$ byla rovna vlastnostem těchto živočichů a rostlin. Relace $I$ pak vyznačuje, zda má objekt $x$ atribut $y$. Objekt $x$ má atribut $y$ právě tehdy, když $\addsp{x, y}\in I$. Formální kontext, jak jsme viděli, může být reprezentován pomocí tabulky. 
 
 \begin{mydef}[Šipkové operátory]
 Pro kontext $\context$ definujeme operátory $\up:2^X\rightarrow2^Y$ a $\down:2^Y\rightarrow2^X$ tak, že pro každé $A\subseteq X$ a $B\subseteq Y$:
@@ -664,7 +665,7 @@ Je například množina $\adds{\mbox{Danny Glover, Mel Gibson}}$ pevným bodem? 
 
 Uzávěrový operátor si můžeme ukázat i na úplně jiném příkladě, doplnění rovinného útvaru na nejmenší konvexní útvar. Máme-li tak nějaké útvar v rovině, který není konvexní, například klasický obrázek hvězdy, uzávěrový operátor ho doplní tak, aby z něj vznikl konvexní útvar a aby tento nový útvar byl nejmenší. Na tomto operátoru si můžeme ilustrovat podmínky v definici \ref{def.clop}.
 
-První vlastnost říká, původní útvar bude vždy podmnožinou uzavřeného útvaru. Původní rovinný útvar bude vždy celý obsažen v konvexním útvaru, který ho má obalovat -- uzavřením pouze \uv{přidáme} původnímu útvaru body tak, aby vznikl konvexní útvar. Druhá vlastnost říká, že pokud máme dva různé útvary, přičemž jeden je zanořený ve druhém, tak i jejich obaly budou zanořené. Poslední vlastnost říká, že obalem obalu je tentýž obal. Pokud obalíme hvězdu konvexním útvarem, pro příklad pravidelným pětiúhelníkem, tak obalem tohoto pětiúhelníku bude tentýž pětiúhelník.
+První vlastnost říká, že původní útvar bude vždy podmnožinou uzavřeného útvaru. Původní rovinný útvar bude vždy celý obsažen v konvexním útvaru, který ho má obalovat -- uzavřením pouze \uv{přidáme} původnímu útvaru body tak, aby vznikl konvexní útvar. Druhá vlastnost říká, že pokud máme dva různé útvary, přičemž jeden je zanořený ve druhém, tak i jejich obaly budou zanořené. Poslední vlastnost říká, že obalem obalu je tentýž obal. Pokud obalíme hvězdu konvexním útvarem, pro příklad pravidelným pětiúhelníkem, tak obalem tohoto pětiúhelníku bude tentýž pětiúhelník.
 
 \begin{theorem}
 Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Pak pro každé $A_j\subseteq X, j\in J$ a $B_j\subseteq Y, j\in J$ platí:
@@ -712,7 +713,7 @@ Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{b
 \begin{theorem}[Extenty, intenty a formální koncepty]Některé důležité vlastnosti množin extentů, intentů a konceptů:
 \begin{enumerate}
 	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou (částečně) uspořádáné množiny. 
-	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou duálně isomorfní. Tj. existuje zobrazení $f: \ext(X,Y,I)\rightarrow\intfca(X,Y,I)$ takové, že platí $A_1\subseteq A_2$ právě tehdy, když $f(A_2)\subseteq f(A_1)$.
+	\item $\addsp{\ext(X,Y,I), \subseteq}$ a $\addsp{\intfca(X,Y,I), \subseteq}$ jsou duálně isomorfní. Tj. existuje zobrazení $f: \ext(X,Y,I)\rightarrow\intfca(X,Y,I)$ takové, že $A_1\subseteq A_2$ platí právě tehdy, když $f(A_2)\subseteq f(A_1)$.
 	\item $\addsp{\lattice, \le}$ je isomorfní s $\addsp{\ext(X,Y,I), \subseteq}.$
 \end{enumerate}
 \qed\end{theorem}
@@ -812,7 +813,7 @@ Věta má dvě části:
 \sssection{Zobrazení konceptuálního svazu}
 Už máme definované uspořádání na množině konceptů a víme, jak počítat suprema a infima, tak si ukážeme, jak takový konceptuální svaz vypadá. Vrátíme se k tabulce \ref{tab.con1}, kde byl zobrazen kontext s živočichy a rostlinami. Všechny koncepty v tomto kontextu jsou vypsány na obrázku \ref{fig.concepts} 
 
-Tento svaz můžeme zobrazit klasickým Hasseovým diagramem. Viz obrázek \ref{fig.lattice}
+Tento svaz můžeme zobrazit klasickým Hasseovým diagramem, viz obrázek \ref{fig.lattice}
 
 \begin{figure}
   \centering
@@ -828,7 +829,7 @@ Tento svaz můžeme zobrazit klasickým Hasseovým diagramem. Viz obrázek \ref{
   \label{fig.lattice}
 \end{figure}
 
-Můžeme si na jednoduchým příkladech ukázat, jak se počítají infima a suprema. Vezměme si množinu konceptů $A=\adds{C_6, C_{15}}$. Z obrázku můžeme vyčíst, že infimum $A$ je rovno $C_{16}$ a supremum $C_5$. Nejdříve si zapíšeme koncepty včetně všech objektů a atributů
+Můžeme si na jednoduchých příkladech ukázat, jak se počítají infima a suprema. Vezměme si množinu konceptů $A=\adds{C_6, C_{15}}$. Z obrázku můžeme vyčíst, že infimum $A$ je rovno $C_{16}$ a supremum $C_5$. Nejdříve si zapíšeme koncepty včetně všech objektů a atributů
 $$\biginf \adds{\addsp{\adds{3, 4}, \adds{a, c, g, h}}, \addsp{\adds{3, 6}, \adds{a, b, c}}}$$
 a nyní spočítáme infimum množiny extentů těchto konceptů. Počítáme tak
 $$
@@ -941,13 +942,13 @@ $$
 X=\adds{D_i\sep i \le n}.
 $$
 
-Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet klíčových slov, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací $m$ atributů dokumentu s nejvyšším $\tfidf$ skórem
+Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet atributů, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací $m$ atributů dokumentu s nejvyšším $\tfidf$ skórem
 $$
 \alpha_m(A_i)=\adds{A_i^j\sep j\le m},
 $$
-kde $A_i^j$ označuje $j$-tý atribut dokumentu $D_i$. Tedy $A_i^1$ je atribut dokumentu $D_i$, který má nejvyšší hodnocení. Nyní sjednotíme všechny atributy všech dokumentů do jedné množiny:
+kde $A_i^j$ označuje $j$-tý atribut dokumentu $D_i$. Tedy $A_i^1$ je atribut dokumentu $D_i$, který má nejvyšší hodnocení. Nyní sjednotíme všechny atributy všech dokumentů do jedné množiny
 $$
-Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}
+Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}.
 $$
 K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstupu vrací množinu slov, které se vyskytují v dotazu, ale nevyskytují se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
 
@@ -971,14 +972,14 @@ kde $x \in X$ a $y \in Y$.
 \sssection{Nalezení konceptu dotazu}
 Dalším úkolem je nalezení konceptu, který reprezentuje výsledek aktuálního dotazu. Máme v zásadě dvě možnosti, jak tento koncept nalézt. Vezmeme si slova z dotazu $\beta(Q)$ a spočítáme extent a zpět intent. Tím dostaneme koncept, který v intentu obsahuje slova z dotazu a zároveň je to nejmenší koncept, který tato slova obsahuje. Koncept dotazu budeme označovat $\hledany$:
 $$
-\hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}
+\hledany=\addsp{\beta(Q)\down, \beta(Q)\downup}.
 $$
 
 Tento postup má ale zásadní nevýhodu v případě, kdy se snažíme nalézt koncept dotazu pro dotaz, který obsahuje jiný operátor než AND. Pokud má dotaz tvar $Q=$\uv{derivace OR integrál}, nemůžeme hledat koncept dotazu tak, že spočítáme extent $\adds{\mbox{derivace, integrál}}\down$, protože bychom tím získali dokumenty, které obsahují jak slovo \uv{derivace}, tak slovo \uv{integrál}. Což jistě nepředstavuje koncept dotazu \uv{derivace OR integrál}.
 
-Lepším postupem tak je začít počítat koncept dotazu přes dokumenty. Pokud vezmeme množinu dokumentů, které vyhledávač vrátil, přesněji tu podmnožinu, kterou jsme použili v kontextu, $X$, pokud jsme aplikovali omezení, a tuto množinu uzavřeme, dostaneme koncept, který přesně odpovídá našemu dotazu. Dostaneme tak koncept:
+Lepším postupem tak je začít počítat koncept dotazu přes dokumenty. Pokud vezmeme množinu dokumentů, které vyhledávač vrátil, přesněji tu podmnožinu, kterou jsme použili v kontextu, $X$, pokud jsme aplikovali omezení, a tuto množinu uzavřeme, dostaneme koncept, který přesně odpovídá našemu dotazu. Dostaneme tak koncept
 $$
-\hledany=\addsp{X\updown, X\up}=\addsp{X, X\up}
+\hledany=\addsp{X\updown, X\up}=\addsp{X, X\up}.
 $$
 
 Problémem tohoto přístupu je, že vždy dostaneme ten největší koncept. Nemůžeme tak hledat obecnější dotazy v horních sousedech, ani související dotazy v okolních sousedech, protože ani horní, ani okolní sousedy tento koncept nemá. To vyřešíme jedině tak, že kontext, který používáme, sestavíme jinak. 
@@ -989,11 +990,11 @@ Kontext, který byl popsán v kapitole \ref{ch.sestaveni} nebudeme vůbec použ�
 
 Začneme opět tím, že vyhledáme dotaz $Q$. Dostaneme dokumenty $D$. První změnou bude, že v případě, že dotaz bude mít více než jedno slovo, $|\beta(Q)|>1$, tak položíme vyhledávači ještě jeden dotaz. Nový dotaz označíme $Q'$ a bude mít tento tvar: vezmeme všechna slova z dotazu $Q$ a vložíme mezi každá dvě slova OR. Pokud byl původní dotaz $Q=$\uv{formální konceptuální analýza}, tak nový dotaz bude mít tvar $Q'=$\uv{formální OR konceptuální OR analýza}. Dotaz $Q'$ položíme vyhledávači, čímž získáme dokumenty $D'$.
 
-Další postup už je stejný jako v kapitole \ref{ch.sestaveni}, pouze do kontextu vložíme dokumenty a atributy z množiny $D'$, nikoliv z $D$. Za $X$ vezmeme prvních $n$ dokumentů z $D'$, za $Y$ jejich atributy sjednocené s $\beta(Q)$. Relaci $I$ sestavíme stejně
+Další postup už je stejný jako v kapitole \ref{ch.sestaveni}, pouze do kontextu vložíme dokumenty a atributy z množiny $D'$, nikoliv z $D$. Za $X'$ vezmeme prvních $n$ dokumentů z $D'$, za $Y'$ jejich atributy sjednocené s $\beta(Q)$. Relaci $I'$ sestavíme stejně
 $$
-\addsp{x,y} \in I \iff y \in x.
+\addsp{x,y} \in I' \iff y \in x.
 $$
-Tento rozšířený kontext si označíme $\addsp{X', Y', I'}$. 
+Dostaneme rozšířený kontext $\addsp{X', Y', I'}$. 
 
 \sssection{Nalezení konceptu dotazu v rozšířeném kontextu}
 Koncept dotazu nalezneme jednoduše v případě, že dotaz $Q$ se skládá pouze z AND operátorů. Pak je koncept dotazu roven
@@ -1066,7 +1067,7 @@ Na řádku \ref{alg.upper.if} se nachází hlavní změna. Rozdíl množin $A'\s
 
 Pokud prvek $a$ generuje horního souseda, musí tak být nutně poslední z těch objektů, které tento koncept mohou generovat. Pokud má horní soused o tři objekty více, než koncept, ke kterému souseda hledáme, podmínkou na řádku \ref{alg.upper.if} projde až ten třetí objekt, který zkusíme. 
 
-Pokud například máme koncept s extentem $\adds{1}$ a horní soused má extent $\adds{1,2,3,4}$, tak pokud zvolíme poprvé $a=2$, tak $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{2} = \adds{3, 4}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{2, 3, 4}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $2$ a pokračovali s $a=3$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $g=4$, rozdíl by vyšel $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{4} = \adds{2, 3}$. Z $candidates$ jsme prvky $2$ a $3$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $4$ zároveň zůstane v množině $candidates$.
+Pokud například máme koncept s extentem $\adds{1}$ a horní soused má extent $\adds{1,2,3,4}$, tak pokud zvolíme poprvé $a=2$, tak $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{2} = \adds{3, 4}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{2, 3, 4}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $2$ a pokračovali s $a=3$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $a=4$, rozdíl by vyšel $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{4} = \adds{2, 3}$. Z $candidates$ jsme prvky $2$ a $3$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $4$ zároveň zůstane v množině $candidates$.
 
 Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $a$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
 
@@ -1119,14 +1120,14 @@ $$
 \upperc_\hledany=\upperneighbors(\hledany).
 $$
 
-Nyní jsme v opačné situaci než během hledání specializací. Koncept dotazu může mít intent $\adds{\mbox{Jaguár, Zvíře}}$ a horní sousedé intenty $\adds{\mbox{Jaguár}}$ a $\adds{\mbox{Zvíře}}$. Tím že odečteme intent konceptu od intentu horního souseda, získáme slova, která se nachází v intentu konceptu, ale nenachází se v intentu horního souseda. Jsou to tak ta slova, která vyhledávač navrhne uživateli k odstranění. 
+Nyní jsme v opačné situaci než během hledání specializací. Koncept dotazu může mít intent $\adds{\mbox{Jaguár, Zvíře}}$ a horní sousedé intenty $\adds{\mbox{Jaguár}}$ a $\adds{\mbox{Zvíře}}$. Tím že odečteme intenty horních sousedů od intentu konceptu dotazu, získáme slova, která se nachází v intentu konceptu, ale nenachází se v intentu horního souseda. Jsou to tak ta slova, která vyhledávač navrhne uživateli k odstranění. 
 $$
 Gen'=\adds{\hledany_I\setminus M\sep M\in\intfca(\upperc_\hledany)}
 $$
 
-Množina $Gen'$ obsahuje množiny slov, která může uživatel odebrat. Ale může obsahovat i slova, která neobsahuje samotný dotaz a která tak nelze odstranit. Například pokud uživatel zadá dotaz \uv{jaguár rychlost}, může být intent konceptu dotazu $\adds{\mbox{jaguár, rychlost, maximální}}$ a pokud má horní soused intent $\adds{\mbox{jaguár}}$, pak by v množině $Gen'$ bylo i slovo \uv{maximální} a vyhledávač by tak uživateli nabídl odstranit slovo \uv{maximální}, aniž by toto slovo v dotazu bylo. Protože ještě provedeme průnik všech prvků v množině $Gen'$ se slovy dotazu $Q$, abychom měli jistotu, že napovídáme odstranit jen ta slova, která uživatel skutečně do dotazu zadal
+Množina $Gen'$ obsahuje množiny slov, která může uživatel odebrat. Ale může obsahovat i slova, která neobsahuje samotný dotaz a která tak nelze odstranit. Například pokud uživatel zadá dotaz \uv{jaguár rychlost}, může být intent konceptu dotazu $\adds{\mbox{jaguár, rychlost, maximální}}$ a pokud má horní soused intent $\adds{\mbox{jaguár}}$, pak by v množině $Gen'$ bylo i slovo \uv{maximální} a vyhledávač by tak uživateli nabídl odstranit slovo \uv{maximální}, aniž by toto slovo v dotazu bylo. Proto ještě provedeme průnik všech prvků v množině $Gen'$ se slovy dotazu $Q$, abychom měli jistotu, že napovídáme odstranit jen ta slova, která uživatel skutečně do dotazu zadal.
 $$
-Gen=\adds{g\cap\beta(Q)\sep g\in Gen'}.
+Gen=\adds{g\cap\beta(Q)\sep g\in Gen'}
 $$
 
 Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $a_1\in Gen$ je relevantnější než $a_2\in Gen$, zapíšeme $a_1\ge a_2$, právě tehdy, když koncepty pro koncepty $\addsp{A_1, B_1}, \addsp{A_2, B_2} \in \upperc_\hledany$, jejichž intenty generují $a_1$ a $a_2$, platí $|A_1|\ge|A_2|$. 
@@ -1146,7 +1147,7 @@ Otázkou je, jak definovat sourozence. Když se podíváme na obrázek \ref{fig.
 
 U svazů ale můžeme zvolit i opačnou cestu -- rodičové potomků. To by odpovídalo sourozencům $\adds{D, F}$. Dále můžeme říci, že sourozenci jsou všichni mezi potomky a rodiči, tj. všechny koncepty mezi konceptem $A$ a $E$, tj. $\adds{B, C, D, F}$. 
 
-Další rozumnou možností je vzít ty koncepty, které stejného rodiče jako koncept $Z$ a zároveň i stejného potomka. Tomu odpovídá koncept $F$.
+Další rozumnou možností je vzít ty koncepty, které mají stejného rodiče jako koncept $Z$ a zároveň i stejného potomka. Tomu odpovídá koncept $F$.
 
 Pro jednu z těchto definic bychom se měli rozhodnout. Není vhodné uživateli napovídat všechny dotazy z konceptů $B, C$ a $D$, protože $D$ je konkrétnější dotaz než $C$ a $C$ je konkrétnější dotaz než $B$. Z této řady stačí uživateli navrhnout jeden dotaz. 
 
@@ -1245,9 +1246,9 @@ Vyhledávač potřebuje u každého dokumentu znát jeho název. V případě HT
 
 Obsah titulku by měl být pro každou stranu jiný. Není vhodné, aby mělo více stránek, nebo dokonce celý web, stejný titulek, protože pak je ve výsledcích vyhledávání nepůjde rozlišit jinak než jejich adresou. Toto pravidlo je důležité nejen pro tento vyhledávač, ale i pro běžné vyhledávače jako Google nebo Seznam. Zároveň se připravujeme o možnost zvýšit hodnocení stránky, pokud by klíčové slovo, které uživatel hledal, bylo v titulku. 
 
-Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí z stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horěí výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
+Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí z stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horší výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
 
-Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, anderson}, takže tento element postupně běžné vyhledávače začali téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
+Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, anderson}, takže tento element postupně běžné vyhledávače začaly téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
 
 HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Nehledí se například na to, jestli element \code{IMG} obsahuje povinný atribut \code{ALT}, ale pokud nebude hodnota atributu správně ukončena uvozovkami, parser si na tom vyláme zuby. Pro převod HTML stránky do obyčejného textu se ve vyhledávači používají dvě funkce -- první používá vestavěný parser, který postupně parsuje stránku a neodpouští tak žádné chyby proti syntaxi jazyka; druhá funkce používá regulární výrazy a je tak benevolentnější, ale její výsledek je zase méně přesný. Druhá funkce se použije až v případě, kdy selže první funkce.
 
@@ -1460,7 +1461,7 @@ After retrieving the result set of documents, formal concept analysis is perform
 
 The quality of results is determined by the quality of the documents. If we put into the search engine documents with rich and good content we usually obtain good results. The analysis is rather quick. \name{} returns results for a single query in a few seconds. The search engine is open source software under the BSD licence so everyone can use it on their own server. 
 
-Further research can be done in the following areas: document processing like improve attributes searching, improve stemmer, search for synonyms, etc. We can use fuzzy FCA instead of crisp FCA. We can use information about word importance to build a new fuzzy formal context. We can extend API and build some new applications that use it. 
+Further research can be done in the following areas: document processing like improve attributes searching, improve stemmer, search for synonyms, etc. We can use fuzzy FCA instead of crisp FCA. We can use information about word importance to build a new fuzzy formal context. We can extend API and create some new applications that use it. 
 \end{conclusions-en}
 
 \newpage
