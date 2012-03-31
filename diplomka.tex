@@ -235,9 +235,9 @@ Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jeji
 
 Tento postup může být úspěšný v případě, kdy máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Atribut pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
 
-Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejné klíčové slovo a to není to, co bychom chtěli. 
+Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejný atribut a to není to, co bychom chtěli. 
 
-Tento problém vyřešíme tím, že při hledání klíčových slov pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v ostatních dokumentech co nejméně často. 
+Tento problém vyřešíme tím, že při hledání atributů pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v ostatních dokumentech co nejméně často. 
 
 
 \subsubsection{Algoritmus tf-idf}\label{tfidf}
@@ -284,7 +284,7 @@ kde $|d|$ je počet slov v dokumentu $d$. Tato modifikace je vlastní, v \cite{i
 
 Nyní už máme všechny prostředky k tomu, abychom pro každý dokument vygenerovali jeho atributy. Pro každý dokument $d$ vezmeme množinu všech stemů, které obsahuje a pro každý stem $s$ spočítáme jeho $\tfidf_{s,d}$ skóre. 
 
-Za atributy pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre, nebo všechny stemy, které překročily určitou hranici $\tfidf$ skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici $\tfidf$ skóre pro klíčová slova a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
+Za atributy pak můžeme vzít buď určitý počet stemů, které dosáhly nejvyššího skóre, nebo všechny stemy, které překročily určitou hranici $\tfidf$ skóre. \name{} v základním nastavení pracuje podle druhého způsobu, takže mu můžeme nastavit minimální hranici $\tfidf$ skóre pro atributy dokumentu a všechny stemy, které dosáhnou alespoň takového skóre, budou považovány za atributy pro daný dokument. 
 
 Dále můžeme ve vyhledávači nastavit:
 
@@ -357,7 +357,7 @@ Na rychlosti získání těchto informací už bude přímo záležet rychlost c
 	\item Název dokumentu. 
 	\item Popisek dokumentu.
 	\item URL dokumentu. 
-	\item Klíčová slova daného dokumentu spolu s jejich $\tfidf$ skórem. 
+	\item Atributy dokumentu spolu s jejich $\tfidf$ skórem. 
 	\item Číselný identifikátor dokumentu.
 	\item Počet slov v dokumentu. 
 	\end{itemize}
@@ -935,14 +935,14 @@ Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou 
 \label{ch.sestaveni}
 Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Pro účely této kapitoly předpokládejme, že máme dokumenty v $D$ reprezentovány jako množinu všech stemů, které dokument obsahuje. 
 
-Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokumentu nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
+Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokument nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
 
 Kontext $\context$ sestavíme takto: ze seznamu dokumentů vezmeme prvních $n$ dokumentů, kde $n$ je hodnota daná nastavením vyhledávače. V základním nastavení platí $n=50$. Tento seznam $n$ dokumentů bude představovat objekty kontextu
 $$
 X=\adds{D_i\sep i \le n}.
 $$
 
-Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet atributů, která má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací $m$ atributů dokumentu s nejvyšším $\tfidf$ skórem
+Dále nalezneme atributy. Vyhledávač umožňuje nastavit maximální počet atributů, které má u každého dokumentu vzít. Tuto hodnotu pojmenujeme $m$. Nyní z každého dokumentu z množiny $X$ vezmeme maximálně $m$ atributů daného dokumentu a tato slova sjednotíme do jedné množiny. Nejprve si nadefinujeme funkci, která nám pro každý dokument vrací $m$ atributů dokumentu s nejvyšším $\tfidf$ skórem
 $$
 \alpha_m(A_i)=\adds{A_i^j\sep j\le m},
 $$
@@ -1263,7 +1263,7 @@ Některé PDF dokumenty na webu katedry informatiky jsou v nějakém podivném s
 
 \sssection{Některé nedostatky vyhledávače}\label{ch.nedostatky}
 
-Podstatný požadavek je, aby se rozumná klíčová slova nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
+Podstatný požadavek je, aby se rozumné atributy nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
 
 Během výpočtu $\tfidf$ funkce hledáme taková slova, která se často vyskytují v daném dokumentu, ale co nejméně ve všech ostatních dokumentech. Funkce bohužel nezkoumá, kolikrát se dané slovo v těch ostatních dokumentech nachází, takže stačí, když se v dokumentu nachází jen jednou v navigaci a už se to bude počítat jako výskyt. 
 
@@ -1436,6 +1436,10 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 	Detailnější informace jsou v článku \cite{searchsleuth} a \cite{fcasim}. Podobný systém byl také použit například pro analýzu CHM souborů, proprietárního formátu Microsoftu pro nápovědu. Více informací v \cite{helpsleuth}.
 \end{description} 
 
+
+
+
+
 %%% Závěr práce v~češtině
 \begin{conclusions-cz}
 
@@ -1465,10 +1469,21 @@ Further research can be done in the following areas: document processing like im
 \end{conclusions-en}
 
 \newpage
-
 % Diplomka používá Český styl pro BibTex, jehož autorem je David Martinek
 % Zdroj: http://www.fit.vutbr.cz/~martinek/latex/czechiso.html
 \bibliographystyle{czechiso}
 \bibliography{citace}
+
+\newpage
+\appendix
+
+\section{Obsah přiloženého CD}
+Popis struktury přiloženého CD:
+
+\begin{description}
+	\item[bin] 
+	\item[doc]
+	\item[]
+\end{description}
 
 \end{document}
