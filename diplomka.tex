@@ -93,6 +93,13 @@
 
 \annotation{Napovídáním souvisejících dotazů může vyhledávač pomoci uživateli rychleji najít dokumenty, které potřebuje. Práce se zabývá tvorbou vyhledávače s webovým rozhraním, který pracuje nad uzavřenou sadou dokumentů. Po položení dotazu dokáže napovědět konkrétnější, obecnější a podobný dotaz, což je realizováno pomocí formální konceptuální analýzy.}
 
+% Anglická anotace:
+% A search engine can help a user to find required documents by suggesting similar queries. The diploma work describes the search engine with web interface and it works with static set of documents. After sending a query, the search engine suggests generalisations, specialisations and categorisations, which is done by formal concept analysis. 
+
+% Opravené:
+% A search engine can help a user to find required documents by suggesting similar queries. This thesis presents a search engine with web interface which works with static set of documents. After sending a query the search engine suggests generalisations, specialisations and categorisations based on formal concept analysis.
+
+
 \thanks{Děkuji Mgr. Janu Outratovi, Ph.D. za vedení této diplomové práce a za rady při konzultacích.}
 
 \begin{document}
@@ -1453,17 +1460,42 @@ Další výzkum může proběhnout v části, která zpracovává samotné dokum
 
 
 %%% Závěr práce v~angličtině
+
 \begin{conclusions-en}
-\name{} is a prototype of a web search engine that works with static set of documents. It can process several types of documents, extracts a title and a description of a document, handles Boolean queries, checks typing errors and the result set of documents is ordered by relevance.
+\name{} is a prototype of a web search engine that works with static set of documents. It can process several types of documents, extract a title and a description of a document, handle Boolean queries and check for typing errors. The search result is ordered by relevance.
 
-After retrieving the result set of documents, formal concept analysis is performed. We try to find three types of query suggestions: generalisations, specialisations and categorisation. \name{} helps user to refine query until he is satisfied with the result. 
+A formal concept analysis is performed after retrieving the resulting set of documents. Three types of query suggestions based on the analysis are proposed: generalisations, specialisations and categorisation. \name{} helps user to refine query until he is satisfied with the result.
 
-\name{} provides a public web API. It can be used to post your own data. The search engine builds up a temporary index and then formal concept analysis is performed to obtain query suggestions. 
+\name{} provides a public web API to post your own data. The search engine builds up a temporary index and performs a formal concept analysis to obtain query suggestions.
 
-The quality of results is determined by the quality of the documents. If we put into the search engine documents with rich and good content we usually obtain good results. The analysis is rather quick. \name{} returns results for a single query in a few seconds. The search engine is open source software under the BSD licence so everyone can use it on their own server. 
+The quality of results is determined by the quality of the indexed documents. If we use the search engine on extensive documents the suggestions are usually sufficient. The analysis is rather quick -- \name{} returns results for a single query in a few seconds. The search engine is an open source software under the BSD licence and therefore publicly available to use.
 
-Further research can be done in the following areas: document processing like improve attributes searching, improve stemmer, search for synonyms, etc. We can use fuzzy FCA instead of crisp FCA. We can use information about word importance to build a new fuzzy formal context. We can extend API and create some new applications that use it. 
+Further research could be done in document processing (e.g. improve attributes searching, improve stemmer, search for synonyms, etc.). Furthermore fuzzy FCA could be used instead of crisp FCA. Information about word importance could be used to build a new fuzzy formal context. API could be extended and provided with new applications.
 \end{conclusions-en}
+
+% Puvodní text před opravou: 
+% \begin{conclusions-en}
+% \name{} is a prototype of a web search engine that works with static set of documents. It can process several types of documents, extracts a title and a description of a document, handles Boolean queries, checks typing errors and the result set of documents is ordered by relevance.
+
+% After retrieving the result set of documents, formal concept analysis is performed. We try to find three types of query suggestions: generalisations, specialisations and categorisation. \name{} helps user to refine query until he is satisfied with the result. 
+
+% \name{} provides a public web API. It can be used to post your own data. The search engine builds up a temporary index and then formal concept analysis is performed to obtain query suggestions. 
+
+% The quality of results is determined by the quality of the documents. If we put into the search engine documents with rich and good content we usually obtain good results. The analysis is rather quick. \name{} returns results for a single query in a few seconds. The search engine is open source software under the BSD licence so everyone can use it on their own server. 
+
+% Further research can be done in the following areas: document processing like improve attributes searching, improve stemmer, search for synonyms, etc. We can use fuzzy FCA instead of crisp FCA. We can use information about word importance to build a new fuzzy formal context. We can extend API and create some new applications that use it. 
+% \end{conclusions-en}
+
+% Po opravě: 
+% CLaSeek is a prototype of a web search engine that works with static set of documents. It can process several types of documents, extract a title and a description of a document, handle Boolean queries and check for typing errors. The search result is ordered by relevance.
+
+% A formal concept analysis is performed after retrieving the resulting set of documents. Three types of query suggestions based on the analysis are proposed: generalisations, specialisations and categorisation. CLaSeek helps user to refine query until he is satisfied with the result.
+
+% CLaSeek provides a public web API to post your own data. The search engine builds up a temporary index and performs a formal concept analysis to obtain query suggestions.
+
+% The quality of results is determined by the quality of the indexed documents. If we use the search engine on extensive documents the suggestions are usually sufficient. The analysis is rather quick - CLaSeek returns results for a single query in a few seconds. The search engine is an open source software under the BSD licence and therefore publicly available to use.
+
+% Further research could be done in document processing (e.g. improve attributes searching, improve stemmer, search for synonyms, etc.). Furthermore Fuzzy FCA could be used instead of crisp FCA. Information about word importance could be used to build a new fuzzy formal context. API could be extended and provided with new applications.
 
 \newpage
 % Diplomka používá Český styl pro BibTex, jehož autorem je David Martinek
