@@ -13,7 +13,7 @@
 
 %%% Obecné věci
 \newcommand{\name}{CLaSeek}
-\newcommand{\nameurl}{\url{http://phoebe.inf.upol.cz/fcasearch/}}
+\newcommand{\nameurl}{\url{http://phoebe.inf.upol.cz/claseek/}}
 \newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\sep}{\,|\,}
 \newcommand{\docs}{\mathbb{D}}
@@ -128,11 +128,11 @@ V této části si popíšeme, jak může obecný vyhledávač fungovat.
 
 \subsubsection{Pojmy související s vyhledávačem}
 \begin{description}
-\item[Sada dokumentů] Na začátku máme nějakou sadu dokumentů, nad kterými chceme vyhledávat. Tato sada může být libovolná -- může se jednat o webové stránky, o lokální dokumenty na osobním počítači nebo o emaily na serveru. V případě webových vyhledávačů typu Google je pak sadou dokumentů \uv{všechno, co lze nalézt na webu}, v případě vyhledávačů v moderních operačních systémech je sadou \uv{všechno, co lze nalézt na počítači}. 
+\item[Sada dokumentů] Na začátku máme nějakou sadu dokumentů, nad kterými chceme vyhledávat. Tato sada může být libovolná -- může se jednat o webové stránky, o lokální dokumenty na osobním počítači nebo o e-maily na serveru. V případě webových vyhledávačů typu Google je pak sadou dokumentů \uv{všechno, co lze nalézt na webu}, v případě vyhledávačů v moderních operačních systémech je sadou \uv{všechno, co lze nalézt na počítači}. 
 
 Sada dokumentů může být statická, nebo dynamická. Statická sada je taková sada, která se nemění buď nikdy nebo málokdy. Může to být například vyhledávač PSČ. Dynamická sada se naopak mění poměrně často, například webové stránky. Velké vyhledávače častěji pracují s dynamickou sadou dokumentů. 
 
-\item[Uživatel] Uživatel je obecné označení toho, kdo pracuje s vyhledávačem. Typicky se jedná o nějakého člověka, ale může to být i program, který například každý den kontroluje počet dokumentů na dané klíčové slovo a při zvýšení tohoto počtu pošle někomu informační email. 
+\item[Uživatel] Uživatel je obecné označení toho, kdo pracuje s vyhledávačem. Typicky se jedná o nějakého člověka, ale může to být i program, který například každý den kontroluje počet dokumentů na dané klíčové slovo a při zvýšení tohoto počtu pošle někomu informační e-mail. 
 
 \item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaký seznam slov, který reprezentuje to, co uživatel chce najít. Může se jednat o jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu říkáme klíčová slova. 
 
@@ -928,7 +928,7 @@ Následující seznam ukazuje postup vyhledávače po zadání dotazu a nastiňu
 
 Tato idea není nijak nová a už byla implementována v několika prototypech jako například CREDO, FooCA a SearchSleuth, podrobnější popis těchto vyhledávačů, včetně popisu odlišností, se nachází v kapitole \ref{ch.fcaengines} Myšlenka vyhledávače, který spolupracuje s FCA je pak popsána například v \cite{fcairslajdy}. Zde popisovaný vyhledávač je velice podobný vyhledávači SearchSleuth, přebírá některé vizuální prvky a FCA část je také téměř stejná. Vyhledávač \name{} je vlastní pokus o ověření funkčnosti celé ideje. 
 
-Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů; na vstupu bere seznam dokumentů, ty stáhne, zaindexuje a pak pracuje nad tímto statickým indexem. Nicméně skrze poskytované API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth, viz kapitolu \ref{ch.apipost}
+Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů; na vstupu bere seznam dokumentů, ty stáhne, zaindexuje a pak pracuje nad tímto statickým indexem. Nicméně skrze poskytované API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth, viz kapitolu \ref{ch.apipost} 
 
 \ssection{Jak vytvořit kontext}
 \sssection{Sestavení kontextu}
@@ -1012,7 +1012,7 @@ $$
 \hledany=\addsp{(D\cap X')\updown, (D\cap X')\up}.
 $$
 
-Idea rozšířeného kontextu a hledání konceptu dotazu byla použita ve vyhledávači SearchSleuth a je popsána v \cite{searchsleuth}. Search\-Sleuth používá k tvorbě rozšířeného kontextu horní sousedy konceptu dotazu -- nejprve sestaví nerozšířený formální kontext, spočítá koncept dotazu, nalezne horní sousedy a intenty těch sousedů znovu vyhledá a výsledné dokumenty připojí k kontextu, čímž vznikne rozšířený kontext. \name{} používá jiný postup, hledá rozšířený koncept přes OR dotaz. 
+Idea rozšířeného kontextu a hledání konceptu dotazu byla použita ve vyhledávači SearchSleuth a je popsána v \cite{searchsleuth}. Search\-Sleuth používá k tvorbě rozšířeného kontextu horní sousedy konceptu dotazu -- nejprve sestaví nerozšířený formální kontext, spočítá koncept dotazu, nalezne horní sousedy a intenty těch sousedů znovu vyhledá a výsledné dokumenty připojí ke kontextu, čímž vznikne rozšířený kontext. \name{} používá jiný postup, hledá rozšířený koncept přes OR dotaz. 
 
 Zároveň také SearchSleuth nepřidává do kontextu klíčová slova z dotazu, protože předpokládá, že se slova vyskytnou v titulcích a popiscích jednotlivých odkazů, které vrátí webový vyhledávač. To nemusí vždy nastat, takže ve formálních kontextu mohou některá klíčová slova chybět. SearchSleuth dále odstraňuje atributy, které sdílí méně než 5 \% objektů. 
 
@@ -1071,7 +1071,7 @@ Pokud například máme koncept s extentem $\adds{1}$ a horní soused má extent
 
 Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $a$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
 
-Například bychom pokud pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{1,2,3,4,5}$, kde zvolíme $a=5$, tak dojdeme k tomu, že $\adds{1,2,3,4,5} \setminus \adds{1} \setminus \adds{5} = \adds{2,3,4}$, ale prvek $4$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
+Například pokud bychom pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{1,2,3,4,5}$, kde zvolíme $a=5$, tak dojdeme k tomu, že $\adds{1,2,3,4,5} \setminus \adds{1} \setminus \adds{5} = \adds{2,3,4}$, ale prvek $4$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
 
 Tento algoritmus můžeme jednoduše upravit tak, aby generoval dolní sousedy. Stačí místo objektů přidávat atributy a dostaneme algoritmus \textsc{LowerNeighbors}.
 
@@ -1120,7 +1120,7 @@ $$
 \upperc_\hledany=\upperneighbors(\hledany).
 $$
 
-Nyní jsme v opačné situaci než během hledání specializací. Koncept dotazu může mít intent $\adds{\mbox{Jaguár, Zvíře}}$ a horní sousedé intenty $\adds{\mbox{Jaguár}}$ a $\adds{\mbox{Zvíře}}$. Tím že odečteme intenty horních sousedů od intentu konceptu dotazu, získáme slova, která se nachází v intentu konceptu, ale nenachází se v intentu horního souseda. Jsou to tak ta slova, která vyhledávač navrhne uživateli k odstranění. 
+Nyní jsme v opačné situaci než během hledání specializací. Koncept dotazu může mít intent $\adds{\mbox{Jaguár, Zvíře}}$ a horní sousedé intenty $\adds{\mbox{Jaguár}}$ a $\adds{\mbox{Zvíře}}$. Tím, že odečteme intenty horních sousedů od intentu konceptu dotazu, získáme slova, která se nachází v intentu konceptu, ale nenachází se v intentu horního souseda. Jsou to ta slova, která vyhledávač navrhne uživateli k odstranění. 
 $$
 Gen'=\adds{\hledany_I\setminus M\sep M\in\intfca(\upperc_\hledany)}
 $$
@@ -1153,7 +1153,7 @@ Pro jednu z těchto definic bychom se měli rozhodnout. Není vhodné uživateli
 
 Pokud budeme za sourozence brát potomky rodičů, budeme mu nabízet spíše obecnější dotazy. Pokud zvolíme rodiče potomků, pak mu budeme nabízet spíše konkrétnější dotazy. 
 
-Zvolíme tak zlatou střední cestu -- budeme mu nabízet dotazy, které generují koncepty, které mají společného rodiče i potomka. Zadefinujeme si funkce, které spočítají všechny horní a dolní sousedy všem prvkům množiny.
+Zvolíme tak zlatou střední cestu -- budeme mu nabízet dotazy, které jsou generovány koncepty mající společného rodiče i potomka. Zadefinujeme si funkce, které spočítají všechny horní a dolní sousedy všem prvkům množiny.
 
 \begin{eqnarray}
 \unfca(X)&=&\bigcup\adds{\upperneighbors(C)\sep C\in X}\\
@@ -1194,7 +1194,7 @@ Téma sousedních konceptů a jejich podobnosti je blíže rozebráno v článku
 \section{Výsledky vyhledávače}
 
 \ssection{Uživatelské prostředí vyhledávače}
-Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty} Do textové pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
+Současná verze vyhledávače \name{} beží na adrese \nameurl. Základní prázdné rozhraní je vidět na obrázku \ref{fig.gui.empty} Do textového pole se vloží dotaz, který chceme položit vyhledávači, vybereme jazyk, databázi, nad kterou chceme dotaz provádět a odešleme. Výsledek vyhledávání je vidět na obrázku \ref{fig.gui.result1}
 
 Na prvních třech řádcích jsou zobrazeny návrhy na úpravu dotazu. Na prvním řádku jsou specializace, tj. jaká slova nabízíme uživateli k přidání k současnému dotazu. Na druhém řádku jsou podobné dotazy. Na třetím řádku je generalizace, tj. jaká slova by měl z dotazu odstranit. Tyto návrhy jsou odkazy, takže na ně stačí klepnout a \name{} vyhledá nový dotaz. 
 
@@ -1230,7 +1230,7 @@ Například pro stránku o studijních oborech na \code{www.inf.upol.cz} zvolil 
 
 Vyhledávač si zároveň neumí efektivně poradit se stránkami, které obsahují příliš mnoho různých informací. Na webu katedry informatiky je například takovou stránkou kalendář nebo aktuality. Na těchto stránkách se vyskytují prakticky všechna důležitá klíčová slova. Nachází se zde informace o stážích jednotlivých zaměstnanců katedry, o pořádaných seminářích, informace o oborech a podobně. Každá zpráva v aktualitách nebo v kalendáři je obvykle krátká a podepsaná. 
 
-Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se mezi prvními výsledky zobrazí právě aktuality nebo kalendář, protože samotná stránka není příliš velká, aby to srazilo hodnocení $\tfidf$ a obvykle dané jméno obsahuje mockrát. Podobný výsledek se objeví, pokud vyhledáme slovo \uv{seminář}. Pokud se seminář koná dvacetkrát do roka, má v kalendáři dvacet různých záznamů a kalendář tak obsahuje minimálně dvacetkrát slovo \uv{seminář}. V hodnocení pak snadno předběhne stránku, která je pro informatický seminář přímo určena. Tyto problémy lze vyřešit různými způsoby:
+Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se mezi prvními výsledky zobrazí právě aktuality nebo kalendář, protože samotná stránka není příliš velká, aby to srazilo hodnocení $\tfidf$ a obvykle dané jméno obsahuje mnohokrát. Podobný výsledek se objeví, pokud vyhledáme slovo \uv{seminář}. Pokud se seminář koná dvacetkrát do roka, má v kalendáři dvacet různých záznamů a kalendář tak obsahuje minimálně dvacetkrát slovo \uv{seminář}. V hodnocení pak snadno předběhne stránku, která je pro informatický seminář přímo určena. Tyto problémy lze vyřešit různými způsoby:
 
 \begin{itemize}
 	\item Napsat obsah stránky o informatickém semináři tak, aby obsahoval vícekrát slovo \uv{seminář}.
@@ -1246,7 +1246,7 @@ Vyhledávač potřebuje u každého dokumentu znát jeho název. V případě HT
 
 Obsah titulku by měl být pro každou stranu jiný. Není vhodné, aby mělo více stránek, nebo dokonce celý web, stejný titulek, protože pak je ve výsledcích vyhledávání nepůjde rozlišit jinak než jejich adresou. Toto pravidlo je důležité nejen pro tento vyhledávač, ale i pro běžné vyhledávače jako Google nebo Seznam. Zároveň se připravujeme o možnost zvýšit hodnocení stránky, pokud by klíčové slovo, které uživatel hledal, bylo v titulku. 
 
-Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí z stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horší výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
+Další informací, kterou může z webu získat, je popisek. Ten se zapisuje do elementu \code{<META NAME='description'>}. Jeho obsahem by měl být ne příliš dlouhý text, který popisuje danou stránku. Opět by měl být unikátní pro každou stránku. Pokud stránka neobsahuje popisek, vyhledávač se pokusí ze stránky vytáhnout nějaký popisek sám, ale téměř jistě to bude horší výsledek, než ručně psaný popisek pro každou stránku zvlášť. 
 
 Teoreticky by vyhledávač mohl získávat atributy dokumentů z elementu \code{<META NAME=keywords>}, který je k tomu určen. Ale během historie webu byl tento element poměrně hodně zneužívám vkládáním nesmyslných klíčových slov jako \uv{sex, porno, nahá, pamela, anderson}, takže tento element postupně běžné vyhledávače začaly téměř ignorovat a většina běžných webů už ho ani nepoužívá. \name{} ho tak zcela ignoruje. 
 
@@ -1255,9 +1255,9 @@ HTML kód nemusí být nutně validní, ale musí dodržovat syntaxi jazyka. Neh
 Web musí mít správně určené kódování stránek prostřednictvím elementu \code{<meta http-equiv='content-type'>}. Pokud se tento element nenajde, bude se předpokládat, že web je v kódování \code{utf-8}. 
 
 \sssection{Zpracování PDF a ODT}
-\name{} si dále poradí s dokumenty ve formátu PDF a ODT. Formát ODT je pouze zabalené XML, takže daný soubor stačí pouze rozbalit, najít soubor obsahující obsah celého dokumentu a zpracovat XML. To můžeme udělat podobně jako HTML stránky, stačí odstranit všechny XML značky a nechat pouze textové obsahy elementů. 
+\name{} si dále poradí s dokumenty ve formátu PDF a ODT. Formát ODT je pouze zabalené XML, takže daný soubor stačí pouze rozbalit, najít soubor, ve kterém je obsah celého dokumentu a zpracovat toto XML. To můžeme udělat podobně jako HTML stránky, stačí odstranit všechny XML značky a nechat pouze textové obsahy elementů. 
 
-S PDF už je větší problém. Vyhledávač používá externí aplikace na dolování textu z PDF souboru, ale žádná aplikace si neporadí se všemi PDF soubory. Největším problémem je diakritika, spousta převaděčů nedokázala po převodu na prostý text správně zobrazit diakritiku. V lepším případě převaděč zobrazil místo správného znaku nějaký nesprávný znak, v horším případě písmeno s dikritikou zcela vypustil, případně vypustil i následující písmeno. S takto převedeným textem už se toho moc dělat nedá. 
+S PDF už je větší problém. Vyhledávač používá externí aplikace na dolování textu z PDF souboru, ale žádná aplikace si neporadí se všemi PDF soubory. Největším problémem je diakritika; spousta převaděčů nedokázala po převodu na prostý text správně zobrazit diakritiku. V lepším případě převaděč zobrazil místo správného znaku nějaký nesprávný znak, v horším případě písmeno s dikritikou zcela vypustil, případně vypustil i následující písmeno. S takto převedeným textem už se toho moc dělat nedá. 
 
 Některé PDF dokumenty na webu katedry informatiky jsou v nějakém podivném stavu, kdy i nakopírování textu v některém ze známých PDF prohlížečů, například Adobe Reader, nefunguje jak má. Typická chyba je, že po vložení textu do jiné aplikace jsou zcela oddělené háčky a čárky, občas jsou ještě různě náhodně vloženy mezery. Vyhledávač se snaží alespoň o částečnou rekonstrukci textu, ale úplná rekonstrukce je nemožná. 
 
@@ -1274,7 +1274,7 @@ Ohodnotit, jak je \name{} úspěšný v řazení nebo v nabízených návrzích,
 
 Ve vyhledávači je uloženo několik testovacích sad dokumentů. Jedná se o weby 
 \begin{itemize}
-	\item \code{jakpsatweb.cz}, který se zabývá tvorbou webových stránek a podobných věcech okolo, 
+	\item \code{jakpsatweb.cz}, který se zabývá tvorbou webových stránek a podobných věcí okolo, 
 	\item \code{matweb.cz}, který se zabývá především středoškolskou matematikou,
 	\item \code{jakpodnikat.cz}, který se zabývá podnikáním, jak danit příjmy a podobně,
 	\item \code{inf.upol.cz}, což je web katedry informatiky UP
@@ -1307,7 +1307,7 @@ Dalším příkladem může být složitější dotaz \uv{jak vložit obrázek n
 
 
 \ssection{Experimenty s nastavením}
-\name{} umožňuje má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}
+\name{} má poměrně bohaté možnosti nastavení. Některé z nich dokáží významně ovlivnit chování a výsledky celého vyhledávače. Všechny možnosti nastavení jsou popsány v kapitole \ref{ch.dokumentace}
 
 \sssection{Počet atributů dokumentu}
 Lze nastavit, jaký maximální počet atributů každého dokumentu vyhledávač vezme v potaz, když buduje rozšířený koncept, viz kapitolu \ref{ch.sestaveni} To do jisté míry ovlivní, jak budou vypadat jednotlivé návrhy u specializací a u podobných dotazů. 
@@ -1319,7 +1319,7 @@ Brát v úvahu vysoký počet atributů dokumentů má smysl v případě, kdy v
 Zvýšení počtu atributů má samozřejmě za následek mírně zpomalení celého programu, protože se pracuje s větším kontextem a větším svazem. 
 
 \sssection{Počet dokumentů v kontextu}
-V nastavení můžeme omezit počet dokumentů, které budou tvořit množinu objektů rozšířeného kontextu. Výsledek je podobný jako v předchozím případě -- pokud zvýšíme počet dokumentů, které pustíme do kontextu, zvýšíme tím šanci, že se mezi návrhy nějaký zajímavý, který by se tam jinak neobjevil. Současně tím ale zvyšujeme šanci, že se tam objeví nesmysl, protože jsme do kontextu pustili dokumenty, které jsou příliš vzdálené původnímu dotazu.
+V nastavení můžeme omezit počet dokumentů, které budou tvořit množinu objektů rozšířeného kontextu. Výsledek je podobný jako v předchozím případě -- pokud zvýšíme počet dokumentů, které pustíme do kontextu, zvýšíme tím šanci, že se mezi návrhy objeví nějaký zajímavý, který by se tam jinak neobjevil. Současně tím ale zvyšujeme šanci, že se tam objeví nesmysl, protože jsme do kontextu pustili dokumenty, které jsou příliš vzdálené původnímu dotazu.
 
 Zároveň při větším počtu dotazů roste výpočetní náročnost, protože se zvětšuje kontext a konceptuální svaz. Zvyšuje se více než v předchozím případě, protože tím, že zdvojnásobíme počet dokumentů, zdvojnásobí se i počet atributů. 
 
@@ -1328,7 +1328,7 @@ Během budování indexu je možné zvolit dvě hlavní kritéria, jak se budou 
 
 První způsob je přímočarý, ale není příliš efektivní v případě, kdy máme různě kvalitní dokumenty. Pro ty nekvalitní dokumenty, u kterých lze jen těžko najít tolik smysluplných atributů, se budou za atributy postupně volit čím dál tím větší nesmysly. Výhodou je, že pro každý dokument máme stejný počet atributů.
 
-U druhého způsobu je o něco těžší nalézt ideální hranici. Hranice je číslo z intervalu $\addsp{0, 100}$ a bude aplikována takto: spočítáme hodnotu $\tfidf$ skóre pro všechna slova ve všech dokumentech. Tato čísla seřadíme, dostaneme tak uspořádaný seznam ohodnocených slov. 
+U druhého způsobu je o něco těžší nalézt ideální hranici. Hranice je číslo z intervalu $\addsp{0, 100}$ a bude aplikována takto: spočítáme hodnotu $\tfidf$ skóre pro všechna slova ve všech dokumentech. Tato čísla seřadíme a dostaneme uspořádaný seznam ohodnocených slov. 
 
 Ze začátku a z konce tohoto seznamu odstraníme setinu slov. Pokud seznam obsahuje 500 slov, pak ze začátku i z konce seznamu odstraníme pět slov. Tím odstraníme slova, která by mohla mít příliš vysoké nebo příliš nízké hodnocení. Dále spočítáme rozdíl největšího a nejmenšího hodnocení. Tento rozdíl si označíme $\delta$. Hranici vydělíme stem, abychom získali číslo v intervalu $\addsp{0, 1}$, označme tuto novou hodnotu $l$. Dále ještě označme nejmenší hodnotu skóre ze všech slov symbolem $m$. 
 
@@ -1371,7 +1371,7 @@ Tohoto můžeme využít na vylepšení výsledků běžného vyhledávače, nap
 
 My od Google získáme seznam několika odkazů, které odpovídají zadanému dotazu. Pro každý odkaz máme k dispozici tři zásadní údaje: URL, titulek a popisek. Z těchto tří údajů vytvoříme sadu dokumentů takto: každý odkaz bude tvořit jeden samostatný dokument. Takže pokud nám Google vrátí na dotaz 50 výsledků, budeme vytvářet 50 dokumentů. URL dokumentu bude stejné jako URL, které vrátil Google; stejně tak titulek. Obsahem dokumentu pak bude popisek odkazu. Popisek dokumentu může být buď stejný jako jeho obsah nebo bude prázdný.
 
-Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. Tím dostaneme aplikaci, která už téměř stejná jako SearchSleuth.
+Takto poskládaná data, zároveň s původním dotazem, který jsme kladli Googlu, pošleme vyhledávači. On z nich seskládá dočasný index a vrátí nám návrhy, které vygenerovala FCA analýza. Tyto návrhy pak můžeme předložit uživateli. Tím dostaneme aplikaci, která už je téměř stejná jako SearchSleuth.
 
 Jednou z cest, kam může směřovat tento vyhledávač, je rozšíření API a napsání dalších aplikací, které toto API využívají. Jednoduchou úpravou algoritmů ve vyhledávači můžeme například vytvořit API, které bere na vstupu seznam dokumentů a na výstupu vrací kategorizovaný seznam dokumentů -- ke každému dokumentu přiřadí jednu, případně i více, kategorii. To se může hodit v případě, kdy máme velké množství dokumentů, které chceme setřídit do nějakých kategorií. Podobných způsobů využití lze jistě vymyslet více. 
 
@@ -1388,7 +1388,7 @@ Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na 
 
 Veškerou komunikaci s externími aplikacemi pak obstarává soubor \code{/src/search}, který volá funkce z modulu \code{/src/other/interface.py}. Ten obsahuje funkce zodpovědné za komunikaci se všemi ostatními balíčky a moduly. 
 
-Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, který napsal Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus a jehož autorem je Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf \url{http://www.foolabs.com/xpdf/}. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
+Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický. Pro český jazyk je využit kód, jehož autorem je Ljiljana Dolamic, jako anglický stemmer je použit program implementující Porter2 algoritmus, který napsal Matt Chaput. Pro převod PDF do prostého textu aplikace používá program Xpdf \url{http://www.foolabs.com/xpdf/}. Na převod ODT do prostého textu není použita žádná externí aplikace, pouze \code{unzip} a obecný XML parser. 
 
 Webové rozhraní je napsáno v PHP 5. HTML kód je validní dle současného návrhu HTML 5. 
 
@@ -1424,9 +1424,9 @@ Zdrojové kódy tohoto textu se nachází na adrese:
 V historii již existovaly vyhledávače, které fungovaly velice podobně jako \name. Jedná se o vyhledávače \uv{CREDO}, \uv{FooCA} a \uv{SearchSleuth}. V současné době CREDO a SearchSleuth nefungují vůbec a k použití FooCA je nutné zažádat o registraci tvůrce tohoto vyhledávače. 
 
 \begin{description}
-	\item[CREDO] Zkratka pochází z \uv{Conceptual REorganization of DOcuments}. Jeho autory jsou C. Carpineto a G. Romano. CREDO spolupracovalo s Googlem, vložený dotaz nejprve vložile pomocí do Google SOAP API, nechalo si vrátit prvních 100 výsledků a poté nad těmito daty provedlo FCA analýzu. CREDO počítalo pouze dolní sousedy a to do druhé úrovně. Začínalo se u největšího konceptu. Smyslem bylo, abych z těch sto výsledků, které dostal na začátku, postupně ukazoval uživateli ty odkazy, které odpovídají nějakému konceptu. 
+	\item[CREDO] Zkratka pochází z \uv{Conceptual REorganization of DOcuments}. Jeho autory jsou C. Carpineto a G. Romano. CREDO spolupracovalo s Googlem. Uživatel vložil do vyhledávače dotaz, CREDO tento dotaz nejprve poslalo pomocí SOAP API do Googlu, nechalo si vrátit prvních 100 výsledků a poté nad těmito daty provedlo FCA analýzu. CREDO počítalo pouze dolní sousedy a to do druhé úrovně. Začínalo se u největšího konceptu. Smyslem bylo, abych z těch sto výsledků, které dostal na začátku, postupně ukazoval uživateli ty odkazy, které odpovídají nějakému konceptu. 
 
-	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze, po kliknutí na návrh, se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. Detailnější informace jsou v článku \cite{credo}.
+	CREDO poté zobrazilo uživateli seznam odkazů spolu se stromovou strukturou návrhů na změnu dotazu. Tyto návrhy ale nebyly interaktivní, pouze po kliknutí na návrh se z té stovky vrácených dotazů vyfiltrovaly ty, které odpovídaly novému dotazu. Žádný nový dotaz do Google neproběhl. Detailnější informace jsou v článku \cite{credo}.
 
 	\item[FooCA] Název vznikl ze spojení FCA a Google. Autorem je Bjoern Koester. Vyhledávač funguje na adrese \code{http://fooca.webstrategy.de}, ale vyžaduje registraci. FooCA, podobně jako CREDO, spolupracuje s webovými vyhledávači, konkrétně s Googlem a Yahoo. Uživatel vloží dotaz do Foo\-CA, ten přepošle dotaz beze změny do Google API nebo do Yahoo API a dále pracuje s navrácenými výsledky. Po skončení FCA analýzy zobrazí uživateli výsledek ve formě tabulky -- kontextu -- nebo ve formě diagramu znázorňující konceptuální svaz. 
 
@@ -1445,7 +1445,7 @@ V historii již existovaly vyhledávače, které fungovaly velice podobně jako 
 
 Výsledkem této práce je prototyp webového vyhledávače \name{}, který primárně pracuje nad statickou sadou dokumentů. Umí prohledávat několik typů dokumentů, automaticky z dokumentů získávat název a popisek, zvládá booleovské dotazy, kontroluje překlepy a výsledné dokumenty vrací seřazené dle relevance. 
 
-Po navrácení výsledných dokumentů provádí jejich analýzu a prostřednictvím formální konceptuální analýzy nabízí tři skupiny návrhů na úpravu dotazu. Konkrétnější dotazy, obecnější dotazy a podobné dotazy. \name{} tak pomáhá uživateli upravovat dotaz tak dlouho, dokud není spokojen s výsledky vyhledávání. 
+Po navrácení výsledných dokumentů provádí jejich analýzu a prostřednictvím formální konceptuální analýzy nabízí tři skupiny návrhů na úpravu dotazu: konkrétnější dotazy, obecnější dotazy a podobné dotazy. \name{} tak pomáhá uživateli upravovat dotaz tak dlouho, dokud není spokojen s výsledky vyhledávání. 
 
 \name{} dále poskytuje veřejné webové API, díky kterému je možné vyhledávači zasílat vlastní data. Vyhledávač pak sestaví dočasný index a provede nad zaslanými daty stejnou analýzu, jako v případě statického indexu. 
 
@@ -1481,9 +1481,6 @@ Further research can be done in the following areas: document processing like im
 Popis struktury přiloženého CD:
 
 \begin{description}
-	\item[bin] 
-	\item[doc]
-	\item[]
 	\item[bin/] Obsahuje dva archivy -- \code{fca-search.zip} a \code{fca-search-web.zip}. V prvním jsou soubory nutné ke spuštění jádra vyhledávače. Aplikace je napsaná v Pythonu, což je interpretovaný jazyk, takže k jejímu spuštění je potřeba interpret Pythonu. archiv neobsahuje žádný spustitelný binární soubor. Jak nainstalovat a používat aplikaci je popsáno v dokumentaci, viz \ref{ch.dokumentace}
 
 	Druhý archiv, \code{fca-search-web.zip}, obsahuje soubory zajišťující běh webového rozhraní. Aplikace je psána v PHP. Jak nainstalovat a používat aplikaci je opět popsáno v dokumentaci. 
