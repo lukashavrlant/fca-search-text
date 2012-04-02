@@ -87,8 +87,8 @@
 
 \title{Vyhledávač založený na formální konceptuální analýze}
 \author{Lukáš Havrlant}
-\year{2011}
-%\date{21. květen 2009}
+\year{2012}
+% \date{2. duben 2012}
 
 \docinfo{Lukáš Havrlant}{Vyhledávač založený na formální konceptuální analýze}
 
@@ -113,11 +113,11 @@
 \section*{Úvod}
 \addcontentsline{toc}{section}{Úvod}
 
-Současné vyhledávače si uchovávají obsah, nad kterým mají vyhledávat, ve formě indexu, což je struktura v principu podobná indexu v knize. Uživateli stačí vložit do vyhledávacího pole svůj dotaz a vyhledávač z indexu získá potřebná data a zobrazí uživateli výsledek, obvykle ve formě nějakého uspořádaného seznamu odkazů na dokumenty. Pokud není uživatel spokojený s výsledky, musí přeformulovat svůj dotaz tak, aby lépe vystihoval to, co chce najít. 
+Současné vyhledávače si uchovávají obsah, nad kterým mají vyhledávat, ve~formě indexu, což je struktura v principu podobná indexu v knize. Uživateli stačí vložit do vyhledávacího pole svůj dotaz a vyhledávač z indexu získá potřebná data a zobrazí uživateli výsledek, obvykle ve formě nějakého uspořádaného seznamu odkazů na dokumenty. Pokud není uživatel spokojený s výsledky, musí přeformulovat svůj dotaz tak, aby lépe vystihoval to, co chce najít. 
 
 Tento problém je typický pro slova, která mají několik významů. Například pokud ve webovém vyhledávači vyhledáme slovo \uv{jaguár}, tak vyhledávač nemůže vědět, zda chceme hledat auto, zvíře nebo ještě něco jiného. Pokud má přístup k historii hledání daného uživatele, může pomocí ní přizpůsobit výsledky. Ale může také uživateli zobrazit návrhy na nový dotaz, například \uv{jaguár auto} nebo \uv{jaguár zvíře}, po jejichž vyhledání se výsledky velmi zpřesní. 
 
-Otázkou je, jak tyto návrhy získat. Pokud si vyhledávač uchovává historii všech hledání, která uživatelé provádějí, může se je pokusit vytáhnout právě z této historie. Pokud ovšem tato data vyhledávač nemá, nebo jich má málo, musí se použít jiná metoda. 
+Otázkou je, jak tyto návrhy získat. Pokud si vyhledávač uchovává historii všech hledání, která uživatelé provádějí, může se je pokusit vytáhnout právě z~této historie. Pokud ovšem tato data vyhledávač nemá, nebo jich má málo, musí se použít jiná metoda. 
 
 Práce popisuje metodu, jak získat podobné dotazy pomocí formální konceptuální analýzy (anglicky Formal concept analysis, dále jen FCA) pouze na základně znalosti obsahu dokumentů. FCA pracuje s tabulkovými daty, ve kterých hledá nějaké potenciálně zajímavé shluky dat. Tyto shluky pro nás budou představovat množiny dokumentů, které jsou nějakým způsobem podobné a které sdílí nějaká zásadní klíčová slova. Tato klíčová slova poté dále využijeme při generování návrhů na nové dotazy. 
 
@@ -139,11 +139,11 @@ Sada dokumentů může být statická, nebo dynamická. Statická sada je takov�
 
 \item[Uživatel] Uživatel je obecné označení toho, kdo pracuje s vyhledávačem. Typicky se jedná o nějakého člověka, ale může to být i program, který například každý den kontroluje počet dokumentů na dané klíčové slovo a při zvýšení tohoto počtu pošle někomu informační e-mail. 
 
-\item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaký seznam slov, který reprezentuje to, co uživatel chce najít. Může se jednat o jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu říkáme klíčová slova. 
+\item[Dotaz] Pomocí dotazů komunikuje uživatel s vyhledávačem. Dotaz je nějaký seznam slov, který reprezentuje to, co uživatel chce najít. Může se jednat o~jednoduché dotazy typu \uv{auto}, ale také o složitější otázky jako \uv{Jaký je smysl života?} Slovům v dotazu říkáme klíčová slova. 
 
 Vyhledávač může uživatelům umožnit používat v dotazu různé operátory, kterými lze zpřesnit dotaz. Typické operátory jsou logické operátory AND, OR a NOT. Webové vyhledávače umožňují například vyhledávat na určité doméně pomocí SITE operátoru, vyhledat odkazující stránky pomocí LINK operátoru a podobně. 
 
-\item[Výsledky vyhledávání] Po položení dotazu zobrazí vyhledávač výsledky. Obecně se jedná o nějaké zkrácené zobrazení dokumentů, které vyhovují danému dotazu. Typicky jde o seznam odkazů na dané dokumenty, ale v některých případech může vyhledávač přímo zodpovědět položenou otázku. Například na otázku o smyslu života může odpověď 42. 
+\item[Výsledky vyhledávání] Po položení dotazu zobrazí vyhledávač výsledky. Obecně se jedná o nějaké zkrácené zobrazení dokumentů, které vyhovují danému dotazu. Typicky jde o seznam odkazů na dané dokumenty, ale v~některých případech může vyhledávač přímo zodpovědět položenou otázku. Například na otázku o smyslu života může odpověď 42. 
 
 Samotný seznam dokumentů bývá obvykle seřazen podle nějakých kritérií. Těchto kritérií bývá poměrně hodně a vyvážit je tak, aby vyhledávač vracel co možná nejlepší výsledky je obtížný úkol, kterým se tato diplomová práce nebude více zabývat. 
 
@@ -166,7 +166,7 @@ Podobný princip můžeme použít i ve vyhledávačích. Nebudeme ale vytváře
 
 Spolu s tím si můžeme uložit informace i o tom, kolik daných slov daný dokument obsahuje, což můžeme dále využít při řazení dokumentů. 
 
-Celou práci vyhledávače tak můžeme rozdělit do dvou částí -- budování a upravování indexu a hledání odpovědí na dotaz. Zde je nutné dát pozor na to, jak velká je sada dokumentů a zda je statická nebo dynamická. Samotné budování indexu můžeme ještě rozdělit na dvě části: předzpracování dokumentů a technická realizace indexu. 
+Celou práci vyhledávače tak můžeme rozdělit do dvou částí -- budování a~upravování indexu a hledání odpovědí na dotaz. Zde je nutné dát pozor na to, jak velká je sada dokumentů a zda je statická nebo dynamická. Samotné budování indexu můžeme ještě rozdělit na dvě části: předzpracování dokumentů a technická realizace indexu. 
 
 \subsection{Vyhledávač \name}
 
@@ -202,7 +202,7 @@ Při tomto odstraňování můžeme narazit na určité problémy a může zde d
 
 % \item[Převod do pole] V tuto chvíli už máme text v takové podobě, že ho můžeme převézt do jiné datové struktury, a sice pole. Jako oddělovač zvolíme mezeru. Tím získáme pole, které v každé buňce obsahuje právě jedno slovo. 
 
-\item[Odstranění stop slov] Stop slova jsou slova, která se vyskytují téměř v každém dokumentu, jsou příliš obecná a nicneříkající, a tak nemá příliš velký smysl je indexovat. Typicky se jedná o předložky jako \uv{ke}, \uv{u}, \uv{na} a podobně. Pokud je odstraníme, neztratíme příliš mnoho informací, ale můžeme tím i poměrně výrazně zredukovat velikost výsledného indexu. Obecně můžeme odstranit všechna slova délky jedna nebo dva bez větší ztráty informace. 
+\item[Odstranění stop slov] Stop slova jsou slova, která se vyskytují téměř v každém dokumentu, jsou příliš obecná a nicneříkající, a tak nemá příliš velký smysl je indexovat. Typicky se jedná o předložky jako \uv{ke}, \uv{u}, \uv{na} a podobně. Pokud je odstraníme, neztratíme příliš mnoho informací, ale můžeme tím i~poměrně výrazně zredukovat velikost výsledného indexu. Obecně můžeme odstranit všechna slova délky jedna nebo dva bez větší ztráty informace. 
 
 \item[Převod na stemy] Jedna z nejdůležitějších části vyhledávače je převod slov na stemy. Stem je kořen, základ slova. Smyslem je, abychom si v indexu neuchovávali všechny tvary každého slova, ale abychom si od každé slova uchovávali ideálně jen jeden, základní tvar -- místo \uv{strom}, \uv{stromy}, \uv{stromu} tak budeme mít pouze jeden tvar \uv{strom}.
 
@@ -214,7 +214,7 @@ Algoritmus, který by k libovolnému slovu vrátil jeho základ, je poměrně ko
 \end{description} 
 
 \subsection{Uložení indexu}
-V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále a můžeme vytvořit základní index. Do něj si uložíme informace o tom, ve kterých dokumentech se vyskytuje daný stem. Pokud pak budeme chtít získat dokumenty, které obsahují stem \uv{strom}, vyhledáme si v indexu záznam o stemu \uv{strom} a okamžitě získáme množinu dokumentů, která stem obsahuje. 
+V tuto chvíli máme vstupní dokumenty převedeny do tvaru, se kterým můžeme pracovat dále a můžeme vytvořit základní index. Do něj si uložíme informace o tom, ve kterých dokumentech se vyskytuje daný stem. Pokud pak budeme chtít získat dokumenty, které obsahují stem \uv{strom}, vyhledáme si v indexu záznam o~stemu \uv{strom} a okamžitě získáme množinu dokumentů, která stem obsahuje. 
 
 Bude se nám také hodit informace o počtu stemů v daném dokumentu. To využijeme během řazení dokumentů od nejvíce relevantních. Nakonec si můžeme ještě uložit informaci o počtu výskytů daného stemu ve všech dokumentech. Všechny tyto informace můžeme uložit do struktury, která vypadá takto: 
 
@@ -236,13 +236,13 @@ V druhé části vyhledávače, která se zabývá nalezením souvisejících do
 
 Atributy jsou poměrně běžnou součástí různých vědeckých článků, kde je ale obvykle vyplňuje sám autor pod názvem \uv{klíčová slova}. V případě vyhledávače stojíme před problémem, jak získat atributy z libovolného dokumentu nějakým obecným způsobem. 
 
-Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu daného stemu ku počtu všech stemů v dokumentu je větší než 0,05}). 
+Jednoduchým způsobem je seřazení všech stemů v daném dokumentu podle jejich četnosti od nejvíce častého. Za atributy pak můžeme vzít ty stemy, které překročí nějakou absolutní hranici (\uv{alespoň 10 výskytů v dokumentu}) nebo nějakou relativní hranici (\uv{poměr počtu daného stemu ku počtu všech stemů v~dokumentu je větší než 0,05}). 
 
 Tento postup může být úspěšný v případě, kdy máme pouze jeden dokument. Pokud ale máme sadu dokumentů, můžeme ještě zjistit vztah s dalšími dokumenty. Atribut pro daný dokument by totiž mělo být takové slovo, které je mezi ostatními dokumenty co možná nejvíce unikátní. 
 
 Pokud máme sadu dokumentů, která se zabývá analýzou dat, je možné, že by v každém dokumentu bylo nejčastější slovo právě \uv{analýza}. Tím bychom dostali pro každý dokument stejný atribut a to není to, co bychom chtěli. 
 
-Tento problém vyřešíme tím, že při hledání atributů pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v ostatních dokumentech co nejméně často. 
+Tento problém vyřešíme tím, že při hledání atributů pro dokument vezmeme v potaz i to, jak často se daná slova vyskytují v ostatních dokumentech. Budeme tak hledat taková slova, která se v daném dokumentu vyskytují co nejčastěji a v~ostatních dokumentech co nejméně často. 
 
 
 \subsubsection{Algoritmus tf-idf}\label{tfidf}
@@ -304,7 +304,7 @@ Podrobnější informace o nastavení je v dokumentaci, viz kapitolu \ref{ch.dok
 \ssection{Další funkce vyhledávače}
 \sssection{Inverzní stemovací funkce}
 
-Během zpracování textů jsme používali stemmer, který bral na vstup slovo a na výstupu vrátil základ slova. Bohužel pro poměrně velkou část slov vrací funkce takový základ slova, který je sám o sobě nesmyslný. 
+Během zpracování textů jsme používali stemmer, který bral na vstup slovo a~na výstupu vrátil základ slova. Bohužel pro poměrně velkou část slov vrací funkce takový základ slova, který je sám o sobě nesmyslný. 
 
 Například pro slovo \uv{množina} získáme s použitým stemmerem stem \uv{mnoh}. Toto chování nám nevadí v případě budování indexu, ale vadilo by nám v druhé části. Nemůžeme uživateli napovědět, že má k dotazu přidat klíčové slovo \uv{mnoh}, protože nebude vědět, jaké slovo ve skutečnosti přidává. 
 
@@ -317,7 +317,7 @@ Zároveň si uložíme počet jednotlivých slov ve všech dokumentech. K tomu �
 Nejprve zadefinujeme pomocnou funkci $\invstem_{max}$:
 $$\invstem_{max}(s)=\adds{x\in P_s \sep \wcount(x) = \max_{y\in P_s}\wcount(y)}.$$
 
-Tato funkce nám vrátí množinu všech slov, která se zobrazují na stem $s$ a jejichž počet výskytů v sadě dokumentů je shodný, ale maximální mezi všemi slovy z $P_s$. Funkce $\invstem$ může z této množiny vrátit libovolný prvek. Aby byla funkce jednoznačně definována, vrátí takové slovo, které je nejmenší vzhledem k lexikografickému uspořádání:
+Tato funkce nám vrátí množinu všech slov, která se zobrazují na stem $s$ a~jejichž počet výskytů v sadě dokumentů je shodný, ale maximální mezi všemi slovy z $P_s$. Funkce $\invstem$ může z této množiny vrátit libovolný prvek. Aby byla funkce jednoznačně definována, vrátí takové slovo, které je nejmenší vzhledem k~lexikografickému uspořádání:
 $$\invstem(s)=w\quad\eq\quad w=\min_{x\in \invstem_{max}(s)}x.$$
 
 Pokud nyní použijeme funkci $\mbox{stem}^{-1}$ například na stem \uv{mnoh}, měla by vrátit slovo \uv{množina}, protože to je slovo, které má stem \uv{mnoh} a pravděpodobně se v dokumentech vyskytuje nejčastěji. 
@@ -334,7 +334,7 @@ Jako popisek stránky se použije element \code{META} obsahující popisek, poku
 \sssection{Kontrola překlepů}
 \name{} má implementovanou jednoduchou kontrolu překlepů. V případě, že uživatel položí vyhledávači dotaz, na který vyhledávač odpoví prázdnou množinou výsledků, pokusí se zjistit, zda uživatel neudělal v některém klíčovém slovu v dotazu chybu. 
 
-Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v dokumentech narazili. Druhý přístup má dvě zásadní výhody.
+Aby vyhledávač mohl tuto kontrolu provádět, musí znát množinu \uv{správných} slov. Můžeme buď sehnat jednu univerzální množinu všech validních slov v daném jazyku, nebo můžeme použít slova z dokumentů, která zpracováváme. Stačí si tak během zpracování a budování indexu uložit všechna slova, na která jsme v~dokumentech narazili. Druhý přístup má dvě zásadní výhody.
 
 \begin{itemize}
 	\item Kontrola překlepů bude rychlejší, protože množina slov z dané databáze bude pravděpodobně menší než množina všech slov daného jazyka. Vyhledávač tak bude hledat správná slova v menší množině. 
@@ -373,7 +373,7 @@ Na rychlosti získání těchto informací už bude přímo záležet rychlost c
 Hlavním účelem vyhledávače je samozřejmě odpovídání na dotazy. Uživatel vloží do rozhraní vyhledávače svůj dotaz, který je dále zpracován vyhledávačem, který vrátí nějaký seznam výsledků. Celý princip fungování boolean dotazů je popsán v \cite{introir}, kapitola 1. 
 
 \sssection{Syntax dotazu}
-Dotazem může být libovolný text, přičemž může obsahovat jisté řídicí příkazy, kterým říkáme operátory. \name{} podporuje tři operátory: AND, OR a NOT. Pokud se tato tři slova objeví v dotazu, budou vyhledávačem pochopena jako operátory, nikoli jako obyčejná text. Musí být psány velkými písmeny, takže pokud chce uživatel použít daná slova jako obyčejný text, stačí použít jejich variantu s malými písmeny. 
+Dotazem může být libovolný text, přičemž může obsahovat jisté řídicí příkazy, kterým říkáme operátory. \name{} podporuje tři operátory: AND, OR a NOT. Pokud se tato tři slova objeví v dotazu, budou vyhledávačem pochopena jako operátory, nikoli jako obyčejná text. Musí být psány velkými písmeny, takže pokud chce uživatel použít daná slova jako obyčejný text, stačí použít jejich variantu s~malými písmeny. 
 
 Během vyhodnocování dotazu budou na dotaz aplikovány stejné postupy na úpravy textu, jaké byly popsány v kapitole \ref{prepr} Dojde tak k odstranění interpunkce, diakritiky a stop slov, text bude převeden na malá písmena a podobně. Dotaz \uv{Hele, jak se máš?!} tak bude vyhodnocen stejně jako dotaz \uv{hele mas}, pokud budou slova \uv{jak} a \uv{se} v množině stop slov. 
 
@@ -393,7 +393,7 @@ Samotný dotaz zapsaný uživatelem musí \name{} přeložit do nějaké intern�
 
 V prvním kroku převedeme holý text na lexémy. Lexém je nějaká základní jednotka dotazovacího jazyka. V našem případě může být lexém slovo, operátor nebo závorky. Takže lexém je například slovo \uv{matematika}, operátor \uv{AND} nebo otevírací závorka \uv{(}. Lexém není \uv{matematika)}, protože na konci slova máme závorku -- tento výraz by měl být rozdělen do dvou lexémů. Po aplikaci této části tak dostáváme seznam lexémů. 
 
-V tuto chvíli budeme jednotlivé lexémy převádět na syntaktický strom, což je stromová struktura, která obsahuje v každém uzlu informaci o typu uzlu a obsahuje odkaz na nula až dva potomky. 
+V tuto chvíli budeme jednotlivé lexémy převádět na syntaktický strom, což je stromová struktura, která obsahuje v každém uzlu informaci o typu uzlu a~obsahuje odkaz na nula až dva potomky. 
 
 Typem může být buď slovo nebo operátor. V případě, že je uzel operátorem, uložíme si ještě, o jaký operátor se jedná. V případě, že je uzel slovem, uložíme si do uzlu samotné slovo. Pokud jde o binární operátor, tj. AND nebo OR, musí obsahovat ještě levého a pravého potomka. Tam může být uložen opět uzel libovolného typu. Pokud jde o uzel typu NOT, tak musí mít právě jednoho potomka, který může být libovolného typu. 
 
@@ -534,9 +534,9 @@ Kukuřice&&\yes&\yes&&\yes&&&\yes\\
 \end{table}
 
 
-To samozřejmě není jediný koncept, který kontext obsahuje. Ve skutečnosti tento kontext obsahuje 19 konceptů. Zkusíme si najít další. Existuje něco, co žije na zemi i ve vodě? Hledáme tak objekty, které mají atributy $\adds{b, c}$. Pohledem do tabulky zjistíme, že tyto vlastnosti má žába a rákosí. Nicméně ještě jsme nenalezli koncept, protože nevíme, jestli náhodou tyto objekty nesdílí ještě nějaký další atribut. Vzhledem k tomu, že všechny objekty mají atribut $a$, musíme ho přidat do množiny atributů. Tím už získáme koncept s objekty $\adds{\mbox{žába, rákosí}}$ a atributy $\adds{a, b, c}$.
+To samozřejmě není jediný koncept, který kontext obsahuje. Ve skutečnosti tento kontext obsahuje 19 konceptů. Zkusíme si najít další. Existuje něco, co žije na zemi i ve vodě? Hledáme tak objekty, které mají atributy $\adds{b, c}$. Pohledem do~tabulky zjistíme, že tyto vlastnosti má žába a rákosí. Nicméně ještě jsme nenalezli koncept, protože nevíme, jestli náhodou tyto objekty nesdílí ještě nějaký další atribut. Vzhledem k tomu, že všechny objekty mají atribut $a$, musíme ho přidat do množiny atributů. Tím už získáme koncept s objekty $\adds{\mbox{žába, rákosí}}$ a~atributy $\adds{a, b, c}$.
 
-Řekli jsme, že formální konceptuální analýza zároveň řeší i hierarchii shluků. Ta se řeší pomocí relace inkluze. Můžeme říci, že koncept, který se skládá z extentu $\adds{\mbox{pijavice, cejn, žába a pes}}$ a intentu $\adds{a, g}$ je obecnější než koncept $\adds{\mbox{cejn, žába a pes}}$ a $\adds{a, g, h}$. 
+Řekli jsme, že formální konceptuální analýza zároveň řeší i hierarchii shluků. Ta se řeší pomocí relace inkluze. Můžeme říci, že koncept, který se skládá z~extentu $\adds{\mbox{pijavice, cejn, žába a pes}}$ a intentu $\adds{a, g}$ je obecnější než koncept $\adds{\mbox{cejn, žába a pes}}$ a $\adds{a, g, h}$. 
 
 První koncept můžeme pojmenovat \uv{pohybující se živočichové}, druhý koncept by byl \uv{živočichové, kteří k pohybu využívají končetiny}. Druhý koncept obsahuje všechny atributy jako první koncept, plus jeden navíc -- ten nějakým způsobem konkretizuje tento koncept. U objektů to platí naopak. Druhý koncept má více atributů, ale méně objektů. To je logické, pokud zvýšíme počet atributů, které objekty musí mít, zvýšíme tím na objekty nároky a objektů ubude. 
 
@@ -583,7 +583,7 @@ $$A\up=B\logand B\down =A.$$
 Množině $A$ říkáme \uv{extent} a množině $B$ \uv{intent}.
 \end{mydef}
 
-Takto definovaný formální koncept odpovídá naší předchozí představě o konceptu. Pokud jsme měli danou množinu objektů, pak jsme našli sdílené atributy. K těmto sdíleným atributům jsme následně nalezli objekty, které všechny tyto atributy sdílí, což mohlo být více objektů, než jaké jsme měli na začátku. Ve chvíli, kdy se k těmto objektům pokusíme najít sdílené atributy, nenalezneme již žádný nový.
+Takto definovaný formální koncept odpovídá naší předchozí představě o konceptu. Pokud jsme měli danou množinu objektů, pak jsme našli sdílené atributy. K těmto sdíleným atributům jsme následně nalezli objekty, které všechny tyto atributy sdílí, což mohlo být více objektů, než jaké jsme měli na začátku. Ve~chvíli, kdy se k těmto objektům pokusíme najít sdílené atributy, nenalezneme již žádný nový.
 
 V tabulce \ref{tab.con1} tak můžeme najít například koncept 
 $$\addsp{\adds{\mbox{Cejn, Žába}}, \adds{a, b, g, h}},$$ 
@@ -593,7 +593,7 @@ $$\adds{\mbox{Cejn, Žába}}\up=\adds{a, b, g, h}\quad \logand \quad \adds{a, b,
 
 \sssection{Galoisova spojení}
 
-Évariste Galois byl francouzský matematik 19. století. Je známý svou prací v oblasti moderní algebry a považuje se za zakladatele teorie grup. Bohužel zemřel již ve svých dvaceti letech, když se účastnil střeleckého souboje. My využijeme Galoisovo spojení jako základní matematickou strukturu pro FCA.
+Évariste Galois byl francouzský matematik 19. století. Je známý svou prací v~oblasti moderní algebry a považuje se za zakladatele teorie grup. Bohužel zemřel již ve svých dvaceti letech, když se účastnil střeleckého souboje. My využijeme Galoisovo spojení jako základní matematickou strukturu pro FCA.
 
 \begin{mydef}[Galoisovo spojení] \label{def.gal}
 Galoisovo spojení mezi množinami $X$ a $Y$ je dvojice zobrazení $\addsp{f,g}$, $f:2^X\rightarrow2^Y$ a $g:2^Y\rightarrow2^X$, která pro všechna $A, A_1, A_2\subseteq X$ a $B, B_1, B_2\subseteq Y$ splňují:
@@ -606,9 +606,9 @@ Galoisovo spojení mezi množinami $X$ a $Y$ je dvojice zobrazení $\addsp{f,g}$
 \end{eqnarray}
 \end{mydef}
 
-Galoisovo spojení má jednoduchou interpretaci, kterou si můžeme ukázat na příkladu herců a filmů. Nechť množina $X$ je množina všech herců a hereček a množina $Y$ všech filmů. 
+Galoisovo spojení má jednoduchou interpretaci, kterou si můžeme ukázat na~příkladu herců a filmů. Nechť množina $X$ je množina všech herců a hereček a~množina $Y$ všech filmů. 
 
-Zobrazení $f$ nám pro danou podmnožinu herců $A$ vrací množinu filmů, ve kterých všichni herci z množiny $A$ hráli. Zobrazení $g$ naopak vrací pro podmnožinu filmů $B$ takovou množinu herců, kteří hráli ve všech filmech v množině $B$. Výsledkem $f(\adds{\mbox{Bruce Willis}})$ je množina všech filmů, ve kterých hrál Bruce Willis. Výsledkem $g(\adds{\mbox{Pelíšky; Dobrá zpráva; Pasti, pasti, pastičky}})$ je množina herců a hereček, kteří hráli ve všech těchto filmech: $\adds{\mbox{Miroslav Donutil, Eva Holubová}}$.
+Zobrazení $f$ nám pro danou podmnožinu herců $A$ vrací množinu filmů, ve kterých všichni herci z množiny $A$ hráli. Zobrazení $g$ naopak vrací pro podmnožinu filmů $B$ takovou množinu herců, kteří hráli ve všech filmech v množině $B$. Výsledkem $f(\adds{\mbox{Bruce Willis}})$ je množina všech filmů, ve kterých hrál Bruce Willis. Výsledkem $g(\adds{\mbox{Pelíšky; Dobrá zpráva; Pasti, pasti, pastičky}})$ je množina herců a~hereček, kteří hráli ve všech těchto filmech: $\adds{\mbox{Miroslav Donutil, Eva Holubová}}$.
 
 Vlastnosti zmíněné v definici \ref{def.gal} už jsou pak velmi přirozené. Vlastnost \ref{eq.gal1} říká, že pokud máme skupiny herců $A_1=\adds{\mbox{Johnny Depp}}$ a $A_2=\adds{\mbox{Johnny Depp, Bruce Lee}}$, tak můžeme očekávat, že pouze Depp hrál ve více filmech než Depp spolu s Leem. Filmy, ve kterých spolu hráli Depp a Lee jsou určitě podmnožinou filmů, kde hrál pouze Depp.
 
@@ -628,7 +628,7 @@ A&=&\adds{\mbox{Miroslav Donutil, Eva Holubová}},\\
 B&=& \adds{\mbox{Pelíšky; Dobrá zpráva; Pasti, pasti, pastičky}}.
 \end{eqnarray*}
 
-Donutil s Holubovou spolu nehráli v žádném dalším filmu, kromě těchto tří. A zároveň v těchto třech filmech spolu nehráli žádní jiní herci než Donutil a Holubová. 
+Donutil s Holubovou spolu nehráli v žádném dalším filmu, kromě těchto tří. A zároveň v těchto třech filmech spolu nehráli žádní jiní herci než Donutil a~Holubová. 
 
 \begin{theorem}[Zřetězení Galoisových spojení]\label{th.chain}
 Pro Galoisovo spojení $\addsp{f,g}$ mezi $X$ a $Y$ a pro všechna $A\subseteq X$ a $B\subseteq Y$ platí:
@@ -659,12 +659,12 @@ jako množinu pevných bodů uzávěrového operátoru $C$.
 \end{mydef}
 
 \begin{theorem}[Od Galoisova spojení k uzávěrovému operátoru]\label{th.galcl}
-Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a $C_Y=g\circ f$ je uzávěrový operátor na $Y$. 
+Nechť $\addsp{f,g}$ je Galoisovo spojení mezi $X$ a $Y$. Potom $C_X=f\circ g$ je uzávěrový operátor na $X$ a~$C_Y=g\circ f$ je uzávěrový operátor na $Y$. 
 \qed\end{theorem}
 
 Zápis $f \circ g$ značí skládání množin ve smyslu $(f \circ g)(x) = g(f(x))$.
 
-Pevným bodem uzávěrového operátoru nad množinou herců rozumíme takovou množinu herců, kteří spolu hráli v určitých filmech, ale \strong{žádní jiní herci už v těchto filmech nehráli}. Poslední vlastnost je pro pevný bod klíčová. 
+Pevným bodem uzávěrového operátoru nad množinou herců rozumíme takovou množinu herců, kteří spolu hráli v určitých filmech, ale \strong{žádní jiní herci už v~těchto filmech nehráli}. Poslední vlastnost je pro pevný bod klíčová. 
 
 Je například množina $\adds{\mbox{Danny Glover, Mel Gibson}}$ pevným bodem? Věta \ref{th.galcl} nám říká, jak postupovat, pokud pevný bod chceme nalézt. Jako první vypočteme $f(\adds{\mbox{Danny Glover, Mel Gibson}})$. Tím získáme množinu filmů, ve kterých herci hráli spolu, tj. $\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}}$. Nyní zpět zjistíme herce, kteří hráli v těchto filmech, spočítáme $g(\adds{\mbox{Smrtonosná zbraň 1, 2, 3, 4}})$. Kromě Gibsona a Glovera se tam objeví ještě Mary Ellen Trainor: $\adds{\mbox{Danny Glover, Mel Gibson, Mary Ellen Trainor}}$. Tato množina herců a hereček je už pevným bodem. 
 
@@ -724,7 +724,7 @@ Relaci menší nebo rovno mezi koncepty můžeme interpretovat jako relaci \uv{b
 \qed\end{theorem}
 
 \begin{mydef}[Svaz]
-Nechť $\addsp{X, \le}$ je uspořádaná množina. Pokud pro každé $x,y\in X$ existuje $\sup(x,y)$ a $\inf(x,y)$, pak $\addsp{X, \le}$ nazveme svaz. Pokud můžeme nalézt infima a suprema pro jakoukoliv podmnožinu množiny $X$, pak se jedná o úplný svaz. 
+Nechť $\addsp{X, \le}$ je uspořádaná množina. Pokud pro každé $x,y\in X$ existuje $\sup(x,y)$ a $\inf(x,y)$, pak $\addsp{X, \le}$ nazveme svaz. Pokud můžeme nalézt infima a suprema pro jakoukoliv podmnožinu množiny $X$, pak se jedná o~úplný svaz. 
 \end{mydef}
 
 Uspořádaná množina tak je svazem, pokud dokážeme ke každým dvěma prvkům množiny nalézt jejich infimum a supremum. Příkladem jednoduchého svazu mohou být reálná čísla s klasickým uspořádáním. Pak platí, že pro $x,y\in\mathbb{R}$: $\sup(x,y)=\max(x,y)$ a $\inf(x,y)=\min(x,y)$.
@@ -777,7 +777,7 @@ $$
 Z toho vyplývá, že $\bigsup_{j\in J}A_j=C(\bigcup_{j\in J}A_j)$.
 
 \begin{mydef}[Supremálně a infimálně hustá množina]
-Množinu $K\subseteq V$ nazveme supremálně hustou ve $V$ právě tehdy, když pro všechna $v \in V$ existuje $K^\prime\subseteq K$ takové, že $v=\bigsup K^\prime$. Každý prvek množiny $V$ je tak supremem nějakých prvků z $K$.
+Množinu $K\subseteq V$ nazveme supremálně hustou ve $V$ právě tehdy, když pro všechna $v \in V$ existuje $K^\prime\subseteq K$ takové, že $v=\bigsup K^\prime$. Každý prvek množiny $V$ je tak supremem nějakých prvků z~$K$.
 
 Duálně pro infimum: když pro všechna $v \in V$ existuje $K^\prime\subseteq K$ takové, že $v=\biginf K^\prime$.
 \end{mydef}
@@ -834,7 +834,7 @@ Tento svaz můžeme zobrazit klasickým Hasseovým diagramem, viz obrázek \ref{
   \label{fig.lattice}
 \end{figure}
 
-Můžeme si na jednoduchých příkladech ukázat, jak se počítají infima a suprema. Vezměme si množinu konceptů $A=\adds{C_6, C_{15}}$. Z obrázku můžeme vyčíst, že infimum $A$ je rovno $C_{16}$ a supremum $C_5$. Nejdříve si zapíšeme koncepty včetně všech objektů a atributů
+Můžeme si na jednoduchých příkladech ukázat, jak se počítají infima a~suprema. Vezměme si množinu konceptů $A=\adds{C_6, C_{15}}$. Z obrázku můžeme vyčíst, že infimum $A$ je rovno $C_{16}$ a supremum $C_5$. Nejdříve si zapíšeme koncepty včetně všech objektů a atributů
 $$\biginf \adds{\addsp{\adds{3, 4}, \adds{a, c, g, h}}, \addsp{\adds{3, 6}, \adds{a, b, c}}}$$
 a nyní spočítáme infimum množiny extentů těchto konceptů. Počítáme tak
 $$
@@ -891,7 +891,7 @@ V různých situacích se hodí různé postupy. Pokud jsme zadali příliš kon
 
 \sssection{Hlavní cíl}
 
-Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze slov v dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
+Hlavním cílem vyhledávače je nacházet zmíněné úpravy dotazu automaticky. Tyto úpravy můžeme hledat například pomocí historie dotazů, pokud danou historii máme. Pokud uživatel položí dotaz \uv{hosting php}, můžeme se podívat do~historie vyhledávání a nalézt všechny dotazy, které obsahují alespoň jedno ze~slov v~dotazu a z této množiny dotazů pak můžeme nějakým postupem vybrat související dotazy pro všechny tři kategorie úprav. Můžeme například zjistit, že z~konkrétnějších dotazů je nejvíce hledaný dotaz \uv{hosting php mysql}, z podobných \uv{server php} a podobně. 
 
 My ale použijeme jiný postup. Všechny související dotazy budeme hledat pouze na základě znalostí sady dokumentů. Nebudeme k tomu využívat žádné dodatečné informace, všechno si spočítáme pouze ze samotných dokumentů.
 
@@ -913,7 +913,7 @@ Jak by měl vypadat výstup vyhledávače? Vyhledávač by měl zobrazit seřaze
 
 Nejprve máme klasický seznam dokumentů setříděných podle relevance. Následující tři řádky jsou hlavním výsledkem vyhledávače, jsou to návrhy, jak upravit dotaz. 
 
-Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. první návrh, \code{+sleva}, nám říká, abychom zkusili vyhledat dotaz \uv{příležitostné příjmy sleva}, čímž bychom měli získat dokumenty, které nám řeknou, zda můžeme u příležitostných příjmů uplatnit nějakou slevu. To zní jako smysluplný dotaz. 
+Na prvním řádku jsou klíčová slova, která můžeme k dotazu přidat. Tj. první návrh, \code{+sleva}, nám říká, abychom zkusili vyhledat dotaz \uv{příležitostné příjmy sleva}, čímž bychom měli získat dokumenty, které nám řeknou, zda můžeme u~příležitostných příjmů uplatnit nějakou slevu. To zní jako smysluplný dotaz. 
 
 Na druhém řádku máme podobné dotazy. Nabízí nám to vyhledat \uv{sleva příjmy}, čímž bychom měli dostat dokumenty, které se věnují celkově slevám, které můžeme během danění příjmů uplatnit. Druhým dotazem, \uv{paušální příjmy}, bychom se měli dostat k informacím o paušálních výdajích, které můžeme uplatnit při danění příjmů. 
 
@@ -935,10 +935,15 @@ Tato idea není nijak nová a už byla implementována v několika prototypech j
 
 Všechny tři předchozí vyhledávače pracují, či pracovaly, nad dynamickou sadou dokumentů, typicky braly výsledky z nějakého webového vyhledávače. Naproti tomu vyhledávač popsaný v této práci pracuje primárně nad statickou sadou dokumentů; na vstupu bere seznam dokumentů, ty stáhne, zaindexuje a pak pracuje nad tímto statickým indexem. Nicméně skrze poskytované API je možné vytvořit vyhledávač, který bude pracovat nad dynamickou sadou dokumentů a bude se chovat prakticky stejně jako například SearchSleuth, viz kapitolu \ref{ch.apipost} 
 
+% Tohle je tady je proto, že text Jak vytvořit kontext byl sám na konci stránky
+% Nevím jak lépe zařídit, aby byl na další stránce
+% Já vím, použití \newpage je špatné a bůh určitě zabil jedno koťátko
+% A já za trest třikrát oběhnu fakultu
+\newpage
 \ssection{Jak vytvořit kontext}
 \sssection{Sestavení kontextu}
 \label{ch.sestaveni}
-Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Pro účely této kapitoly předpokládejme, že máme dokumenty v $D$ reprezentovány jako množinu všech stemů, které dokument obsahuje. 
+Označme dotaz, který uživatel položil vyhledávači, jako $Q$. Výsledný seřazený seznam dokumentů označíme $D$, přičemž $D_1$ je dokument na prvním místě, $D_2$ na druhém atp. Pro účely této kapitoly předpokládejme, že máme dokumenty v~$D$ reprezentovány jako množinu všech stemů, které dokument obsahuje. 
 
 Během budování seznamu jsme každému dokumentu spočítali jeho atributy, což byla nějaká slova, která tento dokument nejvíce charakterizovala. Tyto atributy máme seřazené podle jejich $\tfidf$ skóre. Označme $A_i$ seznam atributů pro dokument $D_i$.
 
@@ -955,7 +960,7 @@ kde $A_i^j$ označuje $j$-tý atribut dokumentu $D_i$. Tedy $A_i^1$ je atribut d
 $$
 Y_1=\bigcup\adds{\alpha_m(A_i)\sep i \le n}.
 $$
-K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstupu vrací množinu slov, které se vyskytují v dotazu, ale nevyskytují se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
+K této množině ještě přidáme slova z dotazu $Q$ převedená na stemy. Nepřidáváme ale slova, která se vyskytují v NOT operátoru. Zavedeme tak funkci $\beta$, která bere na vstupu dotaz a na výstupu vrací množinu slov, které se vyskytují v~dotazu, ale nevyskytují se v NOT. Tato funkce se bude chovat různě v závislosti na tom, jak vypadá dotaz $Q$:
 
 \begin{enumerate}
 	\item pokud je $Q$ pouze jedno slovo, označme ho $s$, pak $\beta(Q)=\adds{s}$,
@@ -1012,7 +1017,7 @@ $$
 \hledany=\addsp{D\updown, D\up}.
 $$
 
-Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke které počítáme intent, je podmnožinou $X'$. Pak koncept dotazu je roven
+Pokud bychom neomezovali velikost kontextu, postup by fungoval. Vzhledem k tomu, že množina objektů $X'$ může být menší než množina navrácených dokumentů $D'$, tak ještě provedeme průnik množin, abychom zajistili, že množina, ke~které počítáme intent, je podmnožinou $X'$. Pak koncept dotazu je roven
 $$
 \hledany=\addsp{(D\cap X')\updown, (D\cap X')\up}.
 $$
@@ -1041,7 +1046,7 @@ Tato množina sice obsahuje všechny horní sousedy, ale bohužel i některé na
 To zkontrolujeme tak, že zjistíme, zda všechny objekty, které přibyly v novém konceptu $\addsp{A', B'}$, generují tentýž koncept. Přesněji to popisuje následující věta.
 
 \begin{theorem}[Jak nalézt horní sousedy]
-Nechť $\addsp{A, B} \in \lattice$ a $\addsp{A, B}\ne\addsp{X, X\up}$. Pak $(A\cup\adds{a})\updown$, kde $a\in X\setminus A$ je extent horního souseda konceptu $\addsp{A, B}$ právě tehdy, když pro všechna $x\in(A\cup\adds{a})\updown\setminus A$ platí $(A\cup\adds{x})\updown=(A\cup\adds{a})\updown$.
+Nechť $\addsp{A, B} \in \lattice$ a $\addsp{A, B}\ne\addsp{X, X\up}$. Pak $(A\cup\adds{a})\updown$, kde $a\in X\setminus A$, je extent horního souseda konceptu $\addsp{A, B}$ právě tehdy, když pro všechna $x\in(A\cup\adds{a})\updown\setminus A$ platí $(A\cup\adds{x})\updown=(A\cup\adds{a})\updown$.
 \qed\end{theorem}
 
 Pomocí této věty už můžeme napsat algoritmus, kterým vygenerujeme všechny horní koncepty konceptu $\addsp{A, B}$ ve svazu $\lattice$, viz obrázek \ref{alg.upper}
@@ -1074,7 +1079,7 @@ Pokud prvek $a$ generuje horního souseda, musí tak být nutně poslední z tě
 
 Pokud například máme koncept s extentem $\adds{1}$ a horní soused má extent $\adds{1,2,3,4}$, tak pokud zvolíme poprvé $a=2$, tak $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{2} = \adds{3, 4}$. Množina $candidates$ obsahuje přinejmenším prvky $\adds{2, 3, 4}$, takže průnik bude neprázdný. Nyní bychom z $candidates$ odstranili $2$ a pokračovali s $a=3$. To by neprošlo ze stejného důvodu, takže ho z $candidates$ opět odstraníme. Na konci bychom zvolili $a=4$, rozdíl by vyšel $\adds{1,2,3,4} \setminus \adds{1} \setminus \adds{4} = \adds{2, 3}$. Z $candidates$ jsme prvky $2$ a $3$ odstranili, takže tento prvek bude generovat horního souseda. Prvek $4$ zároveň zůstane v množině $candidates$.
 
-Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $a$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
+Nyní proč to nepropustí koncept, který je výše než horní koncept. Máme v~zásadě dvě možnosti: pokud ten správný horní koncept ještě nebyl vygenerován, tak průnik na řádku \ref{alg.upper.if} bude vždy neprázdný -- vždy až poslední objekt generuje horního souseda. A pokud už jsme správného horního souseda vygenerovali, tak jsme ten poslední prvek $a$, který ho generoval, neodstranili z množiny $candidates$ a v průniku na řádku \ref{alg.upper.if} tak vždy zůstane minimálně tento prvek, čímž nebude splněna podmínka. 
 
 Například pokud bychom pokračovali v předchozím příkladu a snažili se ověřit koncept s extentem $\adds{1,2,3,4,5}$, kde zvolíme $a=5$, tak dojdeme k tomu, že $\adds{1,2,3,4,5} \setminus \adds{1} \setminus \adds{5} = \adds{2,3,4}$, ale prvek $4$ v množině $candidates$ zůstal, takže průnik bude neprázdný. Množina $candidates$ tak na konci obsahuje právě ty prvky, které generují horní sousedy. 
 
@@ -1087,7 +1092,7 @@ Algoritmus byl původně popsán v \cite{lindig}.
 V současné chvíli máme spočítaný koncept dotazu a víme, jak spočítat horní a dolní sousedy. To bude stačit k tomu, abychom zjistili všechny návrhy. Postup nalezení těchto návrhů bude vycházet z \cite{searchsleuth}.
 
 \sssection{Specializace}
-Specializací budeme rozumět návrh, který konkretizuje dotaz tak, aby uživatel, z těch výsledků, které už má k dispozici, dostal nějakou významnou podmnožinu. Například pokud zadá slovo \uv{jaguár}, aby ho specializace dovedla na podmnožinu dokumentů, které se zabývají autem, nebo zvířetem. 
+Specializací budeme rozumět návrh, který konkretizuje dotaz tak, aby uživatel, z těch výsledků, které už má k dispozici, dostal nějakou významnou podmnožinu. Například pokud zadá slovo \uv{jaguár}, aby ho specializace dovedla na~podmnožinu dokumentů, které se zabývají autem, nebo zvířetem. 
 
 Jako první si spočítáme dolní sousedy našeho konceptu dotazu. Tím dostaneme množinu konceptů, kterou si označíme $\lowerc_\hledany$
 $$
@@ -1100,14 +1105,14 @@ Z každého konceptu budeme nejdříve potřebovat pouze intent, poté extent. N
 \ext(K)&=&\adds{A\sep \addsp{A, B} \in K}
 \end{eqnarray}
 
-V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$. Dostaneme množinu možných návrhů na specializaci dotazu. 
+V tuto chvíli máme koncept dotazu, který má například intent $\adds{\mbox{Jaguár}}$ a dva dolní sousedy, které mají intenty $\adds{\mbox{Jaguár, Zvíře}}$ a $\adds{\mbox{Jaguár, Auto}}$. Abychom získali návrhy \code{+Zvíře} a \code{+Auto}, odečteme od intentů dolních sousedů intent konceptu dotazu. Zároveň ještě odečteme slova z dotazu, protože v případě složitějších Booleovských dotazů by se mohlo stát, že by intenty dolních sousedů obsahovaly slovo, které už v dotaze je. Označme $\hledany=\addsp{\hledany_E, \hledany_I}$. Dostaneme množinu možných návrhů na specializaci dotazu. 
 $$
-Spec'=\adds{B\setminus\hledany_I\sep B \in \intfca(\lowerc_\hledany)}. 
+Spec'=\adds{B\setminus\hledany_I\setminus\beta(Q)\sep B \in \intfca(\lowerc_\hledany)}. 
 $$
 
 Množina $Spec'$ obsahuje možné návrhy na rozšíření dotazu, ale některé z rozšíření mohou obsahovat více než jedno slovo. Pokud má koncept dotazu intent $\adds{\mbox{Jaguár}}$ a dolní soused má intent $\adds{\mbox{Jaguár, rychlost, maximální}}$, pak v množině $Spec'$ bude návrh $\adds{\mbox{rychlost, maximální}}$. 
 
-Nicméně je zbytečné navrhovat úpravu \code{+rychlost, maximální}, protože stačí, když uživateli navrhneme přidat pouze jedno z těchto slov a dovedeme ho ke stejnému konceptu. Z každé množiny v $Spec'$ tak vybereme vždy jen to slovo, které se ve všech dokumentech vyskytuje nejčastěji. Dostaneme finální množinu
+Nicméně je zbytečné navrhovat úpravu \code{+rychlost, maximální}, protože stačí, když uživateli navrhneme přidat pouze jedno z těchto slov a dovedeme ho ke~stejnému konceptu. Z každé množiny v $Spec'$ tak vybereme vždy jen to slovo, které se ve všech dokumentech vyskytuje nejčastěji. Dostaneme finální množinu
 $$
 Spec=\adds{\max(s)\sep s\in Spec'},
 $$
@@ -1120,7 +1125,7 @@ V extentech $A_1$ a $A_2$ jsou jednotlivé dokumenty, ideou tak je, že nejrelev
 \sssection{Generalizace}
 Generalizací budeme rozumět návrh, který zobecňuje dotaz tak, aby uživatel po této změně získal více dokumentů, které odpovídají nějakému obecnějšímu konceptu. Zobecnění bude prováděno odstraněním klíčových slov z dotazu. 
 
-Generalizace budeme hledat v horních sousedech konceptu dotazu, takže si je spočítáme
+Generalizace budeme hledat v~horních sousedech konceptu dotazu, takže si je spočítáme
 $$
 \upperc_\hledany=\upperneighbors(\hledany).
 $$
@@ -1137,6 +1142,8 @@ $$
 
 Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největší počet výsledků. Řekneme, že návrh $a_1\in Gen$ je relevantnější než $a_2\in Gen$, zapíšeme $a_1\ge a_2$, právě tehdy, když koncepty pro koncepty $\addsp{A_1, B_1}, \addsp{A_2, B_2} \in \upperc_\hledany$, jejichž intenty generují $a_1$ a $a_2$, platí $|A_1|\ge|A_2|$. 
 
+Tento postup funguje správně v případě, kdy dotaz obsahuje pouze operátor AND. Pokud obsahuje i operátor OR nebo NOT, tak intent konceptu dotazu neodpovídá přesně struktuře dotazu. Pokud máme například dotaz \uv{(spočetné OR nespočetné) AND (vysvětlení OR objasnění)}, tak koncept dotazu by mohl mít intent $\adds{\mbox{spočetné, množiny}}$ a algoritmus by nám mohl vygenerovat návrh \code{-spočetné}, čímž bychom získali dotaz \uv{nespočetné AND (vysvětlení OR objasnění)}, který paradoxně povede k menšímu počtu výsledků. \name{} tak zobrazuje návrhy na odebrání klíčových slov jen v případě, kdy dotaz neobsahuje operátor OR nebo NOT. 
+
 \sssection{Podobné dotazy}
 % 2011_0035_Eklund
 \begin{figure}
@@ -1146,7 +1153,7 @@ Návrhy opět seřadíme tak, aby návrh na prvním místě vedl na co největš
   \label{fig.siblings}
 \end{figure}
 
-V této části popíšeme, jak vygenerovat dotazy, které jsou podobné současnému dotazu, který uživatel zadal do vyhledávače. Když jsme hledali konkrétnější dotazy, hledali jsme je v dolních sousedech; obecnější dotazy jsme hledali v horních sousedech. Podobné dotazy budeme hledat v konceptech, které se nachází na stejné úrovni. Můžeme tak říci, že je budeme hledat v sourozencích konceptu dotazu. 
+V této části popíšeme, jak vygenerovat dotazy, které jsou podobné současnému dotazu, který uživatel zadal do vyhledávače. Když jsme hledali konkrétnější dotazy, hledali jsme je v dolních sousedech; obecnější dotazy jsme hledali v~horních sousedech. Podobné dotazy budeme hledat v konceptech, které se nachází na stejné úrovni. Můžeme tak říci, že je budeme hledat v sourozencích konceptu dotazu. 
 
 Otázkou je, jak definovat sourozence. Když se podíváme na obrázek \ref{fig.siblings}, jaké koncepty by měly být sourozenci konceptu $Z$? Když se budeme držet terminologie, která je běžná u binárních stromů, pak by sourozenci byli potomci rodiče, což by odpovídalo sourozencům $\adds{B, F}$. 
 
@@ -1221,15 +1228,15 @@ O řádek níže jsou informace o kontextu a konceptuálním svazu. První dvě 
   \label{fig.gui.result1}
 \end{figure}
 
-Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
+Pak už následují samotné výsledné dokumenty seřazené dle relevance. Vypočítaná hodnota $\tfidf$ pro každý dokument je zobrazena nalevo od odkazů na~dokumenty. U dokumentů je nejdříve zobrazen jejich název, pak URL a nakonec popisek. 
 
 \ssection{Požadavky na zpracovávané dokumenty}
-Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. V této části budou popsány některé vlastnosti, které by dokumenty měly mít, aby \name{} dobře fungoval. 
+Kvalita výsledků v prvé řadě závisí na kvalitě zpracovávaných dokumentů. V~této části budou popsány některé vlastnosti, které by dokumenty měly mít, aby \name{} dobře fungoval. 
 
 \sssection{Kvalita obsahů dokumentů}\label{ch.kvalita}
 Zásadním požadavkem na dokument je, aby měl dobrý obsah, ze kterého půjde snadno pomocí $\tfidf$ algoritmu získat jeho atributy. Každý dokument by měl mít ideálně jedno hlavní téma a v jeho obsahu by se měla často vyskytovat slova, která toto téma charakterizují. 
 
-Pokud má vyhledávač dobře fungovat, nemělo by se stávat, že stránka \uv{studijní obory} obsahuje pouze seznam studijních oborů, ale samotná slova \uv{studijní} a \uv{obor} se tam nevyskytují buď vůbec, nebo jen v titulku. Vyhledávač se pak nemá čeho chytit, na dotaz \uv{studijní obory} tuto stránku zobrazí někde ke konci seznamu a jako atribut dokumentu zvolí nějaké nesmyslné slovo, které se tam objevuje poměrně často. 
+Pokud má vyhledávač dobře fungovat, nemělo by se stávat, že stránka \uv{studijní obory} obsahuje pouze seznam studijních oborů, ale samotná slova \uv{studijní} a \uv{obor} se tam nevyskytují buď vůbec, nebo jen v titulku. Vyhledávač se~pak nemá čeho chytit, na dotaz \uv{studijní obory} tuto stránku zobrazí někde ke~konci seznamu a jako atribut dokumentu zvolí nějaké nesmyslné slovo, které se tam objevuje poměrně často. 
 
 Například pro stránku o studijních oborech na \code{www.inf.upol.cz} zvolil vyhledávač jako hlavní atribut slovo \uv{stupeň}, protože jednotlivé obory jsou tam rozděleny podle stupňů -- 1. stupeň, 2. stupeň, 3. stupeň. Pro prezenční a kombinované studium zvlášť. Samozřejmě zůstává otázkou, jestli by zvýšený počet slov \uv{obor} pomohl i uživateli. 
 
@@ -1240,7 +1247,7 @@ Když pak uživatel vyhledá jméno nějakého zaměstnance z katedry, často se
 \begin{itemize}
 	\item Napsat obsah stránky o informatickém semináři tak, aby obsahoval vícekrát slovo \uv{seminář}.
 	\item V hodnocení dokumentů zvýšit důležitost titulků nebo URL, které slovo \uv{seminář} obsahují. 
-	\item Využít další informace z celého webu, například text odkazů, které na stránku o informatickém semináři vedou. 
+	\item Využít další informace z celého webu, například text odkazů, které na~stránku o informatickém semináři vedou. 
 	\item Vyjmout stránky kalendáře a aktualit z indexu, aby se ve výsledcích nezobrazovaly vůbec.
 \end{itemize}
 
@@ -1268,7 +1275,7 @@ Některé PDF dokumenty na webu katedry informatiky jsou v nějakém podivném s
 
 \sssection{Některé nedostatky vyhledávače}\label{ch.nedostatky}
 
-Podstatný požadavek je, aby se rozumné atributy nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
+Podstatný požadavek je, aby se rozumné atributy nevyskytovala na všech stránkách webu. Tento problém může snadno nastat v případě, kdy jsou na všech stránkách webu stejné odkazy v navigaci. Web katedry informatiky (ale i další zkoumané weby) má na všech stránkách stejnou navigaci, takže slova, která jsou v~textech těchto odkazů, mají jen mimální šanci na to, že budou zvoleny atributem nějakého dokumentu. 
 
 Během výpočtu $\tfidf$ funkce hledáme taková slova, která se často vyskytují v daném dokumentu, ale co nejméně ve všech ostatních dokumentech. Funkce bohužel nezkoumá, kolikrát se dané slovo v těch ostatních dokumentech nachází, takže stačí, když se v dokumentu nachází jen jednou v navigaci a už se to bude počítat jako výskyt. 
 
@@ -1368,7 +1375,7 @@ Jak jádro vyhledávače, tak webové rozhraní poskytuje API pro uživatele. We
 Například dotazem \code{/api.php?d=jpw\&docinfo=147\&title} zjistíme název dokumentu z databáze \code{jpw}, který má ID 147.
 
 \sssection{Posílání vlastních dat na server}\label{ch.apipost}
-API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. \name{} tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v předchozích částech dokumentu. 
+API vyhledávače umožňuje poslat na server vlastní dokumenty a provést nad nimi FCA analýzu. To se děje HTTP POST požadavkem. Poslaná data musí být ve formátu JSON. \name{} tyto dokumenty přijme, zpracuje je, tj. provede úplně stejné operace, jako by budoval klasický index, vytvoří dočasný index a následně nad těmito daty provede standardní FCA analýzu, jaká byla popsána v~předchozích částech dokumentu. 
 
 Výsledkem budou opět data ve formátu JSON, která budou obsahovat výsledek FCA analýzy. Nalezneme tam specializace, generalizace a podobné dotazy a některá další data o kontextu a konceptuálním svazu. Dále tam bude seznam dokumentů, který bude seřazený dle relevance. Výstup je prakticky stejný, jako je grafický výstup vyhledávače, pouze máme výsledky v surové JSON podobě. 
 
@@ -1382,7 +1389,7 @@ Jednou z cest, kam může směřovat tento vyhledávač, je rozšíření API a 
 
 
 \ssection{Struktura aplikace a používané programy}
-Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na Pythonu 3.2. Zdrojové soubory jsou rozděleny do balíčků, které obsahují moduly. Mezi nejdůležitější balíčky patří: 
+Jádro vyhledávače je psáno v Pythonu 3, nainstalovaná verze pak běží na~Pythonu 3.2. Zdrojové soubory jsou rozděleny do balíčků, které obsahují moduly. Mezi nejdůležitější balíčky patří: 
 
 \begin{description}
 	\item[\code{preprocess}:] Obsahuje moduly, které jsou zodpovědné za budování nového indexu, úpravu existujícího indexu, odstranění HTML značek z HTML stránek a podobně. 
@@ -1398,7 +1405,7 @@ Aplikace používá dva stemmery, jeden pro český jazyk a jeden pro anglický.
 Webové rozhraní je napsáno v PHP 5. HTML kód je validní dle současného návrhu HTML 5. 
 
 \ssection{Dokumentace}\label{ch.dokumentace}
-Dokumentace k jednotlivým částem programu se nachází na webu spolu se zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \url{www.github.com}, přesné adresy jednotlivých projektů: 
+Dokumentace k jednotlivým částem programu se nachází na webu spolu se~zdrojovými kódy aplikací. K distribuci zdrojového kódu byl použit web \url{www.github.com}, přesné adresy jednotlivých projektů: 
 
 Zdrojové kódy jádra vyhledávače se nachází na adrese
 \begin{itemize}
@@ -1454,7 +1461,7 @@ Po navrácení výsledných dokumentů provádí jejich analýzu a prostřednict
 
 \name{} dále poskytuje veřejné webové API, díky kterému je možné vyhledávači zasílat vlastní data. Vyhledávač pak sestaví dočasný index a provede nad zaslanými daty stejnou analýzu, jako v případě statického indexu. 
 
-Kvalita výsledků je přímo úměrná kvalitě zaindexovaných dokumentů. Pokud do vyhledávače vložíme obsahově bohaté dokumenty, jsou návrhy většinou dobré. Celá analýza je poměrně rychlá, \name{} pro daný dotaz vrátí všechny výsledky obvykle za několik sekund. Všechny kódy jsou volně přístupné pod BSD licencí a vyhledávač tak lze případně nainstalovat na vlastní server. 
+Kvalita výsledků je přímo úměrná kvalitě zaindexovaných dokumentů. Pokud do~vyhledávače vložíme obsahově bohaté dokumenty, jsou návrhy většinou dobré. Celá analýza je poměrně rychlá, \name{} pro daný dotaz vrátí všechny výsledky obvykle za několik sekund. Všechny kódy jsou volně přístupné pod BSD licencí a vyhledávač tak lze případně nainstalovat na vlastní server. 
 
 Další výzkum může proběhnout v části, která zpracovává samotné dokumenty. Například vylepšit algoritmy, které hledají atributy dokumentů, zdokonalit stemmer, zjišťovat synonyma a podobně. V části hledající návrhy je možné zavést fuzzy FCA, kdy do formálního kontextu neuložíme pouze informace o tom, zda dokument dané slovo obsahuje, ale i informaci o tom, jak moc je slovo pro dokument důležité. Je možné také rozšířit API, které \name{} nabízí a nad tímto API postavit další externí služby. 
 \end{conclusions-cz}
@@ -1469,7 +1476,7 @@ A formal concept analysis is performed after retrieving the resulting set of doc
 
 \name{} provides a public web API to post your own data. The search engine builds up a temporary index and performs a formal concept analysis to obtain query suggestions.
 
-The quality of results is determined by the quality of the indexed documents. If we use the search engine on extensive documents the suggestions are usually sufficient. The analysis is rather quick -- \name{} returns results for a single query in a few seconds. The search engine is an open source software under the BSD licence and therefore publicly available to use.
+The quality of results is determined by the quality of the indexed documents. If we use the search engine on extensive documents the suggestions are usually sufficient. The analysis is rather quick---\name{} returns results for a single query in a few seconds. The search engine is an open source software under the BSD licence and therefore publicly available to use.
 
 Further research could be done in document processing (e.g. improve attributes searching, improve stemmer, search for synonyms, etc.). Furthermore fuzzy FCA could be used instead of crisp FCA. Information about word importance could be used to build a new fuzzy formal context. API could be extended and provided with new applications.
 \end{conclusions-en}
@@ -1516,7 +1523,7 @@ Popis struktury přiloženého CD:
 	Druhý archiv, \code{fca-search-web.zip}, obsahuje soubory zajišťující běh webového rozhraní. Aplikace je psána v PHP. Jak nainstalovat a používat aplikaci je opět popsáno v dokumentaci. 
 	\item[doc/] Adresář obsahuje text diplomové práce ve formátu PDF a soubory nutné k jejímu sestavení, tj. zdrojový soubor ve formátu \LaTeX{} a několik obrázků. 
 	\item[src/] Adresář obsahuje zdrojové kódy aplikace. Protože aplikace nemá žádné spustitelné soubory, nachází se zde stejné archivy jako v adresáři \code{bin/}, kromě aplikace \code{pdftotext}. 
-	\item[readme.html] V tomto souboru je stručný popis toho, kde je současná verze nainstalována, jak ji používat a odkazy na dokumentaci. 
+	\item[readme.html] V tomto souboru je stručný popis toho, kde je současná verze nainstalována, jak ji používat, jsou tam i příklady dotazů a odkazy na~dokumentaci. 
 \end{description}
 
 \end{document}

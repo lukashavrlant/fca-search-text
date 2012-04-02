@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta charset='utf-8'>
-	<title>Jak používat CLaSeek</title>
+	<title>Co dokáže CLaSeek</title>
 	<style type="text/css">
 		body {
 			width:800px;
@@ -13,14 +13,14 @@
 </head>
 <body>
 	<h2>Obsah CD</h2>
-		<p>Obsah CD je rozdělen do tří adresářů V adresáři <code>bin</code> jsou zdrojové soubory připravané ke běhu. V archivu <code>fca-search.zip</code> jsou zdrojové soubory jádra vyhledávače. Vyhledávač je napsaný v Pythonu 3, takže ke spuštění je nutný interpet Pytyhonu. V archivu <code>fca-search-web.zip</code> jsou zdrojové soubory webového rozhraní. V adresáři <code>doc</code> je textová verze diplomky a zdrojové soubory v LaTeXu a obrázky. V adresáři <code>src</code> jsou zdrojové soubory obou aplikací. Protože aplikace nemají žádnou binární formu, je obsah téměř stejný jako v adresáři <code>bin</code> (nenachází se zde aplikace <code>pdftotext apod.</code>).</p>
+		<p>Obsah CD je rozdělen do tří adresářů V adresáři <code>bin</code> jsou zdrojové soubory připravené ke běhu. V archivu <code>fca-search.zip</code> jsou zdrojové soubory jádra vyhledávače. Vyhledávač je napsaný v Pythonu 3, takže ke spuštění je nutný interpret Pytyhonu. V archivu <code>fca-search-web.zip</code> jsou zdrojové soubory webového rozhraní. V adresáři <code>doc</code> je textová verze diplomky a zdrojové soubory v LaTeXu a obrázky. V adresáři <code>src</code> jsou zdrojové soubory obou aplikací. Protože aplikace nemají žádnou binární formu, je obsah téměř stejný jako v adresáři <code>bin</code> (nenachází se zde aplikace <code>pdftotext apod.</code>).</p>
 
 	<h2>Online demo vyhledávače</h2>
 		<h3>Základní vyhledávání</h3>
-			<p>Současná verze je nainstalována na adrese <a href="http://phoebe.inf.upol.cz/claseek/">phoebe.inf.upol.cz/claseeek</a>. Je tam vytvořeno celkem pět testovacích indexů, čtyři české a jeden anglický. Vlajky přepínají mezi českým a anglickým seznamem indexů. Popis indexů spolu s ukázkovými dotazy:</p>
+			<p>Současná verze je nainstalována na adrese <a href="http://phoebe.inf.upol.cz/claseek/">phoebe.inf.upol.cz/claseek</a>. Je tam vytvořeno celkem pět testovacích indexů, čtyři české a jeden anglický. Vlajky přepínají mezi českým a anglickým seznamem indexů. Popis indexů spolu s ukázkovými dotazy:</p>
 
 			<ul>
-			<li><code>inf</code> je index webu <a href="http://www.inf.upol.cz/">katedry informatiky</a>. Můžete zde klást dotazy jako <a href="http://phoebe.inf.upol.cz/claseek/?query=fuzzy&search=search&lang=cs&database=inf">fuzzy</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=práce&search=search&lang=cs&database=inf">práce</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=zkoušky&search=search&lang=cs&database=inf">zkoušky</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?query=předměty&search=search&lang=cs&database=inf">předměty</a>. Výsledky jsou všlijaké, viz text diplomové práce.</li>
+			<li><code>inf</code> je index webu <a href="http://www.inf.upol.cz/">katedry informatiky</a>. Můžete zde klást dotazy jako <a href="http://phoebe.inf.upol.cz/claseek/?query=fuzzy&search=search&lang=cs&database=inf">fuzzy</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=práce&search=search&lang=cs&database=inf">práce</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=zkoušky&search=search&lang=cs&database=inf">zkoušky</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?query=předměty&search=search&lang=cs&database=inf">předměty</a>. Výsledky jsou všelijaké, viz text diplomové práce.</li>
 
 			<li><code>jpwi</code> je index webu <a href="http://www.jakpsatweb.cz/">jak psát web.cz</a>, který obsahuje spoustu článků obecně o webu, HTML, CSS, Javascriptu apod. Můžete zde klást dotazy jako <a href="http://phoebe.inf.upol.cz/claseek/?query=hosting+php&search=search&lang=cs&database=jpwi">hosting php</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=použitelnost+webů&search=search&lang=cs&database=jpwi">použitelnost webů</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=formuláře&search=search&lang=cs&database=jpwi">formuláře</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?query=javascript+cyklus&search=search&lang=cs&database=jpwi">javascript cyklus</a>.</li>
 
@@ -28,8 +28,10 @@
 
 			<li><code>matweb</code> je index webu <a href="http://www.matweb.cz/">matweb.cz</a>, který obsahuje články o středoškolské matematice. Můžete zde klást dotazy typu <a href="http://phoebe.inf.upol.cz/claseek/?query=množiny&search=search&lang=cs&database=matweb">množiny</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=interval&search=search&lang=cs&database=matweb">interval</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=limita+funkce&search=search&lang=cs&database=matweb">limita funkce</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?query=bod&search=search&lang=cs&database=matweb">bod</a>.</li>
 
-			<li><code>articles</code> je index anglických článků zaměstnanců KMI, tedy především články se zaměřením na fuzzy, FCA a faktorová analýza. Můžete zde klást dotazy typu <a href="http://phoebe.inf.upol.cz/claseek/?query=fuzzy+logic&search=search&lang=en&database=articles">fuzzy logic</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=hedges&search=search&lang=en&database=articles">hedges</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=formal+concept+analysis&search=search&lang=en&database=articles">formal concept analysis</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?database=articles&query=decomposition+matrices&lang=en">decomposition matrices</a>.</li>
+			<li><code>articles</code> je index anglických článků zaměstnanců KI, tedy především články se zaměřením na fuzzy, FCA a faktorová analýza. Můžete zde klást dotazy typu <a href="http://phoebe.inf.upol.cz/claseek/?query=fuzzy+logic&search=search&lang=en&database=articles">fuzzy logic</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=hedges&search=search&lang=en&database=articles">hedges</a>, <a href="http://phoebe.inf.upol.cz/claseek/?query=formal+concept+analysis&search=search&lang=en&database=articles">formal concept analysis</a> nebo <a href="http://phoebe.inf.upol.cz/claseek/?database=articles&query=decomposition+matrices&lang=en">decomposition matrices</a>.</li>
 			</ul>
+
+			<p>Vyhledávač má implementovanou i triviální kontrolu překlepů, viz například dotaz <a href="http://phoebe.inf.upol.cz/claseek/?query=ourtata&search=search&lang=cs&database=inf">ourtata</a>.</p>
 		<h3>Ukázka dotazovacího API</h3>
 			<p>Vyhledávač poskytuje primitivní dotazovací API. Umí vracet informace o indexu a o jednotlivých dokumentech. API je <a href="https://github.com/havrlant/fca-search-web/wiki/Dokumentace">popsáno v dokumentaci</a>, takže jen několik málo příkladů: </p>
 
